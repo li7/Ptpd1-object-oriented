@@ -9,6 +9,12 @@
  */
 
 #include "classes/ptpd.h"
+#include "classes/datatypes_dep.h"
+#include "classes/RunTimeOpts.h"
+#include "classes/PtpClock.h"
+#include "classes/MsgSync.h"
+#include "classes/MsgHeader.h"
+#include "classes/ForeignMasterRecord.h"
 
 void 
 initData(RunTimeOpts * rtOpts, PtpClock * ptpClock)
