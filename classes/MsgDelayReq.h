@@ -1,0 +1,1 @@
+typedef MsgSync MsgDelayReq;
