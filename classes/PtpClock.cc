@@ -65,6 +65,12 @@ TimeInternal& PtpClock::get_offset_from_master()
 TimeInternal& PtpClock::get_one_way_delay() 
 {return one_way_delay;}
 
+UInteger32 PtpClock::get_one_way_delay_seconds() 
+{return one_way_delay.get_seconds();}
+
+Integer32 PtpClock::get_one_way_delay_nanoseconds() 
+{return one_way_delay.get_nanoseconds();}
+
 UInteger8 PtpClock::get_parent_communication_technology() const
 {return parent_communication_technology;}
 
@@ -209,8 +215,20 @@ Octet PtpClock::get_msgIbuf() const
 TimeInternal& PtpClock::get_master_to_slave_delay()
 {return master_to_slave_delay;}
 
+UInteger32 PtpClock::get_master_to_slave_delay_seconds()
+{return master_to_slave_delay.get_seconds();}
+
+Integer32 PtpClock::get_master_to_slave_delay_nanoseconds()
+{return master_to_slave_delay.get_nanoseconds();}
+
 TimeInternal& PtpClock::get_slave_to_master_delay()
 {return slave_to_master_delay;}
+
+UInteger32 PtpClock::get_slave_to_master_delay_seconds()
+{return slave_to_master_delay.get_seconds();}
+
+Integer32 PtpClock::get_slave_to_master_delay_nanoseconds()
+{return slave_to_master_delay.get_nanoseconds();}
 
 TimeInternal& PtpClock::get_delay_req_receive_time()
 {return delay_req_receive_time;}
@@ -456,8 +474,20 @@ void PtpClock::set_msgIbuf(Octet *mib, int length)
 void PtpClock::set_master_to_slave_delay(TimeInternal mtsd)
 {master_to_slave_delay = mtsd;}
 
+void PtpClock::set_master_to_slave_delay_seconds(UInteger32 sec)
+{master_to_slave_delay.set_seconds(sec);}
+
+void PtpClock::set_master_to_slave_delay_nanoseconds(Integer32 nsec)
+{master_to_slave_delay.set_nanoseconds(nsec);}
+
 void PtpClock::set_slave_to_master_delay(TimeInternal stmd)
 {slave_to_master_delay = stmd;}
+
+void PtpClock::set_slave_to_master_delay_seconds(UInteger32 sec)
+{slave_to_master_delay.set_seconds(sec);}
+
+void PtpClock::set_slave_to_master_delay_nanoseconds(Integer32 nsec)
+{slave_to_master_delay.set_nanoseconds(nsec);}
 
 void PtpClock::set_delay_req_receive_time(TimeInternal drrt)
 {delay_req_receive_time = drrt;}
@@ -488,6 +518,9 @@ void PtpClock::set_ofm_filt(offset_from_master_filter of)
 
 void PtpClock::set_owd_filt(one_way_delay_filter of)
 {owd_filt = of;}
+
+void PtpClock::set_owd_filt_s_exp(Integer32 s)
+{owd_filt.set_s_exp(s);}
 
 void PtpClock::set_message_activity(Boolean ma)
 {message_activity = ma;}

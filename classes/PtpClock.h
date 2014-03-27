@@ -44,6 +44,8 @@ public:
         UInteger16 get_steps_removed() const;
         TimeInternal& get_offset_from_master();
         TimeInternal& get_one_way_delay();
+        UInteger32 get_one_way_delay_seconds();
+        Integer32 get_one_way_delay_nanoseconds();
 
 	/*Parent data set*/
         UInteger8 get_parent_communication_technology() const;
@@ -106,7 +108,11 @@ public:
 	Octet get_msgIbuf() const;
 	
 	TimeInternal& get_master_to_slave_delay();
+	UInteger32 get_master_to_slave_delay_seconds();
+	Integer32 get_master_to_slave_delay_nanoseconds();
 	TimeInternal& get_slave_to_master_delay();
+	UInteger32 get_slave_to_master_delay_seconds();
+	Integer32 get_slave_to_master_delay_nanoseconds();
 
 	TimeInternal& get_delay_req_receive_time();
 	TimeInternal& get_delay_req_send_time();
@@ -197,7 +203,15 @@ public:
 	void set_msgObuf(Octet *mob,int length);
 	void set_msgIbuf(Octet *mib,int length);
 	void set_master_to_slave_delay(TimeInternal mtsd);
+
+	void set_master_to_slave_delay_seconds(UInteger32 sec);
+	void set_master_to_slave_delay_nanoseconds(Integer32 nsec);
+
 	void set_slave_to_master_delay(TimeInternal stmd);
+
+	void set_slave_to_master_delay_seconds(UInteger32 sec);
+	void set_slave_to_master_delay_nanoseconds(Integer32 nsec);
+
 	void set_delay_req_receive_time(TimeInternal drrt);
 	void set_delay_req_send_time(TimeInternal drst);
 	void set_sync_receive_time(TimeInternal srt);
@@ -209,6 +223,8 @@ public:
 	void set_sentDelayReqSequenceId(UInteger16 sdrsi);
 	void set_ofm_filt(offset_from_master_filter of);
 	void set_owd_filt(one_way_delay_filter of);
+	void set_owd_filt_s_exp(Integer32 s);
+
 	void set_message_activity(Boolean ma);
 	void set_itimer(IntervalTimer *i, int length);
 	void set_netPath(NetPath np);
