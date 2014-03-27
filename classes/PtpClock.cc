@@ -7,6 +7,7 @@ using namespace std;
 /*****************Constructor****************/
 PtpClock::PtpClock()
 {
+	netPath;
 }
 
 /*****************accessors***************/
@@ -277,6 +278,9 @@ void PtpClock::set_preferred(Boolean p)
 
 void PtpClock::set_initializable(Boolean i)
 {initializable = i;}
+
+void PtpClock::set_externalTiming(Boolean i)
+{external_timing = i;}
 
 void PtpClock::set_isBoundaryClock(Boolean ibc)
 {is_boundary_clock = ibc;}
