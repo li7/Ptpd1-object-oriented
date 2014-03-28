@@ -62,6 +62,12 @@ UInteger16 PtpClock::get_steps_removed() const
 TimeInternal& PtpClock::get_offset_from_master()
 {return offset_from_master;}
 
+UInteger32 PtpClock::get_offset_from_master_seconds() const
+{return offset_from_master.get_seconds();}
+
+Integer32 PtpClock::get_offset_from_master_nanoseconds() const
+{return offset_from_master.get_nanoseconds();}
+
 TimeInternal& PtpClock::get_one_way_delay() 
 {return one_way_delay;}
 

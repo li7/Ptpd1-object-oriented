@@ -43,6 +43,8 @@ public:
 	/*Current data set*/
         UInteger16 get_steps_removed() const;
         TimeInternal& get_offset_from_master();
+        UInteger32 get_offset_from_master_seconds() const;
+        Integer32 get_offset_from_master_nanoseconds() const;
         TimeInternal& get_one_way_delay();
         UInteger32 get_one_way_delay_seconds();
         Integer32 get_one_way_delay_nanoseconds();
