@@ -8,8 +8,6 @@
  */
 
 #include "classes/ptpd.h"
-#include "classes/TimeInternal.h"
-#include "classes/TimeRepresentation.h"
 
 /* from annex C of the spec */
 UInteger32 

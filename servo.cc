@@ -19,8 +19,8 @@ initClock(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	ptpClock->set_master_to_slave_delay_nanoseconds(0);
 	ptpClock->set_slave_to_master_delay_seconds(0);
 	ptpClock->set_slave_to_master_delay_nanoseconds(0);
-	ptpClock->set_observed_variance(0);
-	ptpClock->set_observed_drift(0);/* clears clock servo accumulator (the
+	ptpClock->set_observedVariance(0);
+	ptpClock->set_observedDrift(0);/* clears clock servo accumulator (the
 					 * I term) */
 	ptpClock->set_owd_filt_s_exp(0);	/* clears one-way delay filter */
 	ptpClock->set_halfEpoch( ptpClock->get_halfEpoch()||rtOpts->get_halfEpoch());
@@ -43,7 +43,7 @@ updateDelay(TimeInternal * send_time, TimeInternal * recv_time,
 	/* calc 'slave_to_master_delay' */
 	subTime(&slave_to_master_delay, recv_time, send_time);
 
-	if (rtOpts->maxDelay) { /* If maxDelay is 0 then it's OFF */
+	if (rtOpts->get_maxDelay()) { /* If maxDelay is 0 then it's OFF */
 		if (slave_to_master_delay.get_seconds() && rtOpts->get_maxDelay()) {
 			INFO("updateDelay aborted, delay greater than 1"
 			     " second.");
@@ -53,8 +53,8 @@ updateDelay(TimeInternal * send_time, TimeInternal * recv_time,
 		if (slave_to_master_delay.get_nanoseconds() > rtOpts->get_maxDelay()) {
 			INFO("updateDelay aborted, delay %d greater than "
 			     "administratively set maximum %d\n",
-			     slave_to_master_delay.nanoseconds, 
-			     rtOpts->get_maxDelay();
+			     slave_to_master_delay.get_nanoseconds(), 
+			     rtOpts->get_maxDelay());
 			return;
 		}
 	}
@@ -63,8 +63,8 @@ updateDelay(TimeInternal * send_time, TimeInternal * recv_time,
 
 	/* update 'one_way_delay' */
 	addTime(&ptpClock->get_one_way_delay(), &ptpClock->get_master_to_slave_delay(), &ptpClock->get_slave_to_master_delay());
-	ptpClock->set_one_way_delay_seconds(ptpClock->get_one_way_delay_seconds()/2);
-	ptpClock->set_one_way_delay_nanoseconds(ptpClock->get_one_way_delay_nanoseconds()/2);
+	ptpClock->set_oneWayDelay_seconds(ptpClock->get_one_way_delay_seconds()/2);
+	ptpClock->set_oneWayDelay_nanoseconds(ptpClock->get_one_way_delay_nanoseconds()/2);
 
 	if (ptpClock->get_one_way_delay_seconds()) {
 		/* cannot filter with secs, clear filter */
@@ -84,14 +84,14 @@ updateDelay(TimeInternal * send_time, TimeInternal * recv_time,
 		//++owd_filt->s_exp;	//NOT SURE IF SAME
 		owd_filt->set_s_exp(owd_filt->get_s_exp() + 1);
 	else if (owd_filt->get_s_exp() > 1 << s)
-		owd_filt->set_s_exp(1) << s;
+		owd_filt->set_s_exp(1 << s);
 
 	/* filter 'one_way_delay' */
 	owd_filt->set_y((owd_filt->get_s_exp() - 1) * owd_filt->get_y() / owd_filt->get_s_exp() +
 	    (ptpClock->get_one_way_delay_nanoseconds() / 2 + owd_filt->get_nsec_prev() / 2) / owd_filt->get_s_exp());
 
 	owd_filt->set_nsec_prev(ptpClock->get_one_way_delay_nanoseconds());
-	ptpClock->set_one_way_delay_nanoseconds(owd_filt->get_y());
+	ptpClock->set_oneWayDelay_nanoseconds(owd_filt->get_y());
 
 	DBG("delay filter %d, %d\n", owd_filt->get_y(), owd_filt->get_s_exp());
 }
@@ -117,7 +117,7 @@ updateOffset(TimeInternal * send_time, TimeInternal * recv_time,
 			INFO("updateDelay aborted, delay %d greater than "
 			     "administratively set maximum %d\n",
 			     master_to_slave_delay.get_nanoseconds(), 
-			     rtOpts->maxDelay);
+			     rtOpts->get_maxDelay());
 			return;
 		}
 	}
