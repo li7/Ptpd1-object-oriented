@@ -80,8 +80,8 @@ Integer32 PtpClock::get_one_way_delay_nanoseconds()
 UInteger8 PtpClock::get_parent_communication_technology() const
 {return parent_communication_technology;}
 
-Octet PtpClock::get_parent_uuid() const
-{return *parent_uuid;}
+Octet* PtpClock::get_parent_uuid()
+{return parent_uuid;}
 
 UInteger16 PtpClock::get_parent_port_id() const
 {return parent_port_id;}
@@ -113,8 +113,8 @@ Boolean PtpClock::get_utc_reasonable() const
 UInteger8 PtpClock::get_grandmaster_communication_technology() const
 {return grandmaster_communication_technology;}
 
-Octet PtpClock::get_grandmaster_uuid_field() const
-{return *grandmaster_uuid_field;}
+Octet* PtpClock::get_grandmaster_uuid_field()
+{return grandmaster_uuid_field;}
 
 UInteger16 PtpClock::get_grandmaster_port_id_field() const
 {return grandmaster_port_id_field;}

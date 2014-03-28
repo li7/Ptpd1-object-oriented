@@ -51,7 +51,7 @@ public:
 
 	/*Parent data set*/
         UInteger8 get_parent_communication_technology() const;
-        Octet get_parent_uuid() const;
+        Octet* get_parent_uuid();
         UInteger16 get_parent_port_id() const;
         UInteger16 get_parent_last_sync_sequence_number() const;
         Boolean get_parent_followup_capable() const;
@@ -62,7 +62,7 @@ public:
         Integer32 get_observed_drift() const;
         Boolean get_utc_reasonable() const;
         UInteger8 get_grandmaster_communication_technology() const;
-        Octet get_grandmaster_uuid_field() const;
+        Octet* get_grandmaster_uuid_field();
         UInteger16 get_grandmaster_port_id_field() const;
         UInteger8 get_grandmaster_stratum() const;
         Octet get_grandmaster_identifier() const;
