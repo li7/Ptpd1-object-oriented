@@ -252,67 +252,67 @@ ptpdStartup(int argc, char **argv, Integer16 * ret, RunTimeOpts * rtOpts)
 
 		case 'l':
 /*******************************START HERE***************************/
-			rtOpts->inboundLatency.nanoseconds = strtol(optarg, &optarg, 0);
+			rtOpts->set_inboundLatency_nanoseconds(strtol(optarg, &optarg, 0));
 			if (optarg[0])
-				rtOpts->outboundLatency.nanoseconds = strtol(optarg + 1, 0, 0);
+				rtOpts->set_outboundLatency_nanoseconds(strtol(optarg + 1, 0, 0));
 			break;
 
 		case 'o':
-			rtOpts->currentUtcOffset = strtol(optarg, &optarg, 0);
+			rtOpts->set_currentUtcOffset(strtol(optarg, &optarg, 0));
 			break;
 
 		case 'e':
-			rtOpts->epochNumber = strtoul(optarg, &optarg, 0);
+			rtOpts->set_epochNumber(strtoul(optarg, &optarg, 0));
 			break;
 
 		case 'h':
-			rtOpts->halfEpoch = TRUE;
+			rtOpts->set_halfEpoch(true);
 			break;
 
 		case 'y':
-			rtOpts->syncInterval = strtol(optarg, 0, 0);
+			rtOpts->set_syncInterval(strtol(optarg, 0, 0));
 			break;
 
 		case 'm':
-			rtOpts->max_foreign_records = strtol(optarg, 0, 0);
-			if (rtOpts->max_foreign_records < 1)
-				rtOpts->max_foreign_records = 1;
+			rtOpts->set_max_foreign_records(strtol(optarg, 0, 0));
+			if (rtOpts->get_max_foreign_records() < 1)
+				rtOpts->set_max_foreign_records(1);
 			break;
 
 		case 'g':
-			rtOpts->slaveOnly = TRUE;
+			rtOpts->set_slaveOnly(true);
 			break;
 
 		case 'p':
-			rtOpts->clockPreferred = TRUE;
+			rtOpts->set_clockPreferred(true);
 			break;
 
 		case 's':
-			rtOpts->clockStratum = strtol(optarg, 0, 0);
-			if (rtOpts->clockStratum <= 0)
-				rtOpts->clockStratum = 255;
+			rtOpts->set_clockStratum(strtol(optarg, 0, 0));
+			if (rtOpts->get_clockStratum() <= 0)
+				rtOpts->set_clockStratum(255);
 			break;
 
 		case 'i':
-			memset(rtOpts->clockIdentifier, 0, PTP_CODE_STRING_LENGTH);
-			strncpy(rtOpts->clockIdentifier, optarg, PTP_CODE_STRING_LENGTH);
+			rtOpts->set_clockIdentifier(0, PTP_CODE_STRING_LENGTH);
+			rtOpts->set_clockIdentifier(optarg, PTP_CODE_STRING_LENGTH);
 			break;
 
 		case 'v':
-			rtOpts->clockVariance = strtol(optarg, 0, 0);
+			rtOpts->set_clockVariance(strtol(optarg, 0, 0));
 			break;
 
 		case 'n':
-			memset(rtOpts->subdomainName, 0, PTP_SUBDOMAIN_NAME_LENGTH);
-			strncpy(rtOpts->subdomainName, optarg, PTP_SUBDOMAIN_NAME_LENGTH);
+			rtOpts->set_subdomainName(0, PTP_SUBDOMAIN_NAME_LENGTH);
+			rtOpts->set_subdomainName(optarg, PTP_SUBDOMAIN_NAME_LENGTH);
 			break;
 
 		case 'k':
-			rtOpts->probe = TRUE;
+			rtOpts->set_probe(true);
 
-			rtOpts->probe_management_key = strtol(optarg, &optarg, 0);
+			rtOpts->set_probe_management_key(strtol(optarg, &optarg, 0));
 			if (optarg[0])
-				rtOpts->probe_record_key = strtol(optarg + 1, 0, 0);
+				rtOpts->set_probe_record_key(strtol(optarg + 1, 0, 0));
 
 			nondaemon = 1;
 			break;
@@ -336,14 +336,14 @@ ptpdStartup(int argc, char **argv, Integer16 * ret, RunTimeOpts * rtOpts)
 		return 0;
 	} else {
 		DBG("allocated %d bytes for protocol engine data\n", (int)sizeof(PtpClock));
-		ptpClock->foreign = (ForeignMasterRecord *) calloc(rtOpts->max_foreign_records, sizeof(ForeignMasterRecord));
-		if (!ptpClock->foreign) {
+		ptpClock->foreign = (ForeignMasterRecord *) calloc(rtOpts->get_max_foreign_records(), sizeof(ForeignMasterRecord));
+		if (!ptpClock->get_foreign()) {
 			PERROR("failed to allocate memory for foreign master data");
 			*ret = 2;
 			free(ptpClock);
 			return 0;
 		} else {
-			DBG("allocated %d bytes for foreign master data\n", (int)(rtOpts->max_foreign_records * sizeof(ForeignMasterRecord)));
+			DBG("allocated %d bytes for foreign master data\n", (int)(rtOpts->get_max_foreign_records() * sizeof(ForeignMasterRecord)));
 		}
 	}
 

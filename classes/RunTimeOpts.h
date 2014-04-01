@@ -53,7 +53,9 @@ public:
 
 	/****************mutators***********/
 	void set_syncInterval(Integer8 si);
+	void set_subdomainName(int sn, int length);
 	void set_subdomainName(Octet *sn, int length);
+	void set_clockIdentifier(int ci, int length);
 	void set_clockIdentifier(Octet *ci, int length);
 	void set_clockVariance(Integer16 cv);
 	void set_clockStratum(UInteger8 cs);
@@ -73,7 +75,10 @@ public:
 	void set_ai(Integer16 a);
 	void set_s(Integer16 i);
 	void set_inboundLatency(TimeInternal ibl);
+	void set_inboundLatency_nanoseconds(Integer32 nsec);
+
 	void set_outboundLatency(TimeInternal obl);
+	void set_outboundLatency_nanoseconds(Integer32 nsec);
 	void set_max_foreign_records(Integer16 mfr);
 	void set_slaveOnly(Boolean so);
 	void set_probe(Boolean p);

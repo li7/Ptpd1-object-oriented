@@ -116,11 +116,17 @@ FILE RunTimeOpts::get_recordFP() const
 void RunTimeOpts::set_syncInterval(Integer8 si)
 {syncInterval = si;}
 
+void RunTimeOpts::set_subdomainName(int sn, int length)
+{memset(subdomainName,sn,length);}
+
 void RunTimeOpts::set_subdomainName(Octet *sn, int length)
-{memcpy(subdomainName,sn,length);}
+{strncpy(subdomainName,sn,length);}
+
+void RunTimeOpts::set_clockIdentifier(int ci, int length)
+{memset(clockIdentifier,ci,length);}
 
 void RunTimeOpts::set_clockIdentifier(Octet *ci, int length)
-{memcpy(clockIdentifier,ci,length);}
+{strncpy(clockIdentifier,ci,length);}
 
 void RunTimeOpts::set_clockVariance(Integer16 cv)
 {clockVariance = cv;}
@@ -176,8 +182,14 @@ void RunTimeOpts::set_s(Integer16 i)
 void RunTimeOpts::set_inboundLatency(TimeInternal ibl)
 {inboundLatency = ibl;}
 
+void RunTimeOpts::set_inboundLatency_nanoseconds(Integer32 nsec)
+{inboundLatency.set_nanoseconds(nsec);}
+
 void RunTimeOpts::set_outboundLatency(TimeInternal obl)
 {outboundLatency = obl;}
+
+void RunTimeOpts::set_outboundLatency_nanoseconds(Integer32 nsec)
+{outboundLatency.set_nanoseconds(nsec);}
 
 void RunTimeOpts::set_max_foreign_records(Integer16 mfr)
 {max_foreign_records = mfr;}
