@@ -223,8 +223,10 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	DBG("netInit\n");
 
 	/* open sockets */
-	if ((netPath->set_eventSock(socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP))) < 0
-	    || (netPath->set_generalSock(socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP))) < 0) {
+	netPath->set_eventSock(socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP));
+	netPath->set_generalSock(socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP));
+	if (netPath->get_eventSock() < 0
+	    || netPath->get_generalSock() < 0) {
 		PERROR("failed to initalize sockets");
 		return false;
 	}
@@ -256,12 +258,12 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		return false;
 	}
 	/* set general and port address */
-	*(Integer16 *) ptpClock->set_event_port_address(PTP_EVENT_PORT);
-	*(Integer16 *) ptpClock->set_general_port_address(PTP_GENERAL_PORT);
+	*(Integer16 *) ptpClock->set_eventPortAddress(PTP_EVENT_PORT);
+	*(Integer16 *) ptpClock->set_generalPortAddress(PTP_GENERAL_PORT);
 
 	/* send a uni-cast address if specified (useful for testing) */
 	if (rtOpts->get_unicastAddress(0)) {
-		if (!inet_aton(rtOpts->unicastAddress, &netAddr)) {
+		if (!inet_aton(rtOpts->get_unicastAddress(), &netAddr)) {
 			ERROR("failed to encode uni-cast address: %s\n", rtOpts->get_unicastAddress());
 			return false;
 		}
@@ -281,7 +283,7 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 
 	s = addrStr;
 	for (i = 0; i < SUBDOMAIN_ADDRESS_LENGTH; ++i) {
-		ptpClock->set_subdomain_address(i,strtol(s, &s, 0));
+		ptpClock->set_subdomainAddress(i,strtol(s, &s, 0));
 
 		if (!s)
 			break;
@@ -304,8 +306,8 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		return false;
 	}
 	/* set socket time-to-live */
-	if (setsockopt(netPath->get_eventSock(), IPPROTO_IP, IP_MULTICAST_TTL, &rtOpts->ttl, sizeof(int)) < 0
-	    || setsockopt(netPath->get_generalSock(), IPPROTO_IP, IP_MULTICAST_TTL, &rtOpts->ttl, sizeof(int)) < 0) {
+	if (setsockopt(netPath->get_eventSock(), IPPROTO_IP, IP_MULTICAST_TTL, &rtOpts->get_ttl(), sizeof(int)) < 0
+	    || setsockopt(netPath->get_generalSock(), IPPROTO_IP, IP_MULTICAST_TTL, &rtOpts->get_ttl(), sizeof(int)) < 0) {
 		PERROR("failed to set the multi-cast time-to-live");
 		return false;
 	}
@@ -340,7 +342,7 @@ netShutdown(NetPath * netPath)
 {
 	struct ip_mreq imr;
 
-	imr.imr_multiaddr.s_addr = netPath->multicastAddr;
+	imr.imr_multiaddr.s_addr = netPath->get_multicastAddr();
 	imr.imr_interface.s_addr = htonl(INADDR_ANY);
 
 	setsockopt(netPath->get_eventSock(), IPPROTO_IP, IP_DROP_MEMBERSHIP, &imr, sizeof(struct ip_mreq));
@@ -428,7 +430,7 @@ netRecvEvent(Octet * buf, TimeInternal * time, NetPath * netPath)
 	msg.msg_controllen = sizeof(cmsg_un.control);
 	msg.msg_flags = 0;
 
-	ret = recvmsg(netPath->eventSock, &msg, MSG_DONTWAIT);
+	ret = recvmsg(netPath->get_eventSock(), &msg, MSG_DONTWAIT);
 	if (ret <= 0) {
 		if (errno == EAGAIN || errno == EINTR)
 			return 0;

@@ -24,14 +24,14 @@ public:
 	Boolean get_clockPreferred() const;
 	Integer16 get_currentUtcOffset() const;
 	UInteger16 get_epochNumber() const;
-	Octet get_ifaceName() const;
+	Octet* get_ifaceName();
 	Boolean get_noResetClock() const;
 	Integer32 get_maxReset() const;
 	Integer32 get_maxDelay() const;
 	Boolean get_noAdjust() const;
 	Boolean get_displayStats() const;
 	Boolean get_csvStats() const;
-	Octet get_unicastAddress() const;
+	Octet* get_unicastAddress();
 	Octet get_unicastAddress(int i) const;
 	Integer16 get_ap() const;
 	Integer16 get_ai() const;
@@ -47,7 +47,7 @@ public:
 	char get_file() const;
 	int get_logFd() const;
 	Boolean get_useSysLog() const;
-	int get_ttl() const;
+	int& get_ttl();
 	char get_recordFile() const;
 	FILE get_recordFP() const;
 
@@ -60,6 +60,7 @@ public:
 	void set_clockPreferred(Boolean cp);
 	void set_currentUtcOffset(Integer16 cuo);
 	void set_epochNumber(UInteger16 en);
+	void set_ifaceName(int ifn, int length);
 	void set_ifaceName(Octet *ifn, int length);
 	void set_noResetClock(Boolean nrc);
 	void set_maxReset(Integer32 mr);

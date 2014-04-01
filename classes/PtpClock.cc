@@ -167,7 +167,7 @@ Octet PtpClock::get_event_port_address() const
 Octet PtpClock::get_general_port_address() const
 {return *general_port_address;}
 
-UInteger8 PtpClock::get_port_communication_technology() const
+UInteger8& PtpClock::get_port_communication_technology()
 {return port_communication_technology;}
 
 Octet* PtpClock::get_port_uuid_field()

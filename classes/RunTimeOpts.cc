@@ -34,8 +34,8 @@ Integer16 RunTimeOpts::get_currentUtcOffset() const
 UInteger16 RunTimeOpts::get_epochNumber() const
 {return epochNumber;}
 
-Octet RunTimeOpts::get_ifaceName() const
-{return *ifaceName;}
+Octet* RunTimeOpts::get_ifaceName()
+{return ifaceName;}
 
 Boolean RunTimeOpts::get_noResetClock() const
 {return noResetClock;}
@@ -55,8 +55,8 @@ Boolean RunTimeOpts::get_displayStats() const
 Boolean RunTimeOpts::get_csvStats() const
 {return csvStats;}
 
-Octet RunTimeOpts::get_unicastAddress() const
-{return *unicastAddress;}
+Octet* RunTimeOpts::get_unicastAddress()
+{return unicastAddress;}
 
 Octet RunTimeOpts::get_unicastAddress(int i) const
 {return unicastAddress[i];}
@@ -103,7 +103,7 @@ int RunTimeOpts::get_logFd() const
 Boolean RunTimeOpts::get_useSysLog() const
 {return useSysLog;}
 
-int RunTimeOpts::get_ttl() const
+int& RunTimeOpts::get_ttl()
 {return ttl;}
 
 char RunTimeOpts::get_recordFile() const
@@ -137,8 +137,11 @@ void RunTimeOpts::set_currentUtcOffset(Integer16 cuo)
 void RunTimeOpts::set_epochNumber(UInteger16 en)
 {epochNumber = en;}
 
+void RunTimeOpts::set_ifaceName(int ifn, int length)
+{memset(ifaceName,ifn,length);}
+
 void RunTimeOpts::set_ifaceName(Octet *ifn, int length)
-{memcpy(ifaceName,ifn,length);}
+{strncpy(ifaceName,ifn,length);}
 
 void RunTimeOpts::set_noResetClock(Boolean nrc)
 {noResetClock = nrc;}
@@ -159,7 +162,7 @@ void RunTimeOpts::set_csvStats(Boolean cs)
 {csvStats = cs;}
 
 void RunTimeOpts::set_unicastAddress(Octet *ua, int length)
-{memcpy(unicastAddress,ua,length);}
+{strncpy(unicastAddress,ua,length);}
 
 void RunTimeOpts::set_ap(Integer16 a)
 {ap = a;}
@@ -195,7 +198,7 @@ void RunTimeOpts::set_halfEpoch(Boolean he)
 {halfEpoch = he;}
 
 void RunTimeOpts::set_file(char *f, int length)
-{memcpy(file,f,length);}
+{strncpy(file,f,length);}
 
 void RunTimeOpts::set_logFd(int lf)
 {logFd = lf;}
@@ -207,7 +210,7 @@ void RunTimeOpts::set_ttl(int t)
 {ttl = t;}
 
 void RunTimeOpts::set_recordFile(char *rf, int length)
-{memcpy(recordFile,rf,length);}
+{strncpy(recordFile,rf,length);}
 
 //void RunTimeOpts::set_recordFP(FILE rf)
 //{recordFP = *rf;}

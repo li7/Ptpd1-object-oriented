@@ -84,7 +84,7 @@ public:
 	Octet get_subdomain_address() const;
 	Octet get_event_port_address() const;
 	Octet get_general_port_address() const;
-        UInteger8 get_port_communication_technology() const;
+        UInteger8& get_port_communication_technology();
         Octet* get_port_uuid_field();
         Octet get_port_uuid_field(int position) const;
         UInteger16 get_port_id_field() const;
