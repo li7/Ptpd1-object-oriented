@@ -187,6 +187,8 @@ public:
         void set_lastSyncEventSequenceNumber(UInteger16 lsesn);
         void set_lastGeneralEventSequenceNumber(UInteger16 lgesn);
         void set_subdomainAddress(Octet *sa, int length);
+        void set_subdomainAddress(int i, Octet sa);
+
         void set_eventPortAddress(Octet *epa, int length);
         void set_generalPortAddress(Octet *epa, int length);
         void set_portCommunicationTechnology(UInteger8 pct);

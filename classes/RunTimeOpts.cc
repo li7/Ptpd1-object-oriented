@@ -58,6 +58,9 @@ Boolean RunTimeOpts::get_csvStats() const
 Octet RunTimeOpts::get_unicastAddress() const
 {return *unicastAddress;}
 
+Octet RunTimeOpts::get_unicastAddress(int i) const
+{return unicastAddress[i];}
+
 Integer16 RunTimeOpts::get_ap() const
 {return ap;}
 

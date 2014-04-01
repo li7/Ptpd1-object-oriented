@@ -426,6 +426,9 @@ void PtpClock::set_lastGeneralEventSequenceNumber(UInteger16 lgesn)
 void PtpClock::set_subdomainAddress(Octet *sa, int length)
 {memcpy(subdomain_address,sa,length);}
 
+void PtpClock::set_subdomainAddress(int i, Octet sa)
+{subdomain_address[i] = sa;}
+
 void PtpClock::set_eventPortAddress(Octet *epa, int length)
 {memcpy(event_port_address,epa,length);}
 

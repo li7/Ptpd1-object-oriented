@@ -32,6 +32,7 @@ public:
 	Boolean get_displayStats() const;
 	Boolean get_csvStats() const;
 	Octet get_unicastAddress() const;
+	Octet get_unicastAddress(int i) const;
 	Integer16 get_ap() const;
 	Integer16 get_ai() const;
 	Integer16 get_s() const;
