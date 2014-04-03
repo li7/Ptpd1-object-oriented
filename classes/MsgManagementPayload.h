@@ -21,16 +21,17 @@ public:
 	MsgManagementPayload();
 
 	/********Accsessor********/
-	ClockIdentity get_clockIdentity() const;
-	DefaultData get_defaultData() const;
-	Current get_current() const;
-	Parent get_parent() const;
-	Port get_port() const;
-	GlobalTime get_globalTime() const;
-	Foreign get_foreign() const;
+	ClockIdentity& get_clockIdentity();
+	DefaultData& get_defaultData();
+	Current& get_current();
+	Parent& get_parent();
+	Port& get_port();
+	GlobalTime& get_globalTime();
+	Foreign& get_foreign();
 
 	/********Mutators*******/
 	void set_clockIdentity(ClockIdentity ci);
+	void set_clockIdentity_clockComTech(UInteger8 ci);
 	void set_defaultData(DefaultData dd);
 	void set_current(Current c);
 	void set_parent(Parent p);

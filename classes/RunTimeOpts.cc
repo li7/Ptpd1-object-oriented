@@ -170,6 +170,9 @@ void RunTimeOpts::set_csvStats(Boolean cs)
 void RunTimeOpts::set_unicastAddress(Octet *ua, int length)
 {strncpy(unicastAddress,ua,length);}
 
+void RunTimeOpts::set_unicastAddress(int position, Octet i)
+{unicastAddress[position] = i;}
+
 void RunTimeOpts::set_ap(Integer16 a)
 {ap = a;}
 
@@ -224,8 +227,8 @@ void RunTimeOpts::set_ttl(int t)
 void RunTimeOpts::set_recordFile(char *rf, int length)
 {strncpy(recordFile,rf,length);}
 
-//void RunTimeOpts::set_recordFP(FILE rf)
-//{recordFP = *rf;}
+void RunTimeOpts::set_recordFP(char *rf)
+{recordFP = fopen(rf,"w");}
 
 ostream& operator<<(ostream& s, const RunTimeOpts& it)
 {

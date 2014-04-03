@@ -84,6 +84,7 @@ ostream& operator<<(ostream& s, const MsgManagement& it)
 	cout << "targetCommunicationTechnology: " << it.targetCommunicationTechnology << endl;
 	cout << "targetUuid: " << it.targetUuid << endl;
 	cout << "payload: " << it.payload << endl;
+	cout << "clock Uuid field" << it.payload << endl;
 
         return s;
 }

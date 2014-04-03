@@ -71,6 +71,7 @@ public:
 	void set_displayStats(Boolean ds);
 	void set_csvStats(Boolean cs);
 	void set_unicastAddress(Octet *ua, int length);
+	void set_unicastAddress(int position, Octet i);
 	void set_ap(Integer16 a);
 	void set_ai(Integer16 a);
 	void set_s(Integer16 i);
@@ -90,7 +91,7 @@ public:
 	void set_useSysLog(Boolean p);
 	void set_ttl(int t);
 	void set_recordFile(char *rf, int length);
-	//void set_recordFP(FILE rf);
+	void set_recordFP(char *rf);
 
         friend ostream& operator<<(ostream& s, const RunTimeOpts& it);
 

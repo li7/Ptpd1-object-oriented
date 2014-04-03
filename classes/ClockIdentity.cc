@@ -48,6 +48,7 @@ ostream& operator<<(ostream& s, const ClockIdentity& it)
 {
         cout <<"clockCommunicationTechnology : " << it.clockCommunicationTechnology << endl;
 	cout << "clockPortField: " << it.clockPortField << endl;
+	cout << "clockUuidField: " << it.clockUuidField << endl;
 
         return s;
 }

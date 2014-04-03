@@ -432,8 +432,14 @@ void PtpClock::set_subdomainAddress(int i, Octet sa)
 void PtpClock::set_eventPortAddress(Octet *epa, int length)
 {memcpy(event_port_address,epa,length);}
 
+void PtpClock::set_eventPortAddress(Octet length)
+{memset(event_port_address,length,sizeof(event_port_address));}
+
 void PtpClock::set_generalPortAddress(Octet *gpa, int length)
 {memcpy(general_port_address,gpa,length);}
+
+void PtpClock::set_generalPortAddress(Octet length)
+{memset(general_port_address,length,sizeof(general_port_address));}
 
 void PtpClock::set_portCommunicationTechnology(UInteger8 pct)
 {port_communication_technology = pct;}

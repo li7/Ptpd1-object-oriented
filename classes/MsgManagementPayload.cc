@@ -10,30 +10,33 @@ MsgManagementPayload::MsgManagementPayload()
 }
 
 /*****************accessors***************/
-ClockIdentity MsgManagementPayload::get_clockIdentity() const
+ClockIdentity& MsgManagementPayload::get_clockIdentity()
 {return clockIdentity;}
 
-DefaultData MsgManagementPayload::get_defaultData() const
+DefaultData& MsgManagementPayload::get_defaultData()
 {return defaultData;}
 
-Current MsgManagementPayload::get_current() const
+Current& MsgManagementPayload::get_current()
 {return current;}
 
-Parent MsgManagementPayload::get_parent() const
+Parent& MsgManagementPayload::get_parent()
 {return parent;}
 
-Port MsgManagementPayload::get_port() const
+Port& MsgManagementPayload::get_port()
 {return port;}
 
-GlobalTime MsgManagementPayload::get_globalTime() const
+GlobalTime& MsgManagementPayload::get_globalTime()
 {return globalTime;}
 
-Foreign MsgManagementPayload::get_foreign() const
+Foreign& MsgManagementPayload::get_foreign()
 {return foreign;}
 
 /****************mutators******************/
 void MsgManagementPayload::set_clockIdentity(ClockIdentity ci)
 {clockIdentity = ci;}
+
+void MsgManagementPayload::set_clockIdentity_clockComTech(UInteger8 ci)
+{clockIdentity.set_clockCommunicationTechnology(ci);}
 
 void  MsgManagementPayload::set_defaultData(DefaultData dd)
 {defaultData = dd;}

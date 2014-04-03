@@ -265,108 +265,108 @@ msgUnloadManagement(void *buf, MsgManagement * manage,
 	return ptpClock->get_port_state();
 }
 
-	/***********************START HERE********************/
 void 
 msgUnpackManagementPayload(void *buf, MsgManagement * manage)
 {
 	switch (manage->get_managementMessageKey()) {
 		case PTP_MM_CLOCK_IDENTITY:
 		DBGV("msgUnloadManagementPayload: managementMessageKey PTP_MM_CLOCK_IDENTITY\n");
-		manage->payload.clockIdentity.clockCommunicationTechnology = *(UInteger8 *) (buf + 63);
-		memcpy(manage->payload.clockIdentity.clockUuidField, buf + 64, PTP_UUID_LENGTH);
-		manage->payload.clockIdentity.clockPortField = flip16(*(UInteger16 *) (buf + 74));
-		memcpy(manage->payload.clockIdentity.manufacturerIdentity, buf + 76, MANUFACTURER_ID_LENGTH);
+		manage->payload.set_clockIdentity_clockComTech(*(UInteger8 *) (buf + 63));
+		manage->get_payload().get_clockIdentity().set_clockUuidField(buf + 64, PTP_UUID_LENGTH);
+		manage->get_payload().get_clockIdentity().set_clockPortField(flip16(*(UInteger16 *) (buf + 74)));
+		manage->get_payload().get_clockIdentity().set_manufacturerIdentity(buf + 76, MANUFACTURER_ID_LENGTH);
 		break;
 
 	case PTP_MM_DEFAULT_DATA_SET:
 		DBGV("msgUnloadManagementPayload: managementMessageKey PTP_MM_DEFAULT_DATA_SET\n");
-		manage->payload.defaultData.clockCommunicationTechnology = *(UInteger8 *) (buf + 63);
-		memcpy(manage->payload.defaultData.clockUuidField, buf + 64, PTP_UUID_LENGTH);
-		manage->payload.defaultData.clockPortField = flip16(*(UInteger16 *) (buf + 74));
-		manage->payload.defaultData.clockStratum = *(UInteger16 *) (buf + 79);
-		memcpy(manage->payload.defaultData.clockIdentifier, buf + 80, PTP_CODE_STRING_LENGTH);
-		manage->payload.defaultData.clockVariance = flip16(*(UInteger16 *) (buf + 86));
-		manage->payload.defaultData.clockFollowupCapable = *(UInteger8 *) (buf + 91);
-		manage->payload.defaultData.preferred = *(UInteger8 *) (buf + 95);
-		manage->payload.defaultData.initializable = *(UInteger8 *) (buf + 99);
-		manage->payload.defaultData.externalTiming = *(UInteger8 *) (buf + 103);
-		manage->payload.defaultData.isBoundaryClock = *(UInteger8 *) (buf + 107);
-		manage->payload.defaultData.syncInterval = *(UInteger8 *) (buf + 111);
-		memcpy(manage->payload.defaultData.subdomainName, buf + 112, PTP_SUBDOMAIN_NAME_LENGTH);
-		manage->payload.defaultData.numberPorts = flip16(*(UInteger16 *) (buf + 130));
-		manage->payload.defaultData.numberForeignRecords = flip16(*(UInteger16 *) (buf + 134));
+		manage->get_payload().get_defaultData().set_clockCommunicationTechnology(*(UInteger8 *) (buf + 63));
+		manage->get_payload().get)_defaultData().set_clockUuidField(buf + 64, PTP_UUID_LENGTH);
+		manage->get_payload().get_defaultData().set_clockPortField(flip16(*(UInteger16 *) (buf + 74)));
+		manage->get_payload().get_defaultData().set_clockStratum(*(UInteger16 *) (buf + 79));
+		manage->get_payload().get_defaultData().set_clockIdentifier(buf + 80, PTP_CODE_STRING_LENGTH);
+		manage->get_payload().get_defaultData().set_clockVariance(flip16(*(UInteger16 *) (buf + 86)));
+		manage->get_payload().get_defaultData().set_clockFollowupCapable(*(UInteger8 *) (buf + 91));
+		manage->get_payload().get_defaultData().set_preferred(*(UInteger8 *) (buf + 95));
+		manage->get_payload().get_defaultData().set_initializable(*(UInteger8 *) (buf + 99));
+		manage->get_payload().get_defaultData().set_externalTiming(*(UInteger8 *) (buf + 103));
+		manage->get_payload().get_defaultData().set_isBoundaryClock(*(UInteger8 *) (buf + 107));
+		manage->get_payload().get_defaultData().set_syncInterval(*(UInteger8 *) (buf + 111));
+		manage->get_payload().get_defaultData().set_subdomainName(buf + 112, PTP_SUBDOMAIN_NAME_LENGTH);
+		manage->get_payload().get_defaultData().set_numberPorts(flip16(*(UInteger16 *) (buf + 130)));
+		manage->get_payload().get_defaultData().set_numberForeignRecords(flip16(*(UInteger16 *) (buf + 134)));
 		break;
 
 	case PTP_MM_CURRENT_DATA_SET:
 		DBGV("msgUnloadManagementPayload: managementMessageKey PTP_MM_CURRENT_DATA_SET\n");
-		manage->payload.current.stepsRemoved = flip16(*(UInteger16 *) (buf + 62));
-		manage->payload.current.offsetFromMaster.seconds = flip32(*(UInteger32 *) (buf + 64));
-		manage->payload.current.offsetFromMaster.nanoseconds = flip32(*(UInteger32 *) (buf + 68));
-		manage->payload.current.oneWayDelay.seconds = flip32(*(UInteger32 *) (buf + 72));
-		manage->payload.current.oneWayDelay.nanoseconds = flip32(*(Integer32 *) (buf + 76));
+		manage->get_payload().get_current().set_stepsRemoved(flip16(*(UInteger16 *) (buf + 62)));
+		manage->get_payload().get_current().get_offsetFromMaster().set_seconds(flip32(*(UInteger32 *) (buf + 64)));
+		manage->get_payload().get_current().get_offsetFromMaster().set_nanoseconds(flip32(*(UInteger32 *) (buf + 68)));
+		manage->get_payload().get_current().get_oneWayDelay().set_seconds(flip32(*(UInteger32 *) (buf + 72)));
+		manage->get_payload().get_current().get_oneWayDelay().set_nanoseconds(flip32(*(Integer32 *) (buf + 76)));
 		break;
 
 	case PTP_MM_PARENT_DATA_SET:
 		DBGV("msgUnloadManagementPayload: managementMessageKey PTP_MM_PORT_DATA_SET\n");
-		manage->payload.parent.parentCommunicationTechnology = *(UInteger8 *) (buf + 63);
-		memcpy(manage->payload.parent.parentUuid, buf + 64, PTP_UUID_LENGTH);
-		manage->payload.parent.parentPortId = flip16(*(UInteger16 *) (buf + 74));
-		manage->payload.parent.parentLastSyncSequenceNumber = flip16(*(UInteger16 *) (buf + 74));
-		manage->payload.parent.parentFollowupCapable = *(UInteger8 *) (buf + 83);
-		manage->payload.parent.parentExternalTiming = *(UInteger8 *) (buf + 87);
-		manage->payload.parent.parentVariance = flip16(*(UInteger16 *) (buf + 90));
-		manage->payload.parent.parentStats = *(UInteger8 *) (buf + 85);
-		manage->payload.parent.observedVariance = flip16(*(Integer16 *) (buf + 98));
-		manage->payload.parent.observedDrift = flip32(*(Integer32 *) (buf + 100));
-		manage->payload.parent.utcReasonable = *(UInteger8 *) (buf + 107);
-		manage->payload.parent.grandmasterCommunicationTechnology = *(UInteger8 *) (buf + 111);
-		memcpy(manage->payload.parent.grandmasterUuidField, buf + 112, PTP_UUID_LENGTH);
-		manage->payload.parent.grandmasterPortIdField = flip16(*(UInteger16 *) (buf + 122));
-		manage->payload.parent.grandmasterStratum = *(UInteger8 *) (buf + 127);
-		memcpy(manage->payload.parent.grandmasterIdentifier, buf + 128, PTP_CODE_STRING_LENGTH);
-		manage->payload.parent.grandmasterVariance = flip16(*(Integer16 *) (buf + 134));
-		manage->payload.parent.grandmasterPreferred = *(UInteger8 *) (buf + 139);
-		manage->payload.parent.grandmasterIsBoundaryClock = *(UInteger8 *) (buf + 144);
-		manage->payload.parent.grandmasterSequenceNumber = flip16(*(UInteger16 *) (buf + 146));
+		manage->get_payload().get_parent().set_parentCommunicationTechnology(*(UInteger8 *) (buf + 63));
+		manage->get_payload().get_parent().set_parentUuid(buf + 64, PTP_UUID_LENGTH);
+		manage->get_payload().get_parent().set_parentPortId(flip16(*(UInteger16 *) (buf + 74)));
+		manage->get_payload().get_parent().set_parentLastSyncSequenceNumber(flip16(*(UInteger16 *) (buf + 74)));
+		manage->get_payload().get_parent().set_parentFollowupCapable(*(UInteger8 *) (buf + 83));
+
+		manage->get_payload().get_parent().set_parentExternalTiming(*(UInteger8 *) (buf + 87));
+		manage->get_payload().get_parent().set_parentVariance(flip16(*(UInteger16 *) (buf + 90)));
+		manage->get_payload().get_parent().set_parentStats(*(UInteger8 *) (buf + 85));
+		manage->get_payload().get_parent().set_observedVariance(flip16(*(Integer16 *) (buf + 98)));
+		manage->get_payload().get_parent().set_observedDrift(flip32(*(Integer32 *) (buf + 100)));
+		manage->get_payload().get_parent().set_utcReasonable(*(UInteger8 *) (buf + 107));
+		manage->get_payload().get_parent().set_grandmasterCommunicationTechnology(*(UInteger8 *) (buf + 111));
+		manage->get_payload().get_parent().set_grandmasterUuidField(buf + 112, PTP_UUID_LENGTH);
+		manage->get_payload().get_parent().set_grandmasterPortIdField(flip16(*(UInteger16 *) (buf + 122)));
+		manage->get_payload().get_parent().set_grandmasterStratum(*(UInteger8 *) (buf + 127));
+		manage->get_payload().get_parent().set_grandmasterIdentifier(buf + 128, PTP_CODE_STRING_LENGTH);
+		manage->get_payload().get_parent().set_grandmasterVariance(flip16(*(Integer16 *) (buf + 134)));
+		manage->get_payload().get_parent().set_grandmasterPreferred(*(UInteger8 *) (buf + 139));
+		manage->get_payload().get_parent().set_grandmasterIsBoundaryCloc(*(UInteger8 *) (buf + 144));
+		manage->get_payload().get_parent().set_grandmasterSequenceNumber(flip16(*(UInteger16 *) (buf + 146)));
 		break;
 
 	case PTP_MM_PORT_DATA_SET:
 		DBGV("msgUnloadManagementPayload: managementMessageKey PTP_MM_FOREIGN_DATA_SET\n");
-		manage->payload.port.returnedPortNumber = flip16(*(UInteger16 *) (buf + 62));
-		manage->payload.port.portState = *(UInteger8 *) (buf + 67);
-		manage->payload.port.lastSyncEventSequenceNumber = flip16(*(UInteger16 *) (buf + 70));
-		manage->payload.port.lastGeneralEventSequenceNumber = flip16(*(UInteger16 *) (buf + 74));
-		manage->payload.port.portCommunicationTechnology = *(UInteger8 *) (buf + 79);
-		memcpy(manage->payload.port.portUuidField, buf + 80, PTP_UUID_LENGTH);
-		manage->payload.port.portIdField = flip16(*(UInteger16 *) (buf + 90));
-		manage->payload.port.burstEnabled = *(UInteger8 *) (buf + 95);
-		manage->payload.port.subdomainAddressOctets = *(UInteger8 *) (buf + 97);
-		manage->payload.port.eventPortAddressOctets = *(UInteger8 *) (buf + 98);
-		manage->payload.port.generalPortAddressOctets = *(UInteger8 *) (buf + 99);
-		memcpy(manage->payload.port.subdomainAddress, buf + 100, SUBDOMAIN_ADDRESS_LENGTH);
-		memcpy(manage->payload.port.eventPortAddress, buf + 106, PORT_ADDRESS_LENGTH);
-		memcpy(manage->payload.port.generalPortAddress, buf + 110, PORT_ADDRESS_LENGTH);
+		manage->get_payload().get_port().set_returnedPortNumber(flip16(*(UInteger16 *) (buf + 62)));
+		manage->get_payload().get_port().set_portState(*(UInteger8 *) (buf + 67));
+		manage->get_payload().get_port().set_lastSyncEventSequenceNumber(flip16(*(UInteger16 *) (buf + 70)));
+		manage->get_payload().get_port().set_lastGeneralEventSequenceNumber(flip16(*(UInteger16 *) (buf + 74)));
+		manage->get_payload().get_port().set_portCommunicationTechnology(*(UInteger8 *) (buf + 79));
+		manage->get_payload().get_port().set_portUuidField(buf + 80, PTP_UUID_LENGTH);
+		manage->get_payload().get_port().set_portIdField(flip16(*(UInteger16 *) (buf + 90)));
+		manage->get_payload().get_port().set_burstEnabled(*(UInteger8 *) (buf + 95));
+		manage->get_payload().get_port().set_subdomainAddressOctets(*(UInteger8 *) (buf + 97));
+		manage->get_payload().get_port().set_eventPortAddressOctets(*(UInteger8 *) (buf + 98));
+		manage->get_payload().get_port().set_generalPortAddressOctets(*(UInteger8 *) (buf + 99));
+		manage->get_payload().get_port().set_subdomainAddress(buf + 100, SUBDOMAIN_ADDRESS_LENGTH);
+		manage->get_payload().get_port().set_eventPortAddress(buf + 106, PORT_ADDRESS_LENGTH);
+		manage->get_payload().get_port().set_generalPortAddress(buf + 110, PORT_ADDRESS_LENGTH);
 		break;
 
 	case PTP_MM_GLOBAL_TIME_DATA_SET:
 		DBGV("msgUnloadManagementPayload: managementMessageKey PTP_MM_GLOBAL_TIME_DATA_SET\n");
-		manage->payload.globalTime.localTime.seconds = flip32(*(UInteger32 *) (buf + 60));
-		manage->payload.globalTime.localTime.nanoseconds = flip32(*(Integer32 *) (buf + 64));
-		manage->payload.globalTime.currentUtcOffset = flip16(*(Integer16 *) (buf + 70));
-		manage->payload.globalTime.leap59 = *(UInteger8 *) (buf + 75);
-		manage->payload.globalTime.leap61 = *(UInteger8 *) (buf + 79);
-		manage->payload.globalTime.epochNumber = flip16(*(UInteger16 *) (buf + 82));
+		manage->get_payload().get_globalTime().get_localTime.set_seconds(flip32(*(UInteger32 *) (buf + 60)));
+		manage->get_payload().get_globalTime().get_localTime().set_nanoseconds(flip32(*(Integer32 *) (buf + 64)));
+		manage->get_payload().get_globalTime().set_currentUtcOffset(flip16(*(Integer16 *) (buf + 70)));
+		manage->get_payload().get_globalTime().set_leap59(*(UInteger8 *) (buf + 75));
+		manage->get_payload().get_globalTime().set_leap61(*(UInteger8 *) (buf + 79));
+		manage->get_payload().get_globalTime().set_epochNumber(flip16(*(UInteger16 *) (buf + 82)));
 		break;
 
 
 	case PTP_MM_FOREIGN_DATA_SET:
 		DBGV("msgUnloadManagementPayload: managementMessageKey PTP_MM_FOREIGN_DATA_SET\n");
-		manage->payload.foreign.returnedPortNumber = flip16(*(UInteger16 *) (buf + 62));
-		manage->payload.foreign.returnedRecordNumber = flip16(*(UInteger16 *) (buf + 68));
-		manage->payload.foreign.foreignMasterCommunicationTechnology = *(UInteger8 *) (buf + 71);
-		memcpy(manage->payload.foreign.foreignMasterUuid, buf + 72, PTP_UUID_LENGTH);
-		manage->payload.foreign.foreignMasterPortId = flip16(*(UInteger16 *) (buf + 82));
-		manage->payload.foreign.foreignMasterSyncs = flip16(*(UInteger16 *) (buf + 66));
+		manage->get_payload().get_foreign().set_returnedPortNumber(flip16(*(UInteger16 *) (buf + 62)));
+		manage->get_payload().get_foreign().set_returnedRecordNumber(flip16(*(UInteger16 *) (buf + 68)));
+		manage->get_payload().get_foreign().set_foreignMasterCommunicationTechnology(*(UInteger8 *) (buf + 71));
+		manage->get_payload().set_foreign().set_foreignMasterUuid(buf + 72, PTP_UUID_LENGTH);
+		manage->get_payload().get_foreign().set_foreignMasterPortId(flip16(*(UInteger16 *) (buf + 82)));
+		manage->get_payload().get_foreign().set_foreignMasterSyncs(flip16(*(UInteger16 *) (buf + 66)));
 		break;
 
 	case PTP_MM_NULL:
@@ -381,6 +381,7 @@ msgUnpackManagementPayload(void *buf, MsgManagement * manage)
 	return;
 }
 
+	/***********************START HERE********************/
 void 
 msgPackHeader(void *buf, PtpClock * ptpClock)
 {
