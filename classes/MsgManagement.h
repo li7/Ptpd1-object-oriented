@@ -15,7 +15,7 @@ public:
 
 	/****************accessors***********/
 	UInteger8 get_targetCommunicationTechnology() const;
-	Octet get_targetUuid() const;
+	Octet* get_targetUuid();
 	UInteger16 get_targetPortId() const;
 	Integer16 get_startingBoundaryHops() const;
 	Integer16 get_boundaryHops() const;
@@ -27,7 +27,7 @@ public:
 
 	/****************mutators***********/
 	void set_targetCommunicationTechnology(UInteger8 tct);
-	void set_targetUuid(Octet *tu, int length);
+	void set_targetUuid(const void *tu, int length);
 	void set_targetPortId(UInteger16 tpi);
 	void set_startingBoundaryHops(Integer16 sbh);
 	void set_boundaryHops(Integer16 bh);

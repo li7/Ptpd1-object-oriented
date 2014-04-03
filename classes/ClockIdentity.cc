@@ -26,13 +26,13 @@ Octet ClockIdentity::get_manufacturerIdentity() const
 void ClockIdentity::set_clockCommunicationTechnology(UInteger8 cct)
 {clockCommunicationTechnology = cct;}
 
-void ClockIdentity::set_clockUuidField(Octet *cuf, int length)
+void ClockIdentity::set_clockUuidField(const void *cuf, int length)
 {memcpy(clockUuidField,cuf,length);}
 
 void ClockIdentity::set_clockPortField(UInteger16 cpf)
 {clockPortField = cpf;}
 
-void ClockIdentity::set_manufacturerIdentity(Octet *mi, int length)
+void ClockIdentity::set_manufacturerIdentity(const void *mi, int length)
 {memcpy(manufacturerIdentity,mi,length);}
 
 ClockIdentity &ClockIdentity::operator=(const ClockIdentity & other_t)

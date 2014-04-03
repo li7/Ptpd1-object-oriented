@@ -74,7 +74,7 @@ UInteger16 Parent::get_grandmasterSequenceNumber() const
 void Parent::set_parentCommunicationTechnology(UInteger8 pct)
 {parentCommunicationTechnology = pct;}
 
-void Parent::set_parentUuid(Octet *pu, int length)
+void Parent::set_parentUuid(const void *pu, int length)
 {memcpy(parentUuid,pu,length);}
 
 void Parent::set_parentPortId(UInteger16 ppi)
@@ -107,7 +107,7 @@ void Parent::set_utcReasonable(Boolean ur)
 void Parent::set_grandmasterCommunicationTechnology(UInteger8 gct)
 {grandmasterCommunicationTechnology = gct;}
 
-void Parent::set_grandmasterUuidField(Octet *guf, int length)
+void Parent::set_grandmasterUuidField(const void *guf, int length)
 {memcpy(grandmasterUuidField,guf,length);}
 
 void Parent::set_grandmasterPortIdField(UInteger16 gpf)
@@ -116,7 +116,7 @@ void Parent::set_grandmasterPortIdField(UInteger16 gpf)
 void Parent::set_grandmasterStratum(UInteger8 gs)
 {grandmasterStratum = gs;}
 
-void Parent::set_grandmasterIdentifier(Octet *gi, int length)
+void Parent::set_grandmasterIdentifier(const void *gi, int length)
 {memcpy(grandmasterIdentifier,gi,length);}
 
 void Parent::set_grandmasterVariance(Integer16 gv)

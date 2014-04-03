@@ -27,7 +27,7 @@ public:
 	void set_delayReceiptTimestamp_seconds(UInteger32 sec);
 	void set_delayReceiptTimestamp_nanoseconds(Integer32 nsec);
 	void set_requestingSourceCommunicationTechnology(UInteger8 rsct);
-	void set_requestingSourceUuid(Octet *rsu, int length);
+	void set_requestingSourceUuid(const void *rsu, int length);
 	void set_requestingSourcePortId(UInteger16 rspi);
 	void set_requestingSourceSequenceId(UInteger16 rssi);
 

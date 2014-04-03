@@ -25,7 +25,7 @@ public:
 	void set_returnedPortNumber(UInteger16 rpn);
 	void set_returnedRecordNumber(UInteger16 rrn);
 	void set_foreignMasterCommunicationTechnology(UInteger8 fmct);
-	void set_foreignMasterUuid(Octet *fmu, int length);
+	void set_foreignMasterUuid(const void *fmu, int length);
 	void set_foreignMasterPortId(UInteger16 fmpi);
 	void set_foreignMasterSyncs(UInteger16 fms);
 

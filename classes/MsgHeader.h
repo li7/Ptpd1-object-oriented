@@ -31,14 +31,14 @@ public:
 	/* mutators */
 	void set_versionPTP(UInteger16 vp);
         void set_versionNetwork(UInteger16 vn);
-        void set_subdomain(const Octet *sd, int length);
+        void set_subdomain(const void *sd, int length);
         void set_messageType(UInteger8 mt);
         void set_sourceCommunicationTechnology(UInteger8 sct);
-        void set_sourceUuid(Octet *su,int length);
+        void set_sourceUuid(const void *su,int length);
         void set_sourcePortId(UInteger16 spid);
         void set_sequenceId(UInteger16 sid);
         void set_control(UInteger8 c);
-        void set_flags(int position, Octet number);
+        void set_flags(const void *f, int length);
 
 	/* operators */
 	MsgHeader &operator=(const MsgHeader & other_t);

@@ -37,7 +37,7 @@ public:
 
 	/****************mutators***********/
 	void set_parentCommunicationTechnology(UInteger8 cct);
-	void set_parentUuid(Octet *pu, int length);
+	void set_parentUuid(const void *pu, int length);
 	void set_parentPortId(UInteger16 ppi);
 	void set_parentLastSyncSequenceNumber(UInteger16 plss);
 	void set_parentFollowupCapable(Boolean pfc);
@@ -48,10 +48,10 @@ public:
 	void set_observedDrift(Integer32 od);
 	void set_utcReasonable(Boolean ur);
 	void set_grandmasterCommunicationTechnology(UInteger8 gct);
-	void set_grandmasterUuidField(Octet *guf, int length);
+	void set_grandmasterUuidField(const void *guf, int length);
 	void set_grandmasterPortIdField(UInteger16 gpf);
 	void set_grandmasterStratum(UInteger8 gs);
-	void set_grandmasterIdentifier(Octet *gi, int length);
+	void set_grandmasterIdentifier(const void *gi, int length);
 	void set_grandmasterVariance(Integer16 gv);
 	void set_grandmasterPreferred(Boolean gp);
 	void set_grandmasterIsBoundaryClock(Boolean gibc);

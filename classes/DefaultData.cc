@@ -59,7 +59,7 @@ UInteger16 DefaultData::get_numberForeignRecords() const
 void DefaultData::set_clockCommunicationTechnology(UInteger8 cct)
 {clockCommunicationTechnology = cct;}
 
-void DefaultData::set_clockUuidField(Octet *cuf, int length)
+void DefaultData::set_clockUuidField(const void *cuf, int length)
 {memcpy(clockUuidField,cuf,length);}
 
 void DefaultData::set_clockPortField(UInteger16 cpf)
@@ -68,7 +68,7 @@ void DefaultData::set_clockPortField(UInteger16 cpf)
 void DefaultData::set_clockStratum(UInteger8 cs)
 {clockStratum = cs;}
 
-void DefaultData::set_clockIdentifier(Octet *ci, int length)
+void DefaultData::set_clockIdentifier(const void *ci, int length)
 {memcpy(clockIdentifier,ci,length);}
 
 void DefaultData::set_clockVariance(Integer16 cv)
@@ -83,13 +83,16 @@ void DefaultData::set_preferred(Boolean p)
 void DefaultData::set_initializable(Boolean i)
 {initializable = i;}
 
+void DefaultData::set_externalTiming(Boolean et)
+{externalTiming = et;}
+
 void DefaultData::set_isBoundaryClock(Boolean ibc)
 {isBoundaryClock = ibc;}
 
 void DefaultData::set_syncInterval(Integer8 si)
 {syncInterval = si;}
 
-void DefaultData::set_subdomainName(Octet *sn, int length)
+void DefaultData::set_subdomainName(const void *sn, int length)
 {memcpy(subdomainName,sn,length);}
 
 void DefaultData::set_numberPorts(UInteger16 np)

@@ -36,15 +36,15 @@ public:
 	void set_lastSyncEventSequenceNumber(UInteger16 lsesn);
 	void set_lastGeneralEventSequenceNumber(UInteger16 lgesn);
 	void set_portCommunicationTechnology(UInteger8 pct);
-	void set_portUuidField(Octet *puf, int length);
+	void set_portUuidField(const void *puf, int length);
 	void set_portIdField(UInteger16 pif);
 	void set_burstEnabled(Boolean be);
 	void set_subdomainAddressOctets(UInteger8 sao);
 	void set_eventPortAddressOctets(UInteger8 epao);
 	void set_generalPortAddressOctets(UInteger8 gpao);
-	void set_subdomainAddress(Octet *sa, int length);
-	void set_eventPortAddress(Octet *epa, int length);
-	void set_generalPortAddress(Octet *gpa, int length);
+	void set_subdomainAddress(const void *sa, int length);
+	void set_eventPortAddress(const void *epa, int length);
+	void set_generalPortAddress(const void *gpa, int length);
 
 	Port &operator=(const Port & other_t);
 

@@ -54,7 +54,8 @@ public:
 	/****************mutators***********/
 	void set_syncInterval(Integer8 si);
 	void set_subdomainName(int sn, int length);
-	void set_subdomainName(Octet *sn, int length);
+	void set_subdomainName(const Octet *sn, int length);
+	void set_subdomainName(const void *sn, int length);
 	void set_clockIdentifier(int ci, int length);
 	void set_clockIdentifier(Octet *ci, int length);
 	void set_clockVariance(Integer16 cv);

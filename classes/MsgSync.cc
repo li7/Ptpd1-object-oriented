@@ -123,7 +123,7 @@ void MsgSync::set_currentUTCOffset(Integer16 cutco)
 void MsgSync::set_grandmasterCommunicationTechnology(UInteger8 gmct)
 {grandmasterCommunicationTechnology = gmct;}
 
-void MsgSync::set_grandmasterClockUuid(Octet *gmcu, int length)
+void MsgSync::set_grandmasterClockUuid(const void *gmcu, int length)
 {memcpy(grandmasterClockUuid,gmcu,length);}
 
 void MsgSync::set_grandmasterPortId(UInteger16 gmpi)
@@ -138,7 +138,7 @@ void MsgSync::set_grandmasterSequenceId(UInteger16 gmsi)
 void MsgSync::set_grandmasterClockStratum(UInteger8 gmcs)
 {grandmasterClockStratum = gmcs;}
 
-void MsgSync::set_grandmasterClockIdentifier(Octet *gmci, int length)
+void MsgSync::set_grandmasterClockIdentifier(const void *gmci, int length)
 {memcpy(grandmasterClockIdentifier,gmci,length);}
 
 void MsgSync::set_grandmasterClockVariance(Integer16 gmcv)
@@ -159,13 +159,13 @@ void MsgSync::set_localStepsRemoved(UInteger16 lsr)
 void MsgSync::set_localClockStratum(UInteger8 lcs)
 {localClockStratum = lcs;}
 
-void MsgSync::set_localClockIdentifier(Octet *lci, int length)
+void MsgSync::set_localClockIdentifier(const void *lci, int length)
 {memcpy(localClockIdentifier,lci,length);}
 
 void MsgSync::set_parentCommunicationTechnology(UInteger8 pct)
 {parentCommunicationTechnology = pct;}
 
-void MsgSync::set_parentUuid(Octet *pu, int length)
+void MsgSync::set_parentUuid(const void *pu, int length)
 {memcpy(parentUuid,pu,length);}
 
 void MsgSync::set_parentPortField(UInteger16 ppf)

@@ -21,9 +21,9 @@ public:
 
 	/****************mutators***********/
 	void set_clockCommunicationTechnology(UInteger8 cct);
-	void set_clockUuidField(Octet *cuf, int length);
+	void set_clockUuidField(const void *cuf, int length);
 	void set_clockPortField(UInteger16 cpf );
-	void set_manufacturerIdentity(Octet *mi, int length);
+	void set_manufacturerIdentity(const void *mi, int length);
 
 	ClockIdentity &operator=(const ClockIdentity & other_t);
 

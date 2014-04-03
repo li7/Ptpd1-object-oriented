@@ -48,7 +48,7 @@ void MsgHeader::set_versionPTP(UInteger16 vp)
 void MsgHeader::set_versionNetwork(UInteger16 vn)
 {versionNetwork = vn;}
 
-void MsgHeader::set_subdomain(const Octet *sd, int length)
+void MsgHeader::set_subdomain(const void *sd, int length)
 {memcpy(subdomain,sd,length);}
 
 void MsgHeader::set_messageType(UInteger8 mt)
@@ -57,7 +57,7 @@ void MsgHeader::set_messageType(UInteger8 mt)
 void MsgHeader::set_sourceCommunicationTechnology(UInteger8 sct)
 {sourceCommunicationTechnology = sct;}
 
-void MsgHeader::set_sourceUuid(Octet *su, int length)
+void MsgHeader::set_sourceUuid(const void *su, int length)
 {memcpy(sourceUuid,su,length);}
 
 void MsgHeader::set_sourcePortId(UInteger16 spid)
@@ -69,8 +69,8 @@ void MsgHeader::set_sequenceId(UInteger16 sid)
 void MsgHeader::set_control(UInteger8 c)
 {control = c;}
 
-void MsgHeader::set_flags(int position, Octet number)
-{flags[position] = number;}
+void MsgHeader::set_flags(const void *f, int length)
+{memcpy(flags,f,length);}
 
 MsgHeader &MsgHeader::operator=(const MsgHeader & other_t)
 {

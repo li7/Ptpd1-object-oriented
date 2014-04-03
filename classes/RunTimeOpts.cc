@@ -119,8 +119,11 @@ void RunTimeOpts::set_syncInterval(Integer8 si)
 void RunTimeOpts::set_subdomainName(int sn, int length)
 {memset(subdomainName,sn,length);}
 
-void RunTimeOpts::set_subdomainName(Octet *sn, int length)
+void RunTimeOpts::set_subdomainName(const Octet *sn, int length)
 {strncpy(subdomainName,sn,length);}
+
+void RunTimeOpts::set_subdomainName(const void *sn, int length)
+{memcpy(subdomainName,sn,length);}
 
 void RunTimeOpts::set_clockIdentifier(int ci, int length)
 {memset(clockIdentifier,ci,length);}

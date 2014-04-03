@@ -13,8 +13,8 @@ ForeignMasterRecord::ForeignMasterRecord()
 UInteger8 ForeignMasterRecord::get_foreign_master_communication_technology() const
 {return foreign_master_communication_technology;}
 
-Octet ForeignMasterRecord::get_foreign_master_uuid() const
-{return *foreign_master_uuid;}
+Octet* ForeignMasterRecord::get_foreign_master_uuid()
+{return foreign_master_uuid;}
 
 UInteger16 ForeignMasterRecord::get_foreign_master_port_id() const
 {return foreign_master_port_id;}

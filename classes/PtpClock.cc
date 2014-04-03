@@ -47,8 +47,8 @@ Boolean PtpClock::get_is_boundary_clock() const
 Integer8 PtpClock::get_sync_interval() const
 {return sync_interval;}
 
-Octet PtpClock::get_subdomain_name() const
-{return *subdomain_name;}
+Octet* PtpClock::get_subdomain_name()
+{return subdomain_name;}
 
 UInteger16 PtpClock::get_number_ports() const
 {return number_ports;}
@@ -122,8 +122,8 @@ UInteger16 PtpClock::get_grandmaster_port_id_field() const
 UInteger8 PtpClock::get_grandmaster_stratum() const
 {return grandmaster_stratum;}
 
-Octet PtpClock::get_grandmaster_identifier() const
-{return *grandmaster_identifier;}
+Octet* PtpClock::get_grandmaster_identifier()
+{return grandmaster_identifier;}
 
 Integer16 PtpClock::get_grandmaster_variance() const
 {return grandmaster_variance;}
@@ -158,14 +158,14 @@ UInteger16 PtpClock::get_last_sync_event_sequence_number() const
 UInteger16 PtpClock::get_last_general_event_sequence_number() const
 {return last_general_event_sequence_number;}
 
-Octet PtpClock::get_subdomain_address() const
-{return *subdomain_address;}
+Octet* PtpClock::get_subdomain_address()
+{return subdomain_address;}
 
-Octet PtpClock::get_event_port_address() const
-{return *event_port_address;}
+Octet* PtpClock::get_event_port_address()
+{return event_port_address;}
 
-Octet PtpClock::get_general_port_address() const
-{return *general_port_address;}
+Octet* PtpClock::get_general_port_address()
+{return general_port_address;}
 
 UInteger8& PtpClock::get_port_communication_technology()
 {return port_communication_technology;}
@@ -185,7 +185,7 @@ Boolean PtpClock::get_burst_enabled() const
 ForeignMasterRecord& PtpClock::get_foreign()
 {return *foreign;}
 
-Boolean PtpClock::get_halfEpoch() const
+Boolean& PtpClock::get_halfEpoch()
 {return halfEpoch;}
 
 Integer16 PtpClock::get_max_foreign_records() const
@@ -212,11 +212,11 @@ msgTmp& PtpClock::get_msgtmp()
 MsgSync& PtpClock::get_msgtmp_sync()
 {return msgtmp.get_sync();}
 
-Octet PtpClock::get_msgObuf() const
-{return *msgObuf;}
+Octet* PtpClock::get_msgObuf()
+{return msgObuf;}
 
-Octet PtpClock::get_msgIbuf() const
-{return *msgIbuf;}
+Octet* PtpClock::get_msgIbuf()
+{return msgIbuf;}
 
 TimeInternal& PtpClock::get_master_to_slave_delay()
 {return master_to_slave_delay;}
@@ -288,7 +288,7 @@ void PtpClock::set_clockPortField(UInteger16 cpf)
 void PtpClock::set_clockStratum(UInteger8 cs)
 {clock_stratum = cs;}
 
-void PtpClock::set_clockIdentifier(Octet *ci, int length)
+void PtpClock::set_clockIdentifier(const void *ci, int length)
 {memcpy(clock_identifier,ci,length);}
 
 void PtpClock::set_clockVariance(Integer16 cv)

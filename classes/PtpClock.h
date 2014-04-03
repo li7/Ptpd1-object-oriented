@@ -36,7 +36,7 @@ public:
         Boolean get_external_timing() const;
         Boolean get_is_boundary_clock() const;
         Integer8 get_sync_interval() const;
-        Octet get_subdomain_name() const;
+        Octet* get_subdomain_name();
         UInteger16 get_number_ports() const;
         UInteger16 get_number_foreign_records() const;
 
@@ -65,7 +65,7 @@ public:
         Octet* get_grandmaster_uuid_field();
         UInteger16 get_grandmaster_port_id_field() const;
         UInteger8 get_grandmaster_stratum() const;
-        Octet get_grandmaster_identifier() const;
+        Octet* get_grandmaster_identifier();
         Integer16 get_grandmaster_variance() const;
         Boolean get_grandmaster_preferred() const;
         Boolean get_grandmaster_is_boundary_clock() const;
@@ -81,9 +81,9 @@ public:
         UInteger8 get_port_state() const;
         UInteger16 get_last_sync_event_sequence_number() const;
         UInteger16 get_last_general_event_sequence_number() const;
-	Octet get_subdomain_address() const;
-	Octet get_event_port_address() const;
-	Octet get_general_port_address() const;
+	Octet* get_subdomain_address();
+	Octet* get_event_port_address();
+	Octet* get_general_port_address();
         UInteger8& get_port_communication_technology();
         Octet* get_port_uuid_field();
         Octet get_port_uuid_field(int position) const;
@@ -94,7 +94,7 @@ public:
 	ForeignMasterRecord& get_foreign();
 
 	/*other*/
-	Boolean get_halfEpoch() const;
+	Boolean& get_halfEpoch();
 	Integer16 get_max_foreign_records() const;
 	Integer16 get_foreign_record_i() const;
 	Integer16 get_foreign_record_best() const;
@@ -106,8 +106,8 @@ public:
 	msgTmp& get_msgtmp();
 	MsgSync& get_msgtmp_sync();
 
-	Octet get_msgObuf() const;
-	Octet get_msgIbuf() const;
+	Octet* get_msgObuf();
+	Octet* get_msgIbuf();
 	
 	TimeInternal& get_master_to_slave_delay();
 	UInteger32 get_master_to_slave_delay_seconds();
@@ -141,7 +141,7 @@ public:
         void set_clockUuidField(Octet *cuf, int length);
         void set_clockPortField(UInteger16 cpf);
         void set_clockStratum(UInteger8 cs);
-        void set_clockIdentifier(Octet *ci, int length);
+        void set_clockIdentifier(const void *ci, int length);
         void set_clockVariance(Integer16 cv);
         void set_clockFollowupCapable(Boolean cfc);
         void set_preferred(Boolean p);

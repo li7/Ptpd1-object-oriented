@@ -32,10 +32,10 @@ public:
 
 	/****************mutators***********/
 	void set_clockCommunicationTechnology(UInteger8 cct);
-	void set_clockUuidField(Octet *cuf, int length);
+	void set_clockUuidField(const void *cuf, int length);
 	void set_clockPortField(UInteger16 cpf);
 	void set_clockStratum(UInteger8 cs);
-	void set_clockIdentifier(Octet *ci, int length);
+	void set_clockIdentifier(const void *ci, int length);
 	void set_clockVariance(Integer16 cv);
 	void set_clockFollowupCapable(Boolean cfc);
 	void set_preferred(Boolean p);
@@ -43,7 +43,7 @@ public:
 	void set_externalTiming(Boolean et);
 	void set_isBoundaryClock(Boolean ibc);
 	void set_syncInterval(Integer8 si);
-	void set_subdomainName(Octet *sn, int length);
+	void set_subdomainName(const void *sn, int length);
 	void set_numberPorts(UInteger16 np);
 	void set_numberForeignRecords(UInteger16 nfr);
 

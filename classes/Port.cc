@@ -68,7 +68,7 @@ void Port::set_lastGeneralEventSequenceNumber(UInteger16 lgesn)
 void Port::set_portCommunicationTechnology(UInteger8 pct)
 {portCommunicationTechnology = pct;}
 
-void Port::set_portUuidField(Octet *puf, int length)
+void Port::set_portUuidField(const void *puf, int length)
 {memcpy(portUuidField,puf,length);}
 
 void Port::set_portIdField(UInteger16 pif)
@@ -86,13 +86,13 @@ void Port::set_eventPortAddressOctets(UInteger8 epao)
 void Port::set_generalPortAddressOctets(UInteger8 gpao)
 {generalPortAddressOctets = gpao;}
 
-void Port::set_subdomainAddress(Octet *sa, int length)
+void Port::set_subdomainAddress(const void *sa, int length)
 {memcpy(subdomainAddress,sa,length);}
 
-void Port::set_eventPortAddress(Octet *epa, int length)
+void Port::set_eventPortAddress(const void *epa, int length)
 {memcpy(eventPortAddress,epa,length);}
 
-void Port::set_generalPortAddress(Octet *gpa, int length)
+void Port::set_generalPortAddress(const void *gpa, int length)
 {memcpy(generalPortAddress,gpa,length);}
 
 Port &Port::operator=(const Port & other_t)

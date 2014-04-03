@@ -51,11 +51,11 @@ public:
             void set_epochNumber(UInteger16 epn);
             void set_currentUTCOffset(Integer16 cutco);
             void set_grandmasterCommunicationTechnology(UInteger8 gmct);
-            void set_grandmasterClockUuid(Octet *gmcu, int length);
+            void set_grandmasterClockUuid(const void *gmcu, int length);
             void set_grandmasterPortId(UInteger16 gmpi);
             void set_grandmasterSequenceId(UInteger16 gmsi);
             void set_grandmasterClockStratum(UInteger8 gmcs);
-            void set_grandmasterClockIdentifier(Octet *gmci, int length);
+            void set_grandmasterClockIdentifier(const void *gmci, int length);
             void set_grandmasterClockVariance(Integer16 gmcv);
             void set_grandmasterPreferred(Boolean gmp);
             void set_grandmasterIsBoundaryClock(Boolean gmbc);
@@ -63,9 +63,9 @@ public:
             void set_localClockVariance(Integer16 lcv);
             void set_localStepsRemoved(UInteger16 lsr);
             void set_localClockStratum(UInteger8 lcs);
-            void set_localClockIdentifier(Octet *lci, int length);
+            void set_localClockIdentifier(const void *lci, int length);
             void set_parentCommunicationTechnology(UInteger8 pct);
-            void set_parentUuid(Octet *pu, int length);
+            void set_parentUuid(const void *pu, int length);
             void set_parentPortField(UInteger16 ppf);
             void set_estimatedMasterVariance(Integer16 emv);
             void set_estimatedMasterDrift(Integer32 emd);

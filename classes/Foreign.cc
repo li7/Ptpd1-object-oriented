@@ -38,7 +38,7 @@ void Foreign::set_returnedRecordNumber(UInteger16 rrn)
 void Foreign::set_foreignMasterCommunicationTechnology(UInteger8 fmct)
 {foreignMasterCommunicationTechnology = fmct;}
 
-void Foreign::set_foreignMasterUuid(Octet *fmu, int length)
+void Foreign::set_foreignMasterUuid(const void *fmu, int length)
 {memcpy(foreignMasterUuid,fmu,length);}
 
 void Foreign::set_foreignMasterPortId(UInteger16 fmpi)

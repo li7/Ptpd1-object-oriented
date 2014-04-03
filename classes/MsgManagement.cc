@@ -13,8 +13,8 @@ MsgManagement::MsgManagement()
 UInteger8 MsgManagement::get_targetCommunicationTechnology() const
 {return targetCommunicationTechnology;}
 
-Octet MsgManagement::get_targetUuid() const
-{return *targetUuid;}
+Octet* MsgManagement::get_targetUuid()
+{return targetUuid;}
 
 UInteger16 MsgManagement::get_targetPortId() const
 {return targetPortId;}
@@ -41,7 +41,7 @@ MsgManagementPayload MsgManagement::get_payload() const
 void MsgManagement::set_targetCommunicationTechnology(UInteger8 tct)
 {targetCommunicationTechnology = tct;}
 
-void MsgManagement::set_targetUuid(Octet *tu, int length)
+void MsgManagement::set_targetUuid(const void *tu, int length)
 {memcpy(targetUuid,tu,length);}
 
 void MsgManagement::set_targetPortId(UInteger16 tpi)

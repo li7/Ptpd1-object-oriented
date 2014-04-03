@@ -44,7 +44,7 @@ void MsgDelayResp::set_delayReceiptTimestamp_nanoseconds(Integer32 nsec)
 void MsgDelayResp::set_requestingSourceCommunicationTechnology(UInteger8 rsct)
 {requestingSourceCommunicationTechnology = rsct;}
 
-void MsgDelayResp::set_requestingSourceUuid(Octet *rsu, int length)
+void MsgDelayResp::set_requestingSourceUuid(const void *rsu, int length)
 {memcpy(requestingSourceUuid,rsu,length);}
 
 void MsgDelayResp::set_requestingSourcePortId(UInteger16 rspi)

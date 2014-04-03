@@ -16,7 +16,7 @@ public:
 
 	/****************accessors***********/
 	UInteger8 get_foreign_master_communication_technology() const;
-	Octet get_foreign_master_uuid() const;
+	Octet* get_foreign_master_uuid();
 	UInteger16 get_foreign_master_port_id() const;
 	UInteger16 get_foreign_master_syncs() const;
 	MsgHeader& get_header();
