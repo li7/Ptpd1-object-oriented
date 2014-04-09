@@ -72,10 +72,10 @@ logToFile()
 {
 	//extern RunTimeOpts rtOpts;//WHY EXTERN
 	RunTimeOpts rtOpts;
-	if(rtOpts.logFd != -1)
+	if(rtOpts.get_logFd() != -1)
 		close(rtOpts.get_logFd());
-	
-	if((rtOpts.get_logFd(creat(rtOpts.get_file(), 0444))) != -1) {
+	rtOpts.set_logFd(creat(rtOpts.get_file(), 0444));
+	if(rtOpts.get_logFd() != -1) {
 		dup2(rtOpts.get_logFd(), STDOUT_FILENO);
 		dup2(rtOpts.get_logFd(), STDERR_FILENO);
 	}
@@ -96,8 +96,8 @@ recordToFile()
 
 	if (rtOpts.get_recordFP() != NULL)
 		fclose(rtOpts.get_recordFP());
-
-	if ((rtOpts.set_recordFP(fopen(rtOpts.recordFile, "w"))) == NULL)
+	rtOpts.set_recordFP(rtOpts.get_recordFile());
+	if (rtOpts.get_recordFP() == NULL)
 		PERROR("could not open sync recording file");
 	else
 		setlinebuf(rtOpts.get_recordFP());
@@ -109,7 +109,8 @@ ptpdShutdown()
 {
 	netShutdown(&ptpClock->get_netPath());
 
-	free(ptpClock->get_foreign());
+	//free(ptpClock->get_foreign());
+	ptpClock->free_foreign();
 	free(ptpClock);
 }
 
@@ -247,7 +248,7 @@ ptpdStartup(int argc, char **argv, Integer16 * ret, RunTimeOpts * rtOpts)
 			break;
 
 		case 'u':
-			rtOpts->set_unicastAddress(optarg, NET_ADDRESS_LENGTH));
+			rtOpts->set_unicastAddress(optarg, NET_ADDRESS_LENGTH);
 			break;
 
 		case 'l':
@@ -336,8 +337,8 @@ ptpdStartup(int argc, char **argv, Integer16 * ret, RunTimeOpts * rtOpts)
 		return 0;
 	} else {
 		DBG("allocated %d bytes for protocol engine data\n", (int)sizeof(PtpClock));
-		ptpClock->foreign = (ForeignMasterRecord *) calloc(rtOpts->get_max_foreign_records(), sizeof(ForeignMasterRecord));
-		if (!ptpClock->get_foreign()) {
+		ptpClock->set_foreign((ForeignMasterRecord *) calloc(rtOpts->get_max_foreign_records(), sizeof(ForeignMasterRecord)));
+		if (!(ptpClock->get_foreign())) {
 			PERROR("failed to allocate memory for foreign master data");
 			*ret = 2;
 			free(ptpClock);

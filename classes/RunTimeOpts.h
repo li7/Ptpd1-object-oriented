@@ -44,12 +44,12 @@ public:
 	UInteger8 get_probe_management_key() const;
 	UInteger16 get_probe_record_key() const;
 	Boolean get_halfEpoch() const;
-	char get_file() const;
+	char* get_file();
 	int get_logFd() const;
 	Boolean get_useSysLog() const;
 	int& get_ttl();
-	char get_recordFile() const;
-	FILE get_recordFP() const;
+	char* get_recordFile();
+	FILE* get_recordFP();
 
 	/****************mutators***********/
 	void set_syncInterval(Integer8 si);

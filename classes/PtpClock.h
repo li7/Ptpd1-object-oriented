@@ -198,6 +198,8 @@ public:
         void set_portIdField(UInteger16 pif);
         void set_burstEnabled(Boolean be);
 	void set_foreign(ForeignMasterRecord *f);
+	void free_foreign();
+
 	void set_halfEpoch(Boolean he);
 	void set_max_foreign_records(Integer16 mfr);
 	void set_foreign_record_i(Integer16 fri);

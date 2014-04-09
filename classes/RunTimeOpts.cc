@@ -94,8 +94,8 @@ UInteger16 RunTimeOpts::get_probe_record_key() const
 Boolean RunTimeOpts::get_halfEpoch() const
 {return halfEpoch;}
 
-char RunTimeOpts::get_file() const
-{return *file;}
+char* RunTimeOpts::get_file()
+{return file;}
 
 int RunTimeOpts::get_logFd() const
 {return logFd;}
@@ -106,11 +106,11 @@ Boolean RunTimeOpts::get_useSysLog() const
 int& RunTimeOpts::get_ttl()
 {return ttl;}
 
-char RunTimeOpts::get_recordFile() const
-{return *recordFile;}
+char* RunTimeOpts::get_recordFile()
+{return recordFile;}
 
-FILE RunTimeOpts::get_recordFP() const
-{return *recordFP;}
+FILE* RunTimeOpts::get_recordFP()
+{return recordFP;}
 
 /****************mutators******************/
 void RunTimeOpts::set_syncInterval(Integer8 si)

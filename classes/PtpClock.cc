@@ -456,6 +456,9 @@ void PtpClock::set_burstEnabled(Boolean be)
 void PtpClock::set_foreign(ForeignMasterRecord *f)
 {foreign = f;}
 
+void PtpClock::free_foreign()
+{free(foreign);}
+
 void PtpClock::set_halfEpoch(Boolean he)
 {halfEpoch = he;}
 
