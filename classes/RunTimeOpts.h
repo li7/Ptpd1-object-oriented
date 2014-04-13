@@ -72,7 +72,7 @@ public:
 	void set_displayStats(Boolean ds);
 	void set_csvStats(Boolean cs);
 	void set_unicastAddress(Octet *ua, int length);
-	void set_unicastAddress(int position, Octet i);
+	void set_unicastAddress(int position, int i);
 	void set_ap(Integer16 a);
 	void set_ai(Integer16 a);
 	void set_s(Integer16 i);

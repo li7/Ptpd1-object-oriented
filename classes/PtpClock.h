@@ -136,6 +136,8 @@ public:
 
 	NetPath& get_netPath();
 
+	bool get_flag();
+
 	/****************mutators***********/
         void set_clockCommunicationTechnology(UInteger8 cct);
         void set_clockUuidField(Octet *cuf, int length);
@@ -343,6 +345,8 @@ private:
         IntervalTimer itimer[TIMER_ARRAY_SIZE];
 
         NetPath netPath;
+
+	bool flag;
 };
 
 ostream& operator<<(ostream& s, const PtpClock& it);

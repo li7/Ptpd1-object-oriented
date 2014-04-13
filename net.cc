@@ -258,9 +258,11 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		return false;
 	}
 	/* set general and port address */
-	*(Integer16 *) ptpClock->set_eventPortAddress(PTP_EVENT_PORT);
-	*(Integer16 *) ptpClock->set_generalPortAddress(PTP_GENERAL_PORT);
-
+	//*(Integer16 *) ptpClock->set_eventPortAddress(PTP_EVENT_PORT);
+	//*(Integer16 *) ptpClock->set_generalPortAddress(PTP_GENERAL_PORT);
+	ptpClock->set_eventPortAddress(*(Integer16 *) PTP_EVENT_PORT);
+	ptpClock->set_generalPortAddress(*(Integer16 *) PTP_GENERAL_PORT);
+	
 	/* send a uni-cast address if specified (useful for testing) */
 	if (rtOpts->get_unicastAddress(0)) {
 		if (!inet_aton(rtOpts->get_unicastAddress(), &netAddr)) {
@@ -335,7 +337,6 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	return true;
 }
 
-/********************************START HERE***************************/
 /* shut down the UDP stuff */
 Boolean 
 netShutdown(NetPath * netPath)

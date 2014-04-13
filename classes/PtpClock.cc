@@ -275,6 +275,9 @@ IntervalTimer& PtpClock::get_itimer()
 NetPath& PtpClock::get_netPath()
 {return netPath;}
 
+bool PtpClock::get_flag()
+{return flag;}
+
 /****************mutators******************/
 void PtpClock::set_clockCommunicationTechnology(UInteger8 cct)
 {clock_communication_technology = cct;}
@@ -454,7 +457,9 @@ void PtpClock::set_burstEnabled(Boolean be)
 {burst_enabled = be;}
 
 void PtpClock::set_foreign(ForeignMasterRecord *f)
-{foreign = f;}
+{foreign = f;
+if (f == NULL) flag = false;
+else flag = true;}
 
 void PtpClock::free_foreign()
 {free(foreign);}

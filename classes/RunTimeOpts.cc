@@ -173,7 +173,7 @@ void RunTimeOpts::set_csvStats(Boolean cs)
 void RunTimeOpts::set_unicastAddress(Octet *ua, int length)
 {strncpy(unicastAddress,ua,length);}
 
-void RunTimeOpts::set_unicastAddress(int position, Octet i)
+void RunTimeOpts::set_unicastAddress(int position, int i)
 {unicastAddress[position] = i;}
 
 void RunTimeOpts::set_ap(Integer16 a)

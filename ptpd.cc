@@ -11,7 +11,7 @@
  * below.
  */
 
-#include "ptpd.h"
+#include "classes/ptpd.h"
 
 RunTimeOpts rtOpts;			/* statically allocated run-time
 					 * configuration data */
