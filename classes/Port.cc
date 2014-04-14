@@ -28,6 +28,9 @@ UInteger8 Port::get_portCommunicationTechnology() const
 Octet Port::get_portUuidField() const
 {return *portUuidField;}
 
+Octet Port::get_portUuidField(int i) const
+{return portUuidField[i];}
+
 UInteger16 Port::get_portIdField() const
 {return portIdField;}
 
@@ -46,11 +49,17 @@ UInteger8 Port::get_generalPortAddressOctets() const
 Octet Port::get_subdomainAddress() const
 {return *subdomainAddress;}
 
+Octet Port::get_subdomainAddress(int i) const
+{return subdomainAddress[i];}
+
 Octet Port::get_eventPortAddress() const
 {return *eventPortAddress;}
 
-Octet Port::get_generalPortAddress() const
-{return *generalPortAddress;}
+Octet Port::get_eventPortAddress(int i) const
+{return eventPortAddress[i];}
+
+Octet Port::get_generalPortAddress(int i) const
+{return generalPortAddress[i];}
 
 /****************mutators******************/
 void Port::set_returnedPortNumber(UInteger16 rpn)

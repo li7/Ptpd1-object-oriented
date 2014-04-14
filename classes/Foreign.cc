@@ -22,6 +22,9 @@ UInteger8 Foreign::get_foreignMasterCommunicationTechnology() const
 Octet Foreign::get_foreignMasterUuid() const
 {return *foreignMasterUuid;}
 
+Octet Foreign::get_foreignMasterUuid(int i) const
+{return foreignMasterUuid[i];}
+
 UInteger16 Foreign::get_foreignMasterPortId() const
 {return foreignMasterPortId;}
 

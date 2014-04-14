@@ -16,9 +16,11 @@ public:
 	/****************accessors***********/
 	UInteger8 get_clockCommunicationTechnology() const;
 	Octet get_clockUuidField() const;
+	Octet get_clockUuidField(int position) const;
 	UInteger16 get_clockPortField() const;
 	UInteger8 get_clockStratum() const;
 	Octet get_clockIdentifier() const;
+	Octet get_clockIdentifier(int postition) const;
 	Integer16 get_clockVariance() const;
 	Boolean get_clockFollowupCapable() const;
 	Boolean get_preferred() const;
@@ -27,6 +29,7 @@ public:
 	Boolean get_isBoundaryClock() const;
 	Integer8 get_syncInterval() const;
 	Octet get_subdomainName() const;
+	Octet get_subdomainName(int x) const;
 	UInteger16 get_numberPorts() const;
 	UInteger16 get_numberForeignRecords() const;
 

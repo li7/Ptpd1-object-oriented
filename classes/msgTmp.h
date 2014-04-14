@@ -20,11 +20,11 @@ public:
 
 	/********Accsessor********/
 	MsgSync& get_sync();
-	//MsgSync get_sync() const;
-	MsgFollowUp get_follow() const;
-	MsgDelayReq get_req() const;
-	MsgDelayResp get_resp() const;
-	MsgManagement get_manage() const;
+	//MsgSync get_sync();
+	MsgFollowUp& get_follow();
+	MsgDelayReq& get_req();
+	MsgDelayResp& get_resp();
+	MsgManagement& get_manage();
 
 	/********Mutators*******/
 	void set_sync(MsgSync s);

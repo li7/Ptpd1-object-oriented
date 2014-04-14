@@ -21,14 +21,18 @@ public:
 	UInteger16 get_lastGeneralEventSequenceNumber() const;
 	UInteger8 get_portCommunicationTechnology() const;
 	Octet get_portUuidField() const;
+	Octet get_portUuidField(int i) const;
 	UInteger16 get_portIdField() const;
 	Boolean get_burstEnabled() const;
 	UInteger8 get_subdomainAddressOctets() const;
 	UInteger8 get_eventPortAddressOctets() const;
 	UInteger8 get_generalPortAddressOctets() const;
 	Octet get_subdomainAddress() const;
+	Octet get_subdomainAddress(int i) const;
 	Octet get_eventPortAddress() const;
+	Octet get_eventPortAddress(int i) const;
 	Octet get_generalPortAddress() const;
+	Octet get_generalPortAddress(int i) const;
 
 	/****************mutators***********/
 	void set_returnedPortNumber(UInteger16 rpn);

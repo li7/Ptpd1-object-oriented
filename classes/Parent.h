@@ -16,6 +16,7 @@ public:
 	/****************accessors***********/
 	UInteger8 get_parentCommunicationTechnology() const;
 	Octet get_parentUuid() const;
+	Octet get_parentUuid(int i) const;
 	UInteger16 get_parentPortId() const;
 	UInteger16 get_parentLastSyncSequenceNumber() const;
 	Boolean get_parentFollowupCapable() const;
@@ -27,9 +28,11 @@ public:
 	Boolean get_utcReasonable() const;
 	UInteger8 get_grandmasterCommunicationTechnology() const;
 	Octet get_grandmasterUuidField() const;
+	Octet get_grandmasterUuidField(int i) const;
 	UInteger16 get_grandmasterPortIdField() const;
 	UInteger8 get_grandmasterStratum() const;
 	Octet get_grandmasterIdentifier() const;
+	Octet get_grandmasterIdentifier(int i) const;
 	Integer16 get_grandmasterVariance() const;
 	Boolean get_grandmasterPreferred() const;
 	Boolean get_grandmasterIsBoundaryClock() const;

@@ -16,6 +16,9 @@ UInteger8 DefaultData::get_clockCommunicationTechnology() const
 Octet DefaultData::get_clockUuidField() const
 {return *clockUuidField;}
 
+Octet DefaultData::get_clockUuidField(int position) const
+{return clockUuidField[position];}
+
 UInteger16 DefaultData::get_clockPortField() const
 {return clockPortField;}
 
@@ -24,6 +27,9 @@ UInteger8 DefaultData::get_clockStratum() const
 
 Octet DefaultData::get_clockIdentifier() const
 {return *clockIdentifier;}
+
+Octet DefaultData::get_clockIdentifier(int position) const
+{return clockIdentifier[position];}
 
 Integer16 DefaultData::get_clockVariance() const
 {return clockVariance;}
@@ -48,6 +54,9 @@ Integer8 DefaultData::get_syncInterval() const
 
 Octet DefaultData::get_subdomainName() const
 {return *subdomainName;}
+
+Octet DefaultData::get_subdomainName(int x) const
+{return subdomainName[x];}
 
 UInteger16 DefaultData::get_numberPorts() const
 {return numberPorts;}

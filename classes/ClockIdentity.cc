@@ -16,11 +16,17 @@ UInteger8 ClockIdentity::get_clockCommunicationTechnology() const
 Octet ClockIdentity::get_clockUuidField() const
 {return *clockUuidField;}
 
+Octet ClockIdentity::get_clockUuidField(int position) const
+{return clockUuidField[position];}
+
 UInteger16 ClockIdentity::get_clockPortField() const
 {return clockPortField;}
 
 Octet ClockIdentity::get_manufacturerIdentity() const
 {return *manufacturerIdentity;}
+
+Octet ClockIdentity::get_manufacturerIdentity(int position) const
+{return manufacturerIdentity[position];}
 
 /****************mutators******************/
 void ClockIdentity::set_clockCommunicationTechnology(UInteger8 cct)

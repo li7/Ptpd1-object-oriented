@@ -10,23 +10,19 @@ msgTmp::msgTmp()
 }
 
 /*****************accessors***************/
-/*const MsgSync& msgTmp::get_sync() const
-{return sync;}
-*/
-
 MsgSync& msgTmp::get_sync()
 {return sync;}
 
-MsgFollowUp msgTmp::get_follow() const
+MsgFollowUp& msgTmp::get_follow()
 {return follow;}
 
-MsgDelayReq msgTmp::get_req() const
+MsgDelayReq& msgTmp::get_req()
 {return req;}
 
-MsgDelayResp msgTmp::get_resp() const
+MsgDelayResp& msgTmp::get_resp()
 {return resp;}
 
-MsgManagement msgTmp::get_manage() const
+MsgManagement& msgTmp::get_manage()
 {return manage;}
 
 /****************mutators******************/

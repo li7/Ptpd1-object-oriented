@@ -23,6 +23,7 @@ public:
         UInteger8 get_messageType() const;
         UInteger8 get_sourceCommunicationTechnology() const;
         Octet * get_sourceUuid();
+        Octet get_sourceUuid(int position);
         UInteger16 get_sourcePortId() const;
         UInteger16 get_sequenceId() const;
         UInteger8 get_control() const;

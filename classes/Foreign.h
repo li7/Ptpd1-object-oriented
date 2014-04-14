@@ -18,6 +18,7 @@ public:
 	UInteger16 get_returnedRecordNumber() const;
 	UInteger8 get_foreignMasterCommunicationTechnology() const;
 	Octet get_foreignMasterUuid() const;
+	Octet get_foreignMasterUuid(int i) const;
 	UInteger16 get_foreignMasterPortId() const;
 	UInteger16 get_foreignMasterSyncs() const;
 

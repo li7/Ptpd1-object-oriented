@@ -16,6 +16,9 @@ UInteger8 Parent::get_parentCommunicationTechnology() const
 Octet Parent::get_parentUuid() const
 {return *parentUuid;}
 
+Octet Parent::get_parentUuid(int i) const
+{return parentUuid[i];}
+
 UInteger16 Parent::get_parentPortId() const
 {return parentPortId;}
 
@@ -46,8 +49,8 @@ Boolean Parent::get_utcReasonable() const
 UInteger8 Parent::get_grandmasterCommunicationTechnology() const
 {return grandmasterCommunicationTechnology;}
 
-Octet Parent::get_grandmasterUuidField() const
-{return *grandmasterUuidField;}
+Octet Parent::get_grandmasterUuidField(int i) const
+{return grandmasterUuidField[i];}
 
 UInteger16 Parent::get_grandmasterPortIdField() const
 {return grandmasterPortIdField;}
@@ -57,6 +60,9 @@ UInteger8 Parent::get_grandmasterStratum() const
 
 Octet Parent::get_grandmasterIdentifier() const
 {return *grandmasterIdentifier;}
+
+Octet Parent::get_grandmasterIdentifier(int i) const
+{return grandmasterIdentifier[i];}
 
 Integer16 Parent::get_grandmasterVariance() const
 {return grandmasterVariance;}

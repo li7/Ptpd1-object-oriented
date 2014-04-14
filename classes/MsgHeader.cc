@@ -29,6 +29,9 @@ UInteger8 MsgHeader::get_sourceCommunicationTechnology() const
 Octet * MsgHeader::get_sourceUuid()
 {return sourceUuid;}
 
+Octet MsgHeader::get_sourceUuid(int position)
+{return sourceUuid[position];}
+
 UInteger16 MsgHeader::get_sourcePortId() const
 {return sourcePortId;}
 
