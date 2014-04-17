@@ -7,6 +7,10 @@ using namespace std;
 /*****************Constructor****************/
 ClockIdentity::ClockIdentity()
 {
+	clockCommunicationTechnology = 0;
+        memset(&clockUuidField,0,PTP_UUID_LENGTH);
+        clockPortField = 0;
+        memset(&manufacturerIdentity,0,MANUFACTURER_ID_LENGTH);
 }
 
 /*****************accessors***************/

@@ -32,6 +32,7 @@ public:
 	void set_req(MsgDelayReq r);
 	void set_resp(MsgDelayResp r);
 	void set_manage(MsgManagement m);
+	void set_manage(int m, int i);
 
 	/********Operators*******/
 	friend ostream& operator<<(ostream& s, const msgTmp& it);

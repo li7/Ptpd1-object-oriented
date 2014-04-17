@@ -39,7 +39,7 @@ probe(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	initData(rtOpts, ptpClock);
 	msgPackHeader(ptpClock->get_msgObuf(), ptpClock);
 
-	&ptpClock->get_msgtmp().set_manage(0, sizeof(MsgManagement));
+	//&ptpClock->get_msgtmp()->set_manage(0, sizeof(MsgManagement));
 	ptpClock->get_msgtmp().get_manage().set_targetCommunicationTechnology(PTP_DEFAULT);
 
 	/* send */

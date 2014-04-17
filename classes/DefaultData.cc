@@ -7,6 +7,22 @@ using namespace std;
 /*****************Constructor****************/
 DefaultData::DefaultData()
 {
+        clockCommunicationTechnology=0;
+        memset(&clockUuidField,0,PTP_UUID_LENGTH);
+        clockPortField=0;
+        clockStratum=0;
+        memset(&clockIdentifier,0,PTP_CODE_STRING_LENGTH);
+        clockVariance=0;
+        clockFollowupCapable=0;
+        preferred=0;
+	initializable=0;
+        externalTiming=0;
+        isBoundaryClock=0;
+        syncInterval=0;
+        memset(&subdomainName,0,PTP_SUBDOMAIN_NAME_LENGTH);
+        numberPorts = 0;
+        numberForeignRecords=0;
+
 }
 
 /*****************accessors***************/

@@ -7,6 +7,27 @@ using namespace std;
 /*****************Constructor****************/
 Parent::Parent()
 {
+        parentCommunicationTechnology=0;
+        memset(&parentUuid,0,PTP_UUID_LENGTH);
+        parentPortId=0;
+        parentLastSyncSequenceNumber=0;
+        parentFollowupCapable=0;
+        parentExternalTiming=0;
+        parentVariance=0;
+        parentStats=0;
+        observedVariance=0;
+        observedDrift=0;
+        utcReasonable=0;
+        grandmasterCommunicationTechnology=0;
+        memset(&grandmasterUuidField,0,PTP_UUID_LENGTH);
+        grandmasterPortIdField=0;
+        grandmasterStratum=0;
+        memset(&grandmasterIdentifier,0,PTP_CODE_STRING_LENGTH);
+        grandmasterVariance=0;
+        grandmasterPreferred=0;
+        grandmasterIsBoundaryClock=0;
+        grandmasterSequenceNumber=0;
+
 }
 
 /*****************accessors***************/

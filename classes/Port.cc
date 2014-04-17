@@ -7,6 +7,20 @@ using namespace std;
 /*****************Constructor****************/
 Port::Port()
 {
+        returnedPortNumber=0;
+        portState=0;
+        lastSyncEventSequenceNumber=0;
+        lastGeneralEventSequenceNumber=0;
+        portCommunicationTechnology=0;
+        memset(&portUuidField,0,PTP_UUID_LENGTH);
+        portIdField=0;
+        burstEnabled=0;
+        subdomainAddressOctets=0;
+        eventPortAddressOctets=0;
+        generalPortAddressOctets=0;
+        memset(&subdomainAddress,0,SUBDOMAIN_ADDRESS_LENGTH);
+        memset(&eventPortAddress,0,PORT_ADDRESS_LENGTH);
+        memset(&generalPortAddress,0,PORT_ADDRESS_LENGTH);
 }
 
 /*****************accessors***************/
@@ -57,6 +71,9 @@ Octet Port::get_eventPortAddress() const
 
 Octet Port::get_eventPortAddress(int i) const
 {return eventPortAddress[i];}
+
+Octet Port::get_generalPortAddress() const
+{return *generalPortAddress;}
 
 Octet Port::get_generalPortAddress(int i) const
 {return generalPortAddress[i];}

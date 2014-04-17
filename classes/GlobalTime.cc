@@ -7,6 +7,11 @@ using namespace std;
 /*****************Constructor****************/
 GlobalTime::GlobalTime()
 {
+        localTime;
+        currentUtcOffset=0;
+        leap59=0;
+        leap61=0;
+        epochNumber=0;
 }
 
 /*****************accessors***************/

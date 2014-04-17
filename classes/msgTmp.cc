@@ -41,6 +41,9 @@ void msgTmp::set_resp(MsgDelayResp r)
 void msgTmp::set_manage(MsgManagement m)
 {manage = m;}
 
+void msgTmp::set_manage(int m, int i)
+{memset(&manage,0,sizeof(MsgManagement));}
+
 ostream& operator<<(ostream& s, const msgTmp& it)
 {
         return s;

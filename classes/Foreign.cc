@@ -7,6 +7,13 @@ using namespace std;
 /*****************Constructor****************/
 Foreign::Foreign()
 {
+        returnedPortNumber=0;
+        returnedRecordNumber=0;
+        foreignMasterCommunicationTechnology=0;
+        memset(&foreignMasterUuid,0,PTP_UUID_LENGTH);
+        foreignMasterPortId=0;
+        foreignMasterSyncs=0;
+
 }
 
 /*****************accessors***************/

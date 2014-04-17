@@ -5,6 +5,10 @@ using namespace std;
 /*****************Constructor****************/
 Current::Current()
 {
+        stepsRemoved=0;
+        offsetFromMaster;
+        oneWayDelay;
+
 }
 
 /*****************accessors***************/

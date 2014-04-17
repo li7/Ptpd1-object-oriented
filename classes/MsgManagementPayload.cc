@@ -7,6 +7,13 @@ using namespace std;
 /*****************Constructor****************/
 MsgManagementPayload::MsgManagementPayload()
 {
+	clockIdentity;
+	defaultData;
+	current;
+	parent;
+	port;
+	globalTime;
+	foreign;
 }
 
 /*****************accessors***************/

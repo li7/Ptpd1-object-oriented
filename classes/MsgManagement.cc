@@ -7,6 +7,15 @@ using namespace std;
 /*****************Constructor****************/
 MsgManagement::MsgManagement()
 {
+	targetCommunicationTechnology = 0;
+        memset(&targetUuid,0,PTP_UUID_LENGTH);
+        targetPortId = 0;
+        startingBoundaryHops = 0;
+        boundaryHops = 0;
+        managementMessageKey = 0;
+        parameterLength = 0;
+        recordKey = 0;
+        payload;
 }
 
 /*****************accessors***************/
