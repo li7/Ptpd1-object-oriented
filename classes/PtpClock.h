@@ -82,8 +82,11 @@ public:
         UInteger16 get_last_sync_event_sequence_number() const;
         UInteger16 get_last_general_event_sequence_number() const;
 	Octet* get_subdomain_address();
+	Octet get_subdomain_address(int i);
 	Octet* get_event_port_address();
+	Octet get_event_port_address(int i);
 	Octet* get_general_port_address();
+	Octet get_general_port_address(int i);
         UInteger8& get_port_communication_technology();
         Octet* get_port_uuid_field();
         Octet get_port_uuid_field(int position) const;

@@ -161,11 +161,20 @@ UInteger16 PtpClock::get_last_general_event_sequence_number() const
 Octet* PtpClock::get_subdomain_address()
 {return subdomain_address;}
 
+Octet PtpClock::get_subdomain_address(int i)
+{return subdomain_address[i];}
+
 Octet* PtpClock::get_event_port_address()
 {return event_port_address;}
 
+Octet PtpClock::get_event_port_address(int i)
+{return event_port_address[i];}
+
 Octet* PtpClock::get_general_port_address()
 {return general_port_address;}
+
+Octet PtpClock::get_general_port_address(int i)
+{return general_port_address[i];}
 
 UInteger8& PtpClock::get_port_communication_technology()
 {return port_communication_technology;}
