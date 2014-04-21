@@ -97,7 +97,6 @@ doInit(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	return TRUE;
 }
 
-/*********************START HERE*******************/
 /* handle actions and events for 'port_state' */
 void 
 doState(RunTimeOpts * rtOpts, PtpClock * ptpClock)
@@ -175,13 +174,13 @@ doState(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 void 
 toState(UInteger8 state, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-	ptpClock->message_activity = TRUE;
+	ptpClock->set_message_activity(true);
 
 	/* leaving state tasks */
-	switch (ptpClock->port_state) {
+	switch (ptpClock->get_port_state()) {
 	case PTP_MASTER:
-		timerStop(SYNC_INTERVAL_TIMER, ptpClock->itimer);
-		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->sync_interval), ptpClock->itimer);
+		timerStop(SYNC_INTERVAL_TIMER, ptpClock->get_itimer());
+		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 		break;
 
 	case PTP_SLAVE:
@@ -196,52 +195,52 @@ toState(UInteger8 state, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	switch (state) {
 	case PTP_INITIALIZING:
 		DBG("state PTP_INITIALIZING\n");
-		timerStop(SYNC_RECEIPT_TIMER, ptpClock->itimer);
+		timerStop(SYNC_RECEIPT_TIMER, ptpClock->get_itimer());
 
-		ptpClock->port_state = PTP_INITIALIZING;
+		ptpClock->set_port_state(PTP_INITIALIZING);
 		break;
 
 	case PTP_FAULTY:
 		DBG("state PTP_FAULTY\n");
-		timerStop(SYNC_RECEIPT_TIMER, ptpClock->itimer);
+		timerStop(SYNC_RECEIPT_TIMER, ptpClock->get_itimer());
 
-		ptpClock->port_state = PTP_FAULTY;
+		ptpClock->set_port_state(PTP_FAULTY);
 		break;
 
 	case PTP_DISABLED:
 		DBG("state change to PTP_DISABLED\n");
-		timerStop(SYNC_RECEIPT_TIMER, ptpClock->itimer);
+		timerStop(SYNC_RECEIPT_TIMER, ptpClock->get_itimer());
 
-		ptpClock->port_state = PTP_DISABLED;
+		ptpClock->set_port_state(PTP_DISABLED);
 		break;
 
 	case PTP_LISTENING:
 		DBG("state PTP_LISTENING\n");
 
-		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->sync_interval), ptpClock->itimer);
+		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
-		ptpClock->port_state = PTP_LISTENING;
+		ptpClock->set_port_state(PTP_LISTENING);
 		break;
 
 	case PTP_MASTER:
 		DBG("state PTP_MASTER\n");
 
-		if (ptpClock->port_state != PTP_PRE_MASTER)
-			timerStart(SYNC_INTERVAL_TIMER, PTP_SYNC_INTERVAL_TIMEOUT(ptpClock->sync_interval), ptpClock->itimer);
+		if (ptpClock->get_port_state() != PTP_PRE_MASTER)
+			timerStart(SYNC_INTERVAL_TIMER, PTP_SYNC_INTERVAL_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
-		timerStop(SYNC_RECEIPT_TIMER, ptpClock->itimer);
+		timerStop(SYNC_RECEIPT_TIMER, ptpClock->get_itimer());
 
-		ptpClock->port_state = PTP_MASTER;
+		ptpClock->set_port_state(PTP_MASTER);
 		break;
 
 	case PTP_PASSIVE:
 		DBG("state PTP_PASSIVE\n");
-		ptpClock->port_state = PTP_PASSIVE;
+		ptpClock->set_port_state(PTP_PASSIVE);
 		break;
 
 	case PTP_UNCALIBRATED:
 		DBG("state PTP_UNCALIBRATED\n");
-		ptpClock->port_state = PTP_UNCALIBRATED;
+		ptpClock->set_port_state(PTP_UNCALIBRATED);
 		break;
 
 	case PTP_SLAVE:
@@ -257,19 +256,19 @@ toState(UInteger8 state, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		 * this is to allow the offset filter to fill for an
 		 * accurate initial clock reset
 		 */
-		ptpClock->Q = 0;
-		ptpClock->R = getRand(&ptpClock->random_seed) % 4 + 4;
-		DBG("Q = %d, R = %d\n", ptpClock->Q, ptpClock->R);
+		ptpClock->set_Q(0);
+		ptpClock->set_R(getRand(&ptpClock->get_random_seed90) % 4 + 4);
+		DBG("Q = %d, R = %d\n", ptpClock->get_Q(), ptpClock->get_R());
 
-		ptpClock->waitingForFollow = FALSE;
-		ptpClock->delay_req_send_time.seconds = 0;
-		ptpClock->delay_req_send_time.nanoseconds = 0;
-		ptpClock->delay_req_receive_time.seconds = 0;
-		ptpClock->delay_req_receive_time.nanoseconds = 0;
+		ptpClock->set_waitingForFollow(false);
+		ptpClock->get_delay_req_send_time().set_seconds(0);
+		ptpClock->get_delay_req_send_time().set_nanoseconds(0);
+		ptpClock->get_delay_req_receive_time().set_seconds(0);
+		ptpClock->get_delay_req_receive_time().set_nanoseconds(0);
 
-		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->sync_interval), ptpClock->itimer);
+		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
-		ptpClock->port_state = PTP_SLAVE;
+		ptpClock->set_port_state(PTP_SLAVE);
 		break;
 
 	default:
@@ -279,7 +278,7 @@ toState(UInteger8 state, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 
 	NOTIFY("Port state changed to %s\n", translatePortState(ptpClock));
 
-	if (rtOpts->displayStats)
+	if (rtOpts->get_displayStats())
 		displayStats(rtOpts, ptpClock);
 }
 
@@ -292,8 +291,8 @@ handle(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	Boolean isFromSelf;
 	TimeInternal time = {0, 0};
 
-	if (!ptpClock->message_activity) {
-		ret = netSelect(0, &ptpClock->netPath);
+	if (!ptpClock->get_message_activity()) {
+		ret = netSelect(0, &ptpClock->get_netPath());
 		if (ret < 0) {
 			PERROR("failed to poll sockets");
 			toState(PTP_FAULTY, rtOpts, ptpClock);
@@ -306,13 +305,13 @@ handle(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	}
 	DBGV("handle: something\n");
 
-	length = netRecvEvent(ptpClock->msgIbuf, &time, &ptpClock->netPath);
+	length = netRecvEvent(ptpClock->get_msgIbuf(), &time, &ptpClock->get_netPath());
 	if (length < 0) {
 		PERROR("failed to receive on the event socket");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	} else if (!length) {
-		length = netRecvGeneral(ptpClock->msgIbuf, &ptpClock->netPath);
+		length = netRecvGeneral(ptpClock->get_msgIbuf(), &ptpClock->get_netPath());
 		if (length < 0) {
 			PERROR("failed to receive on the general socket");
 			toState(PTP_FAULTY, rtOpts, ptpClock);
@@ -320,9 +319,9 @@ handle(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		} else if (!length)
 			return;
 	}
-	ptpClock->message_activity = TRUE;
+	ptpClock->set_message_activity(true);
 
-	if (!msgPeek(ptpClock->msgIbuf, length))
+	if (!msgPeek(ptpClock->get_msgIbuf(), length))
 		return;
 
 	if (length < HEADER_LENGTH) {
@@ -330,7 +329,7 @@ handle(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
-	msgUnpackHeader(ptpClock->msgIbuf, &ptpClock->msgTmpHeader);
+	msgUnpackHeader(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader());
 
 	DBGV("event Receipt of Message\n"
 	    "   version %d\n"
@@ -338,53 +337,53 @@ handle(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	    "   uuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n"
 	    "   sequence %d\n"
 	    "   time %us %dns\n",
-	    ptpClock->msgTmpHeader.versionPTP,
-	    ptpClock->msgTmpHeader.control,
-	    ptpClock->msgTmpHeader.sourceUuid[0], ptpClock->msgTmpHeader.sourceUuid[1],
-	    ptpClock->msgTmpHeader.sourceUuid[2], ptpClock->msgTmpHeader.sourceUuid[3],
-	    ptpClock->msgTmpHeader.sourceUuid[4], ptpClock->msgTmpHeader.sourceUuid[5],
-	    ptpClock->msgTmpHeader.sequenceId,
-	    time.seconds, time.nanoseconds);
+	    ptpClock->get_msgTmpHeader().get_versionPTP(),
+	    ptpClock->get_msgTmpHeader().get_control(),
+	    ptpClock->get_msgTmpHeader().get_sourceUuid(0), ptpClock->get_msgTmpHeader().get_sourceUuid(1),
+	    ptpClock->get_msgTmpHeader().get_sourceUuid(2), ptpClock->get_msgTmpHeader().get_sourceUuid(3),
+	    ptpClock->get_msgTmpHeader().get_sourceUuid(4), ptpClock->get_msgTmpHeader().get_sourceUuid(5),
+	    ptpClock->get_msgTmpHeader().get_sequenceId(),
+	    time.get_seconds(), time.get_nanoseconds());
 
-	if (ptpClock->msgTmpHeader.versionPTP != VERSION_PTP) {
-		DBGV("ignore version %d message\n", ptpClock->msgTmpHeader.versionPTP);
+	if (ptpClock->get_msgTmpHeader().get_versionPTP() != VERSION_PTP) {
+		DBGV("ignore version %d message\n", ptpClock->get_msgTmpHeader().get_versionPTP());
 		return;
 	}
-	if (memcmp(ptpClock->msgTmpHeader.subdomain, ptpClock->subdomain_name,
+	if (memcmp(ptpClock->get_msgTmpHeader().get_subdomain(), ptpClock->get_subdomain_name(),
 	    PTP_SUBDOMAIN_NAME_LENGTH)) {
-		DBGV("ignore message from subdomain %s\n", ptpClock->msgTmpHeader.subdomain);
+		DBGV("ignore message from subdomain %s\n", ptpClock->get_msgTmpHeader().get_subdomain());
 		return;
 	}
-	isFromSelf = ptpClock->msgTmpHeader.sourceCommunicationTechnology == ptpClock->port_communication_technology
-	    && ptpClock->msgTmpHeader.sourcePortId == ptpClock->port_id_field
-	    && !memcmp(ptpClock->msgTmpHeader.sourceUuid, ptpClock->port_uuid_field, PTP_UUID_LENGTH);
+	isFromSelf = ptpClock->get_msgTmpHeader().get_sourceCommunicationTechnology() == ptpClock->get_port_communication_technology()
+	    && ptpClock->get_msgTmpHeader().get_sourcePortId() == ptpClock->get_port_id_field()
+	    && !memcmp(ptpClock->get_msgTmpHeader().get_sourceUuid(), ptpClock->get_port_uuid_field(), PTP_UUID_LENGTH);
 
 	/*
 	 * subtract the inbound latency adjustment if it is not a loop back
 	 * and the time stamp seems reasonable
 	 */
-	if (!isFromSelf && time.seconds > 0)
-		subTime(&time, &time, &rtOpts->inboundLatency);
+	if (!isFromSelf && time.get_seconds() > 0)
+		subTime(&time, &time, &rtOpts->get_inboundLatency());
 
-	switch (ptpClock->msgTmpHeader.control) {
+	switch (ptpClock->get_msgTmpHeader().get_control()) {
 	case PTP_SYNC_MESSAGE:
-		handleSync(&ptpClock->msgTmpHeader, ptpClock->msgIbuf, length, &time, isFromSelf, rtOpts, ptpClock);
+		handleSync(&ptpClock->get_msgTmpHeader(), ptpClock->get_msgIbuf(), length, &time, isFromSelf, rtOpts, ptpClock);
 		break;
 
 	case PTP_FOLLOWUP_MESSAGE:
-		handleFollowUp(&ptpClock->msgTmpHeader, ptpClock->msgIbuf, length, isFromSelf, rtOpts, ptpClock);
+		handleFollowUp(&ptpClock->get_msgTmpHeader(), ptpClock->get_msgIbuf(), length, isFromSelf, rtOpts, ptpClock);
 		break;
 
 	case PTP_DELAY_REQ_MESSAGE:
-		handleDelayReq(&ptpClock->msgTmpHeader, ptpClock->msgIbuf, length, &time, isFromSelf, rtOpts, ptpClock);
+		handleDelayReq(&ptpClock->get_msgTmpHeader(), ptpClock->get_msgIbuf(), length, &time, isFromSelf, rtOpts, ptpClock);
 		break;
 
 	case PTP_DELAY_RESP_MESSAGE:
-		handleDelayResp(&ptpClock->msgTmpHeader, ptpClock->msgIbuf, length, isFromSelf, rtOpts, ptpClock);
+		handleDelayResp(&ptpClock->get_msgTmpHeader(), ptpClock->get_msgIbuf(), length, isFromSelf, rtOpts, ptpClock);
 		break;
 
 	case PTP_MANAGEMENT_MESSAGE:
-		handleManagement(&ptpClock->msgTmpHeader, ptpClock->msgIbuf, length, isFromSelf, rtOpts, ptpClock);
+		handleManagement(&ptpClock->get_msgTmpHeader(), ptpClock->get_msgIbuf(), length, isFromSelf, rtOpts, ptpClock);
 		break;
 
 	default:
@@ -404,7 +403,7 @@ handleSync(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal * t
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
-	switch (ptpClock->port_state) {
+	switch (ptpClock->get_port_state()) {
 	case PTP_FAULTY:
 	case PTP_INITIALIZING:
 	case PTP_DISABLED:
@@ -417,59 +416,59 @@ handleSync(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal * t
 			DBG("handleSync: ignore from self\n");
 			return;
 		}
-		if (getFlag(header->flags, PTP_SYNC_BURST) && !ptpClock->burst_enabled)
+		if (getFlag(header->get_flags(), PTP_SYNC_BURST) && !ptpClock->get_burst_enabled())
 			return;
 
 		DBGV("handleSync: looking for uuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
-		    ptpClock->parent_uuid[0], ptpClock->parent_uuid[1], ptpClock->parent_uuid[2],
-		    ptpClock->parent_uuid[3], ptpClock->parent_uuid[4], ptpClock->parent_uuid[5]);
+		    ptpClock->get_parent_uuid(0), ptpClock->get_parent_uuid(1), ptpClock->get_parent_uuid(2),
+		    ptpClock->get_parent_uuid(3), ptpClock->get_parent_uuid(4), ptpClock->get_parent_uuid(5));
 
-		if (header->sequenceId > ptpClock->parent_last_sync_sequence_number
-		    && header->sourceCommunicationTechnology == ptpClock->parent_communication_technology
-		    && header->sourcePortId == ptpClock->parent_port_id
-		    && !memcmp(header->sourceUuid, ptpClock->parent_uuid, PTP_UUID_LENGTH)) {
+		if (header->get_sequenceId() > ptpClock->get_parent_last_sync_sequence_number()
+		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
+		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
+		    && !memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH)) {
 			/* addForeign() takes care of msgUnpackSync() */
-			ptpClock->record_update = TRUE;
-			sync = addForeign(ptpClock->msgIbuf, &ptpClock->msgTmpHeader, ptpClock);
+			ptpClock->set_record_update(true);
+			sync = addForeign(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader(), ptpClock);
 
-			if (sync->syncInterval != ptpClock->sync_interval) {
-				DBGV("message's sync interval is %d, but clock's is %d\n", sync->syncInterval, ptpClock->sync_interval);
+			if (sync->get_syncInterval() != ptpClock->get_sync_interval()) {
+				DBGV("message's sync interval is %d, but clock's is %d\n", sync->get_syncInterval(), ptpClock->get_sync_interval());
 				/*
 				 * spec recommends handling a sync interval
 				 * discrepancy as a fault
 				 */
 			}
-			ptpClock->sync_receive_time.seconds = time->seconds;
-			ptpClock->sync_receive_time.nanoseconds = time->nanoseconds;
+			ptpClock->get_sync_receive_time().set_seconds(time->get_seconds());
+			ptpClock->get_sync_receive_time().set_nanoseconds(time->get_nanoseconds());
 
-			if (!getFlag(header->flags, PTP_ASSIST)) {
-				ptpClock->waitingForFollow = FALSE;
+			if (!getFlag(header->get_flags(), PTP_ASSIST)) {
+				ptpClock->set_waitingForFollow(false);
 
-				toInternalTime(&originTimestamp, &sync->originTimestamp, &ptpClock->halfEpoch);
-				updateOffset(&originTimestamp, &ptpClock->sync_receive_time,
-				    &ptpClock->ofm_filt, rtOpts, ptpClock);
+				toInternalTime(&originTimestamp, &sync->get_originTimestamp(), &ptpClock->get_halfEpoch());
+				updateOffset(&originTimestamp, &ptpClock->get_sync_receive_time(),
+				    &ptpClock->get_ofm_filt(), rtOpts, ptpClock);
 				updateClock(rtOpts, ptpClock);
 			} else {
-				ptpClock->waitingForFollow = TRUE;
+				ptpClock->get_waitingForFollow(true);
 			}
 
 			s1(header, sync, ptpClock);
 
-			if (!(--ptpClock->R)) {
+			if (!(--ptpClock->get_R())) {
 				issueDelayReq(rtOpts, ptpClock);
 
-				ptpClock->Q = 0;
-				ptpClock->R = getRand(&ptpClock->random_seed) % (PTP_DELAY_REQ_INTERVAL - 2) + 2;
-				DBG("Q = %d, R = %d\n", ptpClock->Q, ptpClock->R);
+				ptpClock->set_Q(0);
+				ptpClock->set_R(getRand(&ptpClock->get_random_seed()) % (PTP_DELAY_REQ_INTERVAL - 2) + 2;
+				DBG("Q = %d, R = %d\n", ptpClock->get_Q(), ptpClock->get_R());
 			}
 			DBGV("SYNC_RECEIPT_TIMER reset\n");
-			timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->sync_interval), ptpClock->itimer);
+			timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
-			if (rtOpts->recordFP != NULL) 
-				fprintf(rtOpts->recordFP, "%d %llu\n", 
-					header->sequenceId, 
-					((time->seconds * 1000000000ULL) + 
-					 time->nanoseconds));
+			if (rtOpts->get_recordFP() != NULL) 
+				fprintf(rtOpts->get_recordFP(), "%d %llu\n", 
+					header->get_sequenceId(), 
+					((time->get_seconds() * 1000000000ULL) + 
+					 time->get_nanoseconds()));
 
 		} else {
 			DBGV("handleSync: unwanted\n");
@@ -477,14 +476,14 @@ handleSync(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal * t
 
 	case PTP_MASTER:
 	default:
-		if (header->sourceCommunicationTechnology == ptpClock->clock_communication_technology
-		    || header->sourceCommunicationTechnology == PTP_DEFAULT
-		    || ptpClock->clock_communication_technology == PTP_DEFAULT) {
+		if (header->get_sourceCommunicationTechnology() == ptpClock->get_clock_communication_technology()
+		    || header->get_sourceCommunicationTechnology() == PTP_DEFAULT
+		    || ptpClock->get_clock_communication_technology() == PTP_DEFAULT) {
 			if (!isFromSelf) {
-				ptpClock->record_update = TRUE;
-				addForeign(ptpClock->msgIbuf, &ptpClock->msgTmpHeader, ptpClock);
-			} else if (ptpClock->port_state == PTP_MASTER && ptpClock->clock_followup_capable) {
-				addTime(time, time, &rtOpts->outboundLatency);
+				ptpClock->set_record_update(true);
+				addForeign(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader(), ptpClock);
+			} else if (ptpClock->get_port_state() == PTP_MASTER && ptpClock->get_clock_followup_capable()) {
+				addTime(time, time, &rtOpts->get_outboundLatency());
 				issueFollowup(time, rtOpts, ptpClock);
 			}
 		}
@@ -503,32 +502,32 @@ handleFollowUp(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean isFr
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
-	switch (ptpClock->port_state) {
+	switch (ptpClock->get_port_state()) {
 	case PTP_SLAVE:
 		if (isFromSelf) {
 			DBG("handleFollowUp: ignore from self\n");
 			return;
 		}
-		if (getFlag(header->flags, PTP_SYNC_BURST) && !ptpClock->burst_enabled)
+		if (getFlag(header->get_flags(), PTP_SYNC_BURST) && !ptpClock->get_burst_enabled())
 			return;
 
 		DBGV("handleFollowUp: looking for uuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
-		    ptpClock->parent_uuid[0], ptpClock->parent_uuid[1], ptpClock->parent_uuid[2],
-		    ptpClock->parent_uuid[3], ptpClock->parent_uuid[4], ptpClock->parent_uuid[5]);
+		    ptpClock->get_parent_uuid(0), ptpClock->get_parent_uuid(1), ptpClock->get_parent_uuid(2),
+		    ptpClock->get_parent_uuid(3), ptpClock->get_parent_uuid(4), ptpClock->get_parent_uuid(5));
 
-		follow = &ptpClock->msgTmp.follow;
-		msgUnpackFollowUp(ptpClock->msgIbuf, follow);
+		follow = &ptpClock->get_msgTmp().get_follow();
+		msgUnpackFollowUp(ptpClock->get_msgIbuf(), follow);
 
-		if (ptpClock->waitingForFollow
-		    && follow->associatedSequenceId == ptpClock->parent_last_sync_sequence_number
-		    && header->sourceCommunicationTechnology == ptpClock->parent_communication_technology
-		    && header->sourcePortId == ptpClock->parent_port_id
-		    && !memcmp(header->sourceUuid, ptpClock->parent_uuid, PTP_UUID_LENGTH)) {
-			ptpClock->waitingForFollow = FALSE;
+		if (ptpClock->get_waitingForFollow()
+		    && follow->get_associatedSequenceId() == ptpClock->get_parent_last_sync_sequence_number()
+		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
+		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
+		    && !memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH)) {
+			ptpClock->set_waitingForFollow(false);
 
-			toInternalTime(&preciseOriginTimestamp, &follow->preciseOriginTimestamp, &ptpClock->halfEpoch);
-			updateOffset(&preciseOriginTimestamp, &ptpClock->sync_receive_time,
-			    &ptpClock->ofm_filt, rtOpts, ptpClock);
+			toInternalTime(&preciseOriginTimestamp, &follow->get_preciseOriginTimestamp(), &ptpClock->get_halfEpoch());
+			updateOffset(&preciseOriginTimestamp, &ptpClock->get_sync_receive_time(),
+			    &ptpClock->get_ofm_filt(), rtOpts, ptpClock);
 			updateClock(rtOpts, ptpClock);
 		} else {
 			DBGV("handleFollowUp: unwanted\n");
@@ -549,16 +548,16 @@ handleDelayReq(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
-	switch (ptpClock->port_state) {
+	switch (ptpClock->get_port_state()) {
 	case PTP_MASTER:
 		if (isFromSelf) {
 			DBG("handleDelayReq: ignore from self\n");
 			return;
 		}
-		if (header->sourceCommunicationTechnology == ptpClock->clock_communication_technology
-		    || header->sourceCommunicationTechnology == PTP_DEFAULT
-		    || ptpClock->clock_communication_technology == PTP_DEFAULT) {
-			issueDelayResp(time, &ptpClock->msgTmpHeader, rtOpts, ptpClock);
+		if (header->get_sourceCommunicationTechnology() == ptpClock->get_clock_communication_technology()
+		    || header->get_sourceCommunicationTechnology() == PTP_DEFAULT
+		    || ptpClock->get_clock_communication_technology() == PTP_DEFAULT) {
+			issueDelayResp(time, &ptpClock->get_msgTmpHeader(), rtOpts, ptpClock);
 		}
 		break;
 
@@ -566,21 +565,21 @@ handleDelayReq(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal
 		if (isFromSelf) {
 			DBG("handleDelayReq: self\n");
 
-			ptpClock->delay_req_send_time.seconds = time->seconds;
-			ptpClock->delay_req_send_time.nanoseconds = time->nanoseconds;
+			ptpClock->get_delay_req_send_time().set_seconds(time->get_seconds();
+			ptpClock->get_delay_req_send_time().set_nanoseconds(time->get_nanoseconds();
 
-			addTime(&ptpClock->delay_req_send_time, &ptpClock->delay_req_send_time, &rtOpts->outboundLatency);
+			addTime(&ptpClock->get_delay_req_send_time(), &ptpClock->get_delay_req_send_time(), &rtOpts->get_outboundLatency());
 
-			if (ptpClock->delay_req_receive_time.seconds) {
-				updateDelay(&ptpClock->delay_req_send_time, 
-					    &ptpClock->delay_req_receive_time,
-					    &ptpClock->owd_filt, rtOpts, 
+			if (ptpClock->get_delay_req_receive_time().get_seconds()) {
+				updateDelay(&ptpClock->get_delay_req_send_time(), 
+					    &ptpClock->get_delay_req_receive_time(),
+					    &ptpClock->get_owd_filt(), rtOpts, 
 					    ptpClock);
 
-				ptpClock->delay_req_send_time.seconds = 0;
-				ptpClock->delay_req_send_time.nanoseconds = 0;
-				ptpClock->delay_req_receive_time.seconds = 0;
-				ptpClock->delay_req_receive_time.nanoseconds = 0;
+				ptpClock->get_delay_req_send_time().set_seconds(0);
+				ptpClock->get_delay_req_send_time().set_nanoseconds(0);
+				ptpClock->get_delay_req_receive_time().set_seconds(0);
+				ptpClock->get_delay_req_receive_time().set_nanoseconds(0);
 			}
 		}
 		break;
@@ -601,35 +600,35 @@ handleDelayResp(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean isF
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
-	switch (ptpClock->port_state) {
+	switch (ptpClock->get_port_state()) {
 	case PTP_SLAVE:
 		if (isFromSelf) {
 			DBG("handleDelayResp: ignore from self\n");
 			return;
 		}
-		resp = &ptpClock->msgTmp.resp;
-		msgUnpackDelayResp(ptpClock->msgIbuf, resp);
+		resp = &ptpClock->get_msgTmp().get_resp();
+		msgUnpackDelayResp(ptpClock->get_msgIbuf(), resp);
 
-		if (ptpClock->sentDelayReq
-		    && resp->requestingSourceSequenceId == ptpClock->sentDelayReqSequenceId
-		    && resp->requestingSourceCommunicationTechnology == ptpClock->port_communication_technology
-		    && resp->requestingSourcePortId == ptpClock->port_id_field
-		    && !memcmp(resp->requestingSourceUuid, ptpClock->port_uuid_field, PTP_UUID_LENGTH)
-		    && header->sourceCommunicationTechnology == ptpClock->parent_communication_technology
-		    && header->sourcePortId == ptpClock->parent_port_id
-		    && !memcmp(header->sourceUuid, ptpClock->parent_uuid, PTP_UUID_LENGTH)) {
-			ptpClock->sentDelayReq = FALSE;
+		if (ptpClock->get_sentDelayReq()
+		    && resp->get_requestingSourceSequenceId() == ptpClock->get_sentDelayReqSequenceId()
+		    && resp->get_requestingSourceCommunicationTechnology() == ptpClock->get_port_communication_technology()
+		    && resp->get_requestingSourcePortId() == ptpClock->get_port_id_field()
+		    && !memcmp(resp->get_requestingSourceUuid(), ptpClock->get_port_uuid_field(), PTP_UUID_LENGTH)
+		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
+		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
+		    && !memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH)) {
+			ptpClock->set_sentDelayReq(false);
 
-			toInternalTime(&ptpClock->delay_req_receive_time, &resp->delayReceiptTimestamp, &ptpClock->halfEpoch);
+			toInternalTime(&ptpClock->get_delay_req_receive_time(), &resp->get_delayReceiptTimestamp(), &ptpClock->get_halfEpoch());
 
-			if (ptpClock->delay_req_send_time.seconds) {
-				updateDelay(&ptpClock->delay_req_send_time, &ptpClock->delay_req_receive_time,
-				    &ptpClock->owd_filt, rtOpts, ptpClock);
+			if (ptpClock->get_delay_req_send_time().get_seconds()) {
+				updateDelay(&ptpClock->get_delay_req_send_time(), &ptpClock->get_delay_req_receive_time(),
+				    &ptpClock->get_owd_filt(), rtOpts, ptpClock);
 
-				ptpClock->delay_req_send_time.seconds = 0;
-				ptpClock->delay_req_send_time.nanoseconds = 0;
-				ptpClock->delay_req_receive_time.seconds = 0;
-				ptpClock->delay_req_receive_time.nanoseconds = 0;
+				ptpClock->get_delay_req_send_time().set_seconds(0);
+				ptpClock->get_delay_req_send_time().set_nanoseconds(0);
+				ptpClock->get_delay_req_receive_time().set_seconds(0);
+				ptpClock->get_delay_req_receive_time().set_nanoseconds(0);
 			}
 		} else {
 			DBGV("handleDelayResp: unwanted\n");
@@ -649,18 +648,18 @@ handleManagement(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean is
 
 	UInteger8 state;
 
-	if (ptpClock->port_state == PTP_INITIALIZING)
+	if (ptpClock->get_port_state() == PTP_INITIALIZING)
 		return;
 
-	manage = &ptpClock->msgTmp.manage;
-	msgUnpackManagement(ptpClock->msgIbuf, manage);
+	manage = &ptpClock->get_msgTmp().get_manage();
+	msgUnpackManagement(ptpClock->get_msgIbuf(), manage);
 
-	if ((manage->targetCommunicationTechnology == ptpClock->clock_communication_technology
-	    && !memcmp(manage->targetUuid, ptpClock->clock_uuid_field, PTP_UUID_LENGTH))
-	    || ((manage->targetCommunicationTechnology == PTP_DEFAULT
-	    || manage->targetCommunicationTechnology == ptpClock->clock_communication_technology)
-	    && !sum(manage->targetUuid, PTP_UUID_LENGTH))) {
-		switch (manage->managementMessageKey) {
+	if ((manage->get_targetCommunicationTechnology() == ptpClock->get_clock_communication_technology()
+	    && !memcmp(manage->get_targetUuid(), ptpClock->get_clock_uuid_field(), PTP_UUID_LENGTH))
+	    || ((manage->get_targetCommunicationTechnology() == PTP_DEFAULT
+	    || manage->get_targetCommunicationTechnology() == ptpClock->get_clock_communication_technology())
+	    && !sum(manage->get_targetUuid(), PTP_UUID_LENGTH))) {
+		switch (manage->get_managementMessageKey()) {
 		case PTP_MM_OBTAIN_IDENTITY:
 		case PTP_MM_GET_DEFAULT_DATA_SET:
 		case PTP_MM_GET_CURRENT_DATA_SET:
@@ -672,9 +671,9 @@ handleManagement(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean is
 			break;
 
 		default:
-			ptpClock->record_update = TRUE;
-			state = msgUnloadManagement(ptpClock->msgIbuf, manage, ptpClock, rtOpts);
-			if (state != ptpClock->port_state)
+			ptpClock->set_record_update(true);
+			state = msgUnloadManagement(ptpClock->get_msgIbuf(), manage, ptpClock, rtOpts);
+			if (state != ptpClock->get_port_state())
 				toState(state, rtOpts, ptpClock);
 			break;
 		}
@@ -690,14 +689,15 @@ issueSync(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	TimeInternal internalTime;
 	TimeRepresentation originTimestamp;
 
-	++ptpClock->last_sync_event_sequence_number;
-	ptpClock->grandmaster_sequence_number = ptpClock->last_sync_event_sequence_number;
+	//++ptpClock->last_sync_event_sequence_number;
+	ptpClock->set_last_sync_event_sequence_number(ptpClock->get_last_sync_sequence_number() + 1);
+	ptpClock->set_grandmaster_sequence_number(ptpClock->get_last_sync_event_sequence_number());
 
 	getTime(&internalTime);
-	fromInternalTime(&internalTime, &originTimestamp, ptpClock->halfEpoch);
-	msgPackSync(ptpClock->msgObuf, FALSE, &originTimestamp, ptpClock);
+	fromInternalTime(&internalTime, &originTimestamp, ptpClock->get_halfEpoch());
+	msgPackSync(ptpClock->get_msgObuf(), false, &originTimestamp, ptpClock);
 
-	if (!netSendEvent(ptpClock->msgObuf, SYNC_PACKET_LENGTH, &ptpClock->netPath))
+	if (!netSendEvent(ptpClock->get_msgObuf(), SYNC_PACKET_LENGTH, &ptpClock->get_netPath()))
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent sync message\n");
@@ -708,12 +708,13 @@ issueFollowup(TimeInternal * time, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
 	TimeRepresentation preciseOriginTimestamp;
 
-	++ptpClock->last_general_event_sequence_number;
+	//++ptpClock->last_general_event_sequence_number;
+	ptpClock->set_last_general_event_sequence_number(ptpClock->get_last_general_event_sequence_number() + 1);
 
-	fromInternalTime(time, &preciseOriginTimestamp, ptpClock->halfEpoch);
+	fromInternalTime(time, &preciseOriginTimestamp, ptpClock->get_halfEpoch());
 	msgPackFollowUp(ptpClock->msgObuf, ptpClock->last_sync_event_sequence_number, &preciseOriginTimestamp, ptpClock);
 
-	if (!netSendGeneral(ptpClock->msgObuf, FOLLOW_UP_PACKET_LENGTH, &ptpClock->netPath))
+	if (!netSendGeneral(ptpClock->get_msgObuf(), FOLLOW_UP_PACKET_LENGTH, &ptpClock->get_netPath()))
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent followup message\n");
@@ -725,30 +726,33 @@ issueDelayReq(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	TimeInternal internalTime;
 	TimeRepresentation originTimestamp;
 
-	ptpClock->sentDelayReq = TRUE;
-	ptpClock->sentDelayReqSequenceId = ++ptpClock->last_sync_event_sequence_number;
+	ptpClock->set_sentDelayReq(true);
+	//ptpClock->sentDelayReqSequenceId = ++ptpClock->last_sync_event_sequence_number;
+	ptpClock->set_sentDelayReqSequenceId(ptpClock->get_last_sync_event_sequence_number() + 1));
 
 	getTime(&internalTime);
-	fromInternalTime(&internalTime, &originTimestamp, ptpClock->halfEpoch);
-	msgPackDelayReq(ptpClock->msgObuf, FALSE, &originTimestamp, ptpClock);
+	fromInternalTime(&internalTime, &originTimestamp, ptpClock->get_halfEpoch());
+	msgPackDelayReq(ptpClock->get_msgObuf(), false, &originTimestamp, ptpClock);
 
-	if (!netSendEvent(ptpClock->msgObuf, DELAY_REQ_PACKET_LENGTH, &ptpClock->netPath))
+	if (!netSendEvent(ptpClock->get_msgObuf(), DELAY_REQ_PACKET_LENGTH, &ptpClock->get_netPath()))
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent delay request message\n");
 }
 
+/*********************START HERE*******************/
 void 
 issueDelayResp(TimeInternal * time, MsgHeader * header, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
 	TimeRepresentation delayReceiptTimestamp;
 
-	++ptpClock->last_general_event_sequence_number;
+	//++ptpClock->last_general_event_sequence_number;
+	ptpClock->set_last_general_event_sequence_number(ptpClock->get_last_general_event_sequence_number() + 1);
 
-	fromInternalTime(time, &delayReceiptTimestamp, ptpClock->halfEpoch);
-	msgPackDelayResp(ptpClock->msgObuf, header, &delayReceiptTimestamp, ptpClock);
+	fromInternalTime(time, &delayReceiptTimestamp, ptpClock->get_halfEpoch());
+	msgPackDelayResp(ptpClock->get_msgObuf(), header, &delayReceiptTimestamp, ptpClock);
 
-	if (!netSendGeneral(ptpClock->msgObuf, DELAY_RESP_PACKET_LENGTH, &ptpClock->netPath))
+	if (!netSendGeneral(ptpClock->get_msgObuf(), DELAY_RESP_PACKET_LENGTH, &ptpClock->get_netPath()))
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent delay response message\n");
@@ -759,12 +763,13 @@ issueManagement(MsgHeader * header, MsgManagement * manage, RunTimeOpts * rtOpts
 {
 	UInteger16 length;
 
-	++ptpClock->last_general_event_sequence_number;
+	//++ptpClock->last_general_event_sequence_number;
+	ptpClock->set_last_general_event_sequence_number(ptpClock->set_last_general_event_sequence_number() + 1);
 
-	if (!(length = msgPackManagementResponse(ptpClock->msgObuf, header, manage, ptpClock)))
+	if (!(length = msgPackManagementResponse(ptpClock->get_msgObuf(), header, manage, ptpClock)))
 		return;
 
-	if (!netSendGeneral(ptpClock->msgObuf, length, &ptpClock->netPath))
+	if (!netSendGeneral(ptpClock->get_msgObuf(), length, &ptpClock->get_netPath()))
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent management message\n");
@@ -775,48 +780,46 @@ MsgSync *
 addForeign(Octet * buf, MsgHeader * header, PtpClock * ptpClock)
 {
 	int i, j;
-	Boolean found = FALSE;
+	Boolean found = false;
 
 	DBGV("updateForeign\n");
 
-	j = ptpClock->foreign_record_best;
-	for (i = 0; i < ptpClock->number_foreign_records; ++i) {
-		if (header->sourceCommunicationTechnology == ptpClock->foreign[j].foreign_master_communication_technology
-		    && header->sourcePortId == ptpClock->foreign[j].foreign_master_port_id
-		    && !memcmp(header->sourceUuid, ptpClock->foreign[j].foreign_master_uuid, PTP_UUID_LENGTH)) {
-			++ptpClock->foreign[j].foreign_master_syncs;
-			found = TRUE;
+	j = ptpClock->get_foreign_record_best();
+	for (i = 0; i < ptpClock->get_number_foreign_records(); ++i) {
+		if (header->get_sourceCommunicationTechnology() == ptpClock->get_foreign(j).get_foreign_master_communication_technology()
+		    && header->get_sourcePortId() == ptpClock->get_foreign(j).get_foreign_master_port_id()
+		    && !memcmp(header->get_sourceUuid(), ptpClock->get_foreign(j).get_foreign_master_uuid(), PTP_UUID_LENGTH)) {
+			//++ptpClock->foreign[j].foreign_master_syncs;
+			ptpClock->get_foreign(j).set_foreign_master_syncs(ptpClock->get_foreign(j).get_foreign_master_sync() + 1);
+			found = true;
 			DBGV("updateForeign: update record %d\n", j);
 			break;
 		}
-		j = (j + 1) % ptpClock->number_foreign_records;
+		j = (j + 1) % ptpClock->get_number_foreign_records();
 	}
 
 	if (!found) {
-		if (ptpClock->number_foreign_records < ptpClock->max_foreign_records)
-			++ptpClock->number_foreign_records;
+		if (ptpClock->get_number_foreign_records() < ptpClock->get_max_foreign_records())
+			//++ptpClock->number_foreign_records;
+			ptpClock->set_number_foreign_records(ptpClock->get_number_foreign_records() + 1);
+		j = ptpClock->get_foreign_record_i();
 
-		j = ptpClock->foreign_record_i;
-
-		ptpClock->foreign[j].foreign_master_communication_technology =
-		    header->sourceCommunicationTechnology;
-		ptpClock->foreign[j].foreign_master_port_id =
-		    header->sourcePortId;
-		memcpy(ptpClock->foreign[j].foreign_master_uuid,
-		    header->sourceUuid, PTP_UUID_LENGTH);
+		ptpClock->get_foreign(j).set_foreign_master_communication_technology(header->get_sourceCommunicationTechnology);
+		ptpClock->get_foreign(j).set_foreign_master_port_id(header->get_sourcePortId());
+		ptpClock->get_foreign(j).set_foreign_master_uuid(header->get_sourceUuid(), PTP_UUID_LENGTH);
 
 		DBG("updateForeign: new record (%d,%d) %d %d %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
-		    ptpClock->foreign_record_i, ptpClock->number_foreign_records,
-		    ptpClock->foreign[j].foreign_master_communication_technology,
-		    ptpClock->foreign[j].foreign_master_port_id,
-		    ptpClock->foreign[j].foreign_master_uuid[0], ptpClock->foreign[j].foreign_master_uuid[1],
-		    ptpClock->foreign[j].foreign_master_uuid[2], ptpClock->foreign[j].foreign_master_uuid[3],
-		    ptpClock->foreign[j].foreign_master_uuid[4], ptpClock->foreign[j].foreign_master_uuid[5]);
+		    ptpClock->get_foreign_record_i(), ptpClock->get_number_foreign_records(),
+		    ptpClock->get_foreign(j).get_foreign_master_communication_technology(),
+		    ptpClock->get_foreign(j).get_foreign_master_port_id(),
+		    ptpClock->get_foreign(j).get_foreign_master_uuid(0), ptpClock->get_foreign(j).get_foreign_master_uuid(1),
+		    ptpClock->get_foreign(j).get_foreign_master_uuid(2), ptpClock->get_foreign(j).get_foreign_master_uuid(3),
+		    ptpClock->get_foreign(j).get_foreign_master_uuid(4), ptpClock->get_foreign(j).get_foreign_master_uuid(5));
 
-		ptpClock->foreign_record_i = (ptpClock->foreign_record_i + 1) % ptpClock->max_foreign_records;
+		ptpClock->set_foreign_record_i((ptpClock->get_foreign_record_i() + 1) % ptpClock->get_max_foreign_records());
 	}
-	msgUnpackHeader(buf, &ptpClock->foreign[j].header);
-	msgUnpackSync(buf, &ptpClock->foreign[j].sync);
+	msgUnpackHeader(buf, &ptpClock->get_foreign(j).get_header());
+	msgUnpackSync(buf, &ptpClock->get_foreign(j).get_sync());
 
-	return &ptpClock->foreign[j].sync;
+	return &ptpClock->get_foreign(j).get_sync();
 }

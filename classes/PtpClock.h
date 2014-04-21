@@ -95,6 +95,7 @@ public:
 
 	/*foreign master record data set*/
 	ForeignMasterRecord& get_foreign();
+	ForeignMasterRecord get_foreign(int i);
 
 	/*other*/
 	Boolean& get_halfEpoch();

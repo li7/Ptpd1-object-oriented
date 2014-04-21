@@ -194,6 +194,9 @@ Boolean PtpClock::get_burst_enabled() const
 ForeignMasterRecord& PtpClock::get_foreign()
 {return *foreign;}
 
+ForeignMasterRecord PtpClock::get_foreign(int i)
+{return foreign[i];}
+
 Boolean& PtpClock::get_halfEpoch()
 {return halfEpoch;}
 
