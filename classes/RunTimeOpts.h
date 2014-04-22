@@ -36,8 +36,8 @@ public:
 	Integer16 get_ap() const;
 	Integer16 get_ai() const;
 	Integer16 get_s() const;
-	TimeInternal get_inboundLatency() const;
-	TimeInternal get_outboundLatency() const;
+	TimeInternal& get_inboundLatency();
+	TimeInternal& get_outboundLatency();
 	Integer16 get_max_foreign_records() const;
 	Boolean get_slaveOnly() const;
 	Boolean get_probe() const;

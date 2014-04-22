@@ -10,7 +10,7 @@ MsgDelayResp::MsgDelayResp()
 }
 
 /*****************accessors***************/
-TimeRepresentation MsgDelayResp::get_delayReceiptTimestamp() const
+TimeRepresentation& MsgDelayResp::get_delayReceiptTimestamp()
 {return delayReceiptTimestamp;}
 
 UInteger32 MsgDelayResp::get_delayReceiptTimestamp_seconds() const
@@ -22,8 +22,8 @@ Integer32 MsgDelayResp::get_delayReceiptTimestamp_nanoseconds() const
 UInteger8 MsgDelayResp::get_requestingSourceCommunicationTechnology() const
 {return requestingSourceCommunicationTechnology;}
 
-Octet MsgDelayResp::get_requestingSourceUuid() const
-{return *requestingSourceUuid;}
+Octet* MsgDelayResp::get_requestingSourceUuid()
+{return requestingSourceUuid;}
 
 UInteger16 MsgDelayResp::get_requestingSourcePortId() const
 {return requestingSourcePortId;}

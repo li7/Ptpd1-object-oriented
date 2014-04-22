@@ -212,7 +212,7 @@ Integer16 PtpClock::get_foreign_record_best() const
 Boolean PtpClock::get_record_update() const
 {return record_update;}
 
-UInteger32 PtpClock::get_random_seed() const
+UInteger32& PtpClock::get_random_seed()
 {return random_seed;}
 
 MsgHeader& PtpClock::get_msgTmpHeader()

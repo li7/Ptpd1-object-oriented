@@ -19,7 +19,7 @@ public:
 	/* accessors */
 	UInteger16 get_versionPTP() const;
         UInteger16 get_versionNetwork() const;
-        Octet   get_subdomain() const;
+        Octet*   get_subdomain();
         UInteger8 get_messageType() const;
         UInteger8 get_sourceCommunicationTechnology() const;
         Octet * get_sourceUuid();

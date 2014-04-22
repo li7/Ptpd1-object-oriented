@@ -70,10 +70,10 @@ Integer16 RunTimeOpts::get_ai() const
 Integer16 RunTimeOpts::get_s() const
 {return s;}
 
-TimeInternal RunTimeOpts::get_inboundLatency() const
+TimeInternal& RunTimeOpts::get_inboundLatency()
 {return inboundLatency;}
 
-TimeInternal RunTimeOpts::get_outboundLatency() const
+TimeInternal& RunTimeOpts::get_outboundLatency()
 {return outboundLatency;}
 
 Integer16 RunTimeOpts::get_max_foreign_records() const

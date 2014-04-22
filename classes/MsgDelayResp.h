@@ -14,11 +14,11 @@ public:
 	MsgDelayResp();
 
 	/****************accessors***********/
-	TimeRepresentation get_delayReceiptTimestamp() const;
+	TimeRepresentation& get_delayReceiptTimestamp();
 	UInteger32 get_delayReceiptTimestamp_seconds() const;
 	Integer32 get_delayReceiptTimestamp_nanoseconds() const;
 	UInteger8 get_requestingSourceCommunicationTechnology() const;
-	Octet get_requestingSourceUuid() const;
+	Octet* get_requestingSourceUuid();
 	UInteger16 get_requestingSourcePortId() const;
 	UInteger16 get_requestingSourceSequenceId() const;
 

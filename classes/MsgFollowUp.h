@@ -18,7 +18,7 @@ public:
 
 	/****************accessors***********/
 	UInteger16 get_associatedSequenceId() const;
-	TimeRepresentation get_preciseOriginTimestamp() const;
+	TimeRepresentation& get_preciseOriginTimestamp();
 	UInteger32 get_preciseOriginTimestamp_seconds() const;
 	Integer32 get_preciseOriginTimestamp_nanoseconds() const;
 

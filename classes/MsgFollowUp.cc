@@ -13,7 +13,7 @@ associatedSequenceId = 0;
 UInteger16 MsgFollowUp::get_associatedSequenceId() const
 {return associatedSequenceId;}
 
-TimeRepresentation MsgFollowUp::get_preciseOriginTimestamp() const
+TimeRepresentation& MsgFollowUp::get_preciseOriginTimestamp()
 {return preciseOriginTimestamp;}
 
 UInteger32 MsgFollowUp::get_preciseOriginTimestamp_seconds() const

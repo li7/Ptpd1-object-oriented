@@ -26,5 +26,5 @@ clean:
 	rm -f classes/*.o
 
 real_clean: clean
-	rm -f arith timer
+	rm -f arith timer bmc msg net probe servo sys startup
 

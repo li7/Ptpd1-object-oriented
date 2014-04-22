@@ -103,7 +103,7 @@ public:
 	Integer16 get_foreign_record_i() const;
 	Integer16 get_foreign_record_best() const;
 	Boolean get_record_update() const;
-	UInteger32 get_random_seed() const;
+	UInteger32& get_random_seed();
 
 	MsgHeader& get_msgTmpHeader();
 

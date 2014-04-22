@@ -17,8 +17,8 @@ UInteger16 MsgHeader::get_versionPTP() const
 UInteger16 MsgHeader::get_versionNetwork() const 
 {return versionNetwork;}
 
-Octet MsgHeader::get_subdomain() const
-{return *subdomain;}
+Octet* MsgHeader::get_subdomain()
+{return subdomain;}
 
 UInteger8 MsgHeader::get_messageType() const 
 {return messageType;}
