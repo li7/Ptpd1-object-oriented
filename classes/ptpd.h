@@ -32,6 +32,9 @@ UInteger8 bmc(ForeignMasterRecord *, RunTimeOpts *, PtpClock *);
 void	m1 (PtpClock *);
 void	s1 (MsgHeader *, MsgSync *, PtpClock *);
 void	initData(RunTimeOpts *, PtpClock *);
+void	copyD0(MsgHeader *, MsgSync *, PtpClock *);
+Integer8	bmcDataSetComparison(MsgHeader *, MsgSync *, MsgHeader *, MsgSync *, PtpClock *);
+UInteger8	bmcStateDecision(MsgHeader *, MsgSync *, RunTimeOpts *, PtpClock *);
 
 /* probe.c */
 void	probe(RunTimeOpts *, PtpClock *);
