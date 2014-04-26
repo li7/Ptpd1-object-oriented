@@ -1,2 +1,67 @@
-In the current directory are the functions that are being converted. The "classes/" 
-directory is full of the converted structs to classes.
+In the current directory are the functions that are being converted.
+The "classes/" directory is full of the converted structs to classes/Objects
+used for the current directory.
+
+arith.cc: does arithmetic functions 
+	crc_algorithm: This algorithm checks if the crc checksum is correct.
+	sum: computes the sum of two numbers.
+	fromInternalTime: getting the parameters of the internal clock of 
+			device. for other devices to know which is better.
+	toInternalTime: if another device, have better parameters, then this
+			divice changes it's clock to the better incoming one.
+	normalize: normalizes the time. 
+	addTime: adds two times together.
+	subTime: subtracts two times together.
+
+bmc.cc: contains functions that are needed to run the best master clock
+algorithm to determine which is the best clock.
+	initData: initializes the data of the clock, can possibly be done with 
+		constructors. If there are any run time options, then it will
+		take that into consideration.
+	s1: sets the parameters to that of a 'slave' device from the sync and
+		header messages.
+	copyD0: sets the data of sync messages with the header from the data
+		of the ptpd clock.
+	getIdentifier: returns the identifier number, of device.
+	bmcDataSetComparison: compares the data set of messages from device
+		A and device B. returns the one that has better data.
+	bmcStateDecision: based on the comparisons, determine what state the
+		device should be in. 
+	bmc: the big algorithm that determines which has the best clock to 
+		work off of.
+msg.cc: handles the contents of the messages
+	msgUnpackHeader: unpacks the header message and fills in the parameters
+		contained in the header of the message.
+	msgUnpackSync: If it is a sync message the information will be filled
+		out according the sync messages
+	msgUnpackFollowUp: if it is a follow up message it will fill gather the
+		data that a follow up message contains.
+	msgUnpackDelayResp: if it is a delay response message it will gather
+		 the data that a delay response message contains.
+	msgUnpackManagement: if it is a management message it will gather
+		 the data that a management message contains.
+	msgUnloadManagement: if it is a management message, unload the contents
+	msgUnloadManagementPayload: gather the data from the payload of the 
+		message.
+	msgPackHeader: creates the contents of the header of a message.
+	msgPackSync: creates the contents of the sync message.
+	msgPackDelayRequest: creates the contents of the delay request message.
+	msgPackFollowUp: creates the contents of the follow up message.
+	msgPackManagement: creates the contents of the management message.
+	msgPackManagementResponse: creates the contents of the management 
+		response message.
+	msgPackManagement: creates the contents of the management message.
+net.cc: handles the network setup of the the protocol
+	lookupSubdomainAddress: find the address of the subdomain.
+	lookupCommunicationTechnology: find the communication technology used.
+	findIface: defines what kind of interface/OS is being used to run the
+		daemon.
+	netInit: initializes the network connections
+	netShutdown: closes the connections upon termination of the daemon.
+	netSelect: 
+	netRecvEvent:
+	netRecvGeneral:
+	netSendEvent:
+	netSendGeneral: 
+	
+	
