@@ -58,10 +58,64 @@ net.cc: handles the network setup of the the protocol
 		daemon.
 	netInit: initializes the network connections
 	netShutdown: closes the connections upon termination of the daemon.
-	netSelect: 
-	netRecvEvent:
-	netRecvGeneral:
-	netSendEvent:
-	netSendGeneral: 
-	
-	
+	netSelect: selects the path of the network, accounts for timeout.
+	netRecvEvent: no idea
+	netRecvGeneral: no idea
+	netSendEvent: no idea
+	netSendGeneral: no idea
+protocol.cc: runs the main protocol of the program.
+	protocol: loops forever to see if there is a change in state. If 
+		current state does not change continue with no change. If
+		state changes run necessary procedure for new state.
+	doInit: initializes the netwrok and other things.
+	doState: handle the actions of the port state
+	toState: performs the actions needed to leave a state and enter a new
+		state.
+	handle: checks and hadles messages received.
+	handleSync: checks and handles sync messages
+	handleFollowUp: checks and handles follow up messages.
+	handleDelayReq: checks and handles delay request messages.
+	handleDelayResp: checks and handles delay response messages.
+	handleManagement: handles the message contents.
+	issueSync: pack and send sync messages.
+	issueFollowUp: pack and send follow up messages.
+	issueDelayReq: pack and send delay requese messages.
+	issueResponse: pack and send response messages.
+	issueManagement: pack and send management messages.
+	addForeign: add or update an entry in the foreign master data set.
+ptpd.cc: 
+	main: ran at start time.
+servo.cc: implements the clock servo of the system.
+	initClock: initializes the clock.
+	updateDelay: updates the delay between the master and slave clocks.
+	updateOffset: updates the offset of slabe clock.
+	updateClock: updates the clock of used for the system.
+startup.cc: handle the daemons startup and command line arguments if any.
+	catch_close: catches if the close signal has been made. 
+	catch_sighup: catches to see if the other terminal has hung up.
+	logToFile: Puts the output to a file. if done correctly then it returns
+		a true, other wise it would be false.
+	recordToFile: records the quality of data for later correlation.
+	ptpdShutdown: shuts down all parts of the system.
+	ptpdStartup: handles the startup of the ptp daemon, including command
+		line arguments.
+sys.cc: used to get system calls from kernel 
+	istimeInternalNegative: checks if the time is negative. 
+	snprint_TimeInternal: stores the TimeInternal as a string.
+	snprint_ClockIdentity: stores the ClockIdentity as a string.
+	snprint_PortIdentity: stores the PortIdentity as a string.
+	message: 
+	translatePortState: sets the state bit of the clock.
+	displayStats: display the stats.
+	nanoSleep: puts the daemon to sleep for a short time.
+	getTime: get the time.
+	setTime: set the time according to the time.
+	getRand: gets a psuedo random number.
+	adjFreq: adjust frequency of the clock.
+timer.cc: timers that run the state machine.
+	catch_alarm: see if the timer has elapsed.
+	initTimer: initializes the timer.
+	timerUpdate: updates the timer.
+	timerStop: stops the timer, reset.
+	timerStart: starts the timer.
+	timerExpired: checks if the timer has expired.
