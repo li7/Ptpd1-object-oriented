@@ -113,7 +113,8 @@ sys.cc: used to get system calls from kernel
 	setTime: set the time according to the time.
 	getRand: gets a psuedo random number.
 	adjFreq: adjust frequency of the clock.
-timer.cc: timers that run the state machine.
+timer.cc: timers that run the state machine. the index is used to determine which timer
+is being referred to.
 	catch_alarm: see if the timer has elapsed.
 	initTimer: initializes the timer.
 	timerUpdate: updates the timer.
