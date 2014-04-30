@@ -2,6 +2,7 @@ In the current directory are the functions that are being converted.
 The "classes/" directory is full of the converted structs to classes/Objects
 used for the current directory.
 
+What the functions are expected to do:
 arith.cc: does arithmetic functions 
 	crc_algorithm: This algorithm checks if the crc checksum is correct.
 	sum: computes the sum of two numbers.
@@ -119,3 +120,15 @@ timer.cc: timers that run the state machine.
 	timerStop: stops the timer, reset.
 	timerStart: starts the timer.
 	timerExpired: checks if the timer has expired.
+
+
+Testing the functions:
+1) Look at what the function is supposed to do, compare with original code to 
+see if they seem to be doing the same thing.
+2) Look at other parts of the code to see how the function is used. model your
+test around that.
+3) Look at the classes to see if there is a parameter in there that you can use
+to test with, this can also assure that the classes are working properly.
+4) Test multiple cases for the function, meeting if conditions, meeting 
+different cases, etc. observe to see if it does what you expect. You may need
+to initialize code to meet the conditions. 
