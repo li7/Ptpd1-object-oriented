@@ -222,19 +222,23 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 
 	DBG("netInit\n");
 
+	printf("listen3\n");
 	/* open sockets */
 	netPath->set_eventSock(socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP));
+	printf("listen3.1\n");
 	netPath->set_generalSock(socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP));
 	if (netPath->get_eventSock() < 0
 	    || netPath->get_generalSock() < 0) {
 		PERROR("failed to initalize sockets");
 		return false;
 	}
+	printf("listen3.2\n");
 	/* find a network interface */
 	if (!(interfaceAddr.s_addr = findIface(rtOpts->get_ifaceName(), &ptpClock->get_port_communication_technology(),
 	    ptpClock->get_port_uuid_field(), netPath)))
 		return false;
 
+	printf("listen3.3\n");
 	temp = 1;			/* allow address reuse */
 	if (setsockopt(netPath->get_eventSock(), SOL_SOCKET, SO_REUSEADDR, &temp, sizeof(int)) < 0
 	    || setsockopt(netPath->get_generalSock(), SOL_SOCKET, SO_REUSEADDR, &temp, sizeof(int)) < 0) {
@@ -245,23 +249,28 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	 * need INADDR_ANY to allow receipt of multi-cast and uni-cast
 	 * messages
 	 */
+	printf("listen3.4\n");
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr.sin_port = htons(PTP_EVENT_PORT);
+	printf("listen3.5\n");
 	if (bind(netPath->get_eventSock(), (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0) {
 		PERROR("failed to bind event socket");
 		return false;
 	}
 	addr.sin_port = htons(PTP_GENERAL_PORT);
+	printf("listen3.6\n");
 	if (bind(netPath->get_generalSock(), (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0) {
 		PERROR("failed to bind general socket");
 		return false;
 	}
+	printf("listen3.7\n");
 	/* set general and port address */
-	//*(Integer16 *) ptpClock->set_eventPortAddress(PTP_EVENT_PORT);
-	//*(Integer16 *) ptpClock->set_generalPortAddress(PTP_GENERAL_PORT);
-	ptpClock->set_eventPortAddress(*(Integer16 *) PTP_EVENT_PORT);
-	ptpClock->set_generalPortAddress(*(Integer16 *) PTP_GENERAL_PORT);
+	ptpClock->set_eventPortAddress(PTP_EVENT_PORT);
+	ptpClock->set_generalPortAddress(PTP_GENERAL_PORT);
+	//ptpClock->set_eventPortAddress(*(Integer16 *) PTP_EVENT_PORT);
+	//ptpClock->set_generalPortAddress(*(Integer16 *) PTP_GENERAL_PORT);
+	printf("listen3.8\n");
 	
 	/* send a uni-cast address if specified (useful for testing) */
 	if (rtOpts->get_unicastAddress(0)) {
@@ -273,16 +282,19 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	} else
 		netPath->set_unicastAddr(0);
 
+	printf("listen3.9\n");
 	/* resolve PTP subdomain */
 	if (!lookupSubdomainAddress(rtOpts->get_subdomainName(), addrStr))
 		return false;
 
+	printf("listen3.10\n");
 	if (!inet_aton(addrStr, &netAddr)) {
 		ERROR("failed to encode multi-cast address: %s\n", addrStr);
 		return false;
 	}
 	netPath->set_multicastAddr(netAddr.s_addr);
 
+	printf("listen4\n");
 	s = addrStr;
 	for (i = 0; i < SUBDOMAIN_ADDRESS_LENGTH; ++i) {
 		ptpClock->set_subdomainAddress(i,strtol(s, &s, 0));
@@ -334,6 +346,7 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		return false;
 	}
 
+	printf("listen5\n");
 	return true;
 }
 

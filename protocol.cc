@@ -61,7 +61,9 @@ doInit(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	DBG("manufacturerIdentity: %s\n", MANUFACTURER_ID);
 
 	/* initialize networking */
+	printf("listen1\n");
 	netShutdown(&ptpClock->get_netPath());
+	printf("listen2\n");
 	if (!netInit(&ptpClock->get_netPath(), rtOpts, ptpClock)) {
 		ERROR("failed to initialize network\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);

@@ -195,9 +195,9 @@ public:
         void set_subdomainAddress(Octet *sa, int length);
         void set_subdomainAddress(int i, Octet sa);
 
-        void set_eventPortAddress(Octet *epa, int length);
+        //void set_eventPortAddress(Octet *epa, int length);
         void set_eventPortAddress(Octet length);
-        void set_generalPortAddress(Octet *epa, int length);
+        //void set_generalPortAddress(Octet *epa, int length);
         void set_generalPortAddress(Octet length);
         void set_portCommunicationTechnology(UInteger8 pct);
         void set_portUuidField(Octet *puf, int length);
