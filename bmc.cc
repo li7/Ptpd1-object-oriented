@@ -324,7 +324,10 @@ bmc(ForeignMasterRecord * foreign, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
 	Integer16 i, best;
 
+	printf("number foreign records = %d\n",ptpClock->get_number_foreign_records());
+	ptpClock->set_numberForeignRecords(1);
 	if (!ptpClock->get_number_foreign_records()) {
+	cout << "get bmc" << endl;
 		if (ptpClock->get_port_state() == PTP_MASTER)
 			m1(ptpClock);
 		return ptpClock->get_port_state();	/* no change */

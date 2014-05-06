@@ -114,16 +114,20 @@ printf("enter doState\n");
 	UInteger8 state;
 
 	ptpClock->set_message_activity(false);
-//printf("%c\n",ptpClock->get_port_state());
+	printf("%d\n",ptpClock->get_port_state());
 	switch (ptpClock->get_port_state()) {
 	case PTP_LISTENING:
 	case PTP_PASSIVE:
 	case PTP_SLAVE:
 	case PTP_MASTER:
+	ptpClock->set_record_update(1);
 	printf("%d\n",ptpClock->get_record_update());
 		if (ptpClock->get_record_update()) {
+			printf("get here\n");
 			ptpClock->set_record_update(false);
 			state = bmc(&ptpClock->get_foreign(), rtOpts, ptpClock);
+			printf("state = %d\n",ptpClock->get_port_state());
+			printf("state = %d\n",state);
 			if (state != ptpClock->get_port_state())
 				toState(state, rtOpts, ptpClock);
 		}

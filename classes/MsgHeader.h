@@ -27,7 +27,7 @@ public:
         UInteger16 get_sourcePortId() const;
         UInteger16 get_sequenceId() const;
         UInteger8 get_control() const;
-        Octet   get_flags() const;
+        Octet * get_flags();
 
 	/* mutators */
 	void set_versionPTP(UInteger16 vp);

@@ -270,7 +270,8 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	ptpClock->set_generalPortAddress(PTP_GENERAL_PORT);
 	//ptpClock->set_eventPortAddress(*(Integer16 *) PTP_EVENT_PORT);
 	//ptpClock->set_generalPortAddress(*(Integer16 *) PTP_GENERAL_PORT);
-	//printf("%s %s\n",ptpClock->get_event_port_address(),ptpClock->get_general_port_address());
+	printf("%d\n",ptpClock->get_event_port_address());
+	printf("%d\n",ptpClock->get_general_port_address());
 printf("listen3.8\n");
 	
 	/* send a uni-cast address if specified (useful for testing) */

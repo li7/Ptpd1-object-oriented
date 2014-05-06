@@ -41,8 +41,8 @@ UInteger16 MsgHeader::get_sequenceId() const
 UInteger8 MsgHeader::get_control() const
 {return control;}
 
-Octet MsgHeader::get_flags() const
-{return *flags;}
+Octet * MsgHeader::get_flags()
+{return flags;}
 
 /* Mutators */
 void MsgHeader::set_versionPTP(UInteger16 vp)

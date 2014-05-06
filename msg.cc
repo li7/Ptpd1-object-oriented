@@ -52,7 +52,7 @@ msgUnpackHeader(void *buf, MsgHeader * header)
 	DBGV("msgUnpackHeader: control %d\n", header->get_control());
 
 	header->set_flags((buf+34),2);
-	memcpy(header->flags, (buf + 34), 2);
+	memcpy(header->get_flags(), (buf + 34), 2);
 //	DBGV("msgUnpackHeader: flags %02hhx %02hhx\n", header->flags[0], header->flags[1]);
 }
 
