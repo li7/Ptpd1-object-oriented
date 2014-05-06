@@ -114,13 +114,14 @@ sys.cc: used to get system calls from kernel
 	getRand: gets a psuedo random number.
 	adjFreq: adjust frequency of the clock.
 timer.cc: timers that run the state machine. the index is used to determine which timer
-is being referred to.
+is being referred to. the timers are enumed in classes/constants.h. itimer is an array 
+of timers where the index, indicates which timer you are talking about.
 	catch_alarm: see if the timer has elapsed.
-	initTimer: initializes the timer.
-	timerUpdate: updates the timer.
-	timerStop: stops the timer, reset.
-	timerStart: starts the timer.
-	timerExpired: checks if the timer has expired.
+	initTimer: initializes the timer (itimer[index]).
+	timerUpdate: updates the timer all timers.
+	timerStop: stops the timer indicated by index, reset.
+	timerStart: starts the timer indicated by index.
+	timerExpired: checks if the timer index has expired.
 
 
 Testing the functions:
