@@ -301,8 +301,8 @@ private:
         UInteger16 last_sync_event_sequence_number;
         UInteger16 last_general_event_sequence_number;
         Octet   subdomain_address[SUBDOMAIN_ADDRESS_LENGTH];
-        Octet   event_port_address[PORT_ADDRESS_LENGTH];
-        Octet   general_port_address[PORT_ADDRESS_LENGTH];
+        Octet	event_port_address[PORT_ADDRESS_LENGTH];
+        Octet	general_port_address[PORT_ADDRESS_LENGTH];
         UInteger8 port_communication_technology;
         Octet   port_uuid_field[PTP_UUID_LENGTH];
         UInteger16 port_id_field;

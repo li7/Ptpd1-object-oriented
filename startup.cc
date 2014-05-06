@@ -332,10 +332,12 @@ ptpdStartup(int argc, char **argv, Integer16 * ret, RunTimeOpts * rtOpts)
 
 	ptpClock = (PtpClock *) calloc(1, sizeof(PtpClock));
 	if (!ptpClock) {
+		cout << "no make ptpClock" << endl;
 		PERROR("failed to allocate memory for protocol engine data");
 		*ret = 2;
 		return 0;
 	} else {
+	cout << "memory allocated" << endl;
 		DBG("allocated %d bytes for protocol engine data\n", (int)sizeof(PtpClock));
 		ptpClock->set_foreign((ForeignMasterRecord *) calloc(rtOpts->get_max_foreign_records(), sizeof(ForeignMasterRecord)));
 		if (ptpClock->get_flag() == false) {

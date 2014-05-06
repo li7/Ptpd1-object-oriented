@@ -61,6 +61,7 @@ initData(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 void 
 m1(PtpClock * ptpClock)
 {
+//	printf("In m1\n");
 	/* Default data set */
 	ptpClock->set_stepsRemoved(0);
 	ptpClock->set_offsetFromMaster_seconds(0);
@@ -85,12 +86,14 @@ m1(PtpClock * ptpClock)
 	ptpClock->set_grandmasterPreferred(ptpClock->get_preferred());
 	ptpClock->set_grandmasterIsBoundaryClock(ptpClock->get_is_boundary_clock());
 	ptpClock->set_grandmasterSequenceNumber(ptpClock->get_last_sync_event_sequence_number());
+//printf("exit m1\n");
 }
 
 /* see spec table 21 */
 void 
 s1(MsgHeader * header, MsgSync * sync, PtpClock * ptpClock)
 {
+//printf("enter s1\n");
 	/* Current data set */
 	ptpClock->set_stepsRemoved(sync->get_localStepsRemoved() + 1);
 
@@ -117,6 +120,7 @@ s1(MsgHeader * header, MsgSync * sync, PtpClock * ptpClock)
 	ptpClock->set_leap59(getFlag(header->get_flags(), PTP_LI_59));
 	ptpClock->set_leap61(getFlag(header->get_flags(), PTP_LI_61));
 	ptpClock->set_epochNumber(sync->get_epochNumber());
+//printf("exit s1\n");
 }
 
 void 

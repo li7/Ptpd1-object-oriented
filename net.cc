@@ -249,7 +249,7 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	 * need INADDR_ANY to allow receipt of multi-cast and uni-cast
 	 * messages
 	 */
-	printf("listen3.4\n");
+	//printf("listen3.4\n");
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr.sin_port = htons(PTP_EVENT_PORT);
@@ -270,7 +270,8 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	ptpClock->set_generalPortAddress(PTP_GENERAL_PORT);
 	//ptpClock->set_eventPortAddress(*(Integer16 *) PTP_EVENT_PORT);
 	//ptpClock->set_generalPortAddress(*(Integer16 *) PTP_GENERAL_PORT);
-	printf("listen3.8\n");
+	//printf("%s %s\n",ptpClock->get_event_port_address(),ptpClock->get_general_port_address());
+printf("listen3.8\n");
 	
 	/* send a uni-cast address if specified (useful for testing) */
 	if (rtOpts->get_unicastAddress(0)) {
@@ -346,7 +347,7 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		return false;
 	}
 
-	printf("listen5\n");
+	printf("listen5, netInit done\n");
 	return true;
 }
 
