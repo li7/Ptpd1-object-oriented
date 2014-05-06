@@ -56,11 +56,10 @@ fromInternalTime(TimeInternal * internal, TimeRepresentation * external, Boolean
 		external->set_nanoseconds(labs(internal->get_nanoseconds()));
 	}
 
-/*	DBGV("fromInternalTime: %10ds %11dns -> %10us %11dns\n",
+	DBGV("fromInternalTime: %10ds %11dns -> %10us %11dns\n",
 	    internal.get_seconds(), internal.get_nanoseconds(),
 	    external.get_seconds(), external.get_nanoseconds());
-*/
-	printf("ok\n");
+
 }
 
 void 
@@ -76,10 +75,10 @@ toInternalTime(TimeInternal * internal, TimeRepresentation * external, Boolean *
 		internal->set_nanoseconds(external->get_nanoseconds());
 	}
 
-/*	DBGV("toInternalTime: %10ds %11dns <- %10us %11dns\n",
+	DBGV("toInternalTime: %10ds %11dns <- %10us %11dns\n",
 	    internal.get_seconds(), internal.get_nanoseconds(),
 	    external.get_seconds(), external.get_nanoseconds());
-*/
+
 }
 
 void 

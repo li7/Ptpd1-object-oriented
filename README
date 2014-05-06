@@ -1,2 +1,136 @@
-In the current directory are the functions that are being converted. The "classes/" 
-directory is full of the converted structs to classes.
+In the current directory are the functions that are being converted.
+The "classes/" directory is full of the converted structs to classes/Objects
+used for the current directory.
+
+What the functions are expected to do:
+arith.cc: does arithmetic functions 
+	crc_algorithm: This algorithm checks if the crc checksum is correct.
+	sum: computes the sum of two numbers.
+	fromInternalTime: getting the parameters of the internal clock of 
+			device. for other devices to know which is better.
+	toInternalTime: if another device, have better parameters, then this
+			divice changes it's clock to the better incoming one.
+	normalize: normalizes the time. 
+	addTime: adds two times together.
+	subTime: subtracts two times together.
+
+bmc.cc: contains functions that are needed to run the best master clock
+algorithm to determine which is the best clock.
+	initData: initializes the data of the clock, can possibly be done with 
+		constructors. If there are any run time options, then it will
+		take that into consideration.
+	s1: sets the parameters to that of a 'slave' device from the sync and
+		header messages.
+	copyD0: sets the data of sync messages with the header from the data
+		of the ptpd clock.
+	getIdentifier: returns the identifier number, of device.
+	bmcDataSetComparison: compares the data set of messages from device
+		A and device B. returns the one that has better data.
+	bmcStateDecision: based on the comparisons, determine what state the
+		device should be in. 
+	bmc: the big algorithm that determines which has the best clock to 
+		work off of.
+msg.cc: handles the contents of the messages
+	msgUnpackHeader: unpacks the header message and fills in the parameters
+		contained in the header of the message.
+	msgUnpackSync: If it is a sync message the information will be filled
+		out according the sync messages
+	msgUnpackFollowUp: if it is a follow up message it will fill gather the
+		data that a follow up message contains.
+	msgUnpackDelayResp: if it is a delay response message it will gather
+		 the data that a delay response message contains.
+	msgUnpackManagement: if it is a management message it will gather
+		 the data that a management message contains.
+	msgUnloadManagement: if it is a management message, unload the contents
+	msgUnloadManagementPayload: gather the data from the payload of the 
+		message.
+	msgPackHeader: creates the contents of the header of a message.
+	msgPackSync: creates the contents of the sync message.
+	msgPackDelayRequest: creates the contents of the delay request message.
+	msgPackFollowUp: creates the contents of the follow up message.
+	msgPackManagement: creates the contents of the management message.
+	msgPackManagementResponse: creates the contents of the management 
+		response message.
+	msgPackManagement: creates the contents of the management message.
+net.cc: handles the network setup of the the protocol
+	lookupSubdomainAddress: find the address of the subdomain.
+	lookupCommunicationTechnology: find the communication technology used.
+	findIface: defines what kind of interface/OS is being used to run the
+		daemon.
+	netInit: initializes the network connections
+	netShutdown: closes the connections upon termination of the daemon.
+	netSelect: selects the path of the network, accounts for timeout.
+	netRecvEvent: no idea
+	netRecvGeneral: no idea
+	netSendEvent: no idea
+	netSendGeneral: no idea
+protocol.cc: runs the main protocol of the program.
+	protocol: loops forever to see if there is a change in state. If 
+		current state does not change continue with no change. If
+		state changes run necessary procedure for new state.
+	doInit: initializes the netwrok and other things.
+	doState: handle the actions of the port state
+	toState: performs the actions needed to leave a state and enter a new
+		state.
+	handle: checks and hadles messages received.
+	handleSync: checks and handles sync messages
+	handleFollowUp: checks and handles follow up messages.
+	handleDelayReq: checks and handles delay request messages.
+	handleDelayResp: checks and handles delay response messages.
+	handleManagement: handles the message contents.
+	issueSync: pack and send sync messages.
+	issueFollowUp: pack and send follow up messages.
+	issueDelayReq: pack and send delay requese messages.
+	issueResponse: pack and send response messages.
+	issueManagement: pack and send management messages.
+	addForeign: add or update an entry in the foreign master data set.
+ptpd.cc: 
+	main: ran at start time.
+servo.cc: implements the clock servo of the system.
+	initClock: initializes the clock.
+	updateDelay: updates the delay between the master and slave clocks.
+	updateOffset: updates the offset of slabe clock.
+	updateClock: updates the clock of used for the system.
+startup.cc: handle the daemons startup and command line arguments if any.
+	catch_close: catches if the close signal has been made. 
+	catch_sighup: catches to see if the other terminal has hung up.
+	logToFile: Puts the output to a file. if done correctly then it returns
+		a true, other wise it would be false.
+	recordToFile: records the quality of data for later correlation.
+	ptpdShutdown: shuts down all parts of the system.
+	ptpdStartup: handles the startup of the ptp daemon, including command
+		line arguments.
+sys.cc: used to get system calls from kernel 
+	istimeInternalNegative: checks if the time is negative. 
+	snprint_TimeInternal: stores the TimeInternal as a string.
+	snprint_ClockIdentity: stores the ClockIdentity as a string.
+	snprint_PortIdentity: stores the PortIdentity as a string.
+	message: 
+	translatePortState: sets the state bit of the clock.
+	displayStats: display the stats.
+	nanoSleep: puts the daemon to sleep for a short time.
+	getTime: get the time.
+	setTime: set the time according to the time.
+	getRand: gets a psuedo random number.
+	adjFreq: adjust frequency of the clock.
+timer.cc: timers that run the state machine. the index is used to determine which timer
+is being referred to. the timers are enumed in classes/constants.h. itimer is an array 
+of timers where the index, indicates which timer you are talking about.
+	catch_alarm: see if the timer has elapsed.
+	initTimer: initializes the timer (itimer[index]).
+	timerUpdate: updates the timer all timers.
+	timerStop: stops the timer indicated by index, reset.
+	timerStart: starts the timer indicated by index.
+	timerExpired: checks if the timer index has expired.
+
+
+Testing the functions:
+1) Look at what the function is supposed to do, compare with original code to 
+see if they seem to be doing the same thing.
+2) Look at other parts of the code to see how the function is used. model your
+test around that.
+3) Look at the classes to see if there is a parameter in there that you can use
+to test with, this can also assure that the classes are working properly.
+4) Test multiple cases for the function, meeting if conditions, meeting 
+different cases, etc. observe to see if it does what you expect. You may need
+to initialize code to meet the conditions. 

@@ -24,18 +24,18 @@ msgUnpackHeader(void *buf, MsgHeader * header)
 {
 	header->set_versionPTP(flip16(*(UInteger16 *) (buf + 0)));
 	header->set_versionNetwork(flip16(*(UInteger16 *) (buf + 2)));
-/*	DBGV("msgUnpackHeader: versionPTP %d\n", header->versionPTP);
-	DBGV("msgUnpackHeader: versionNetwork %d\n", header->versionNetwork);
-*/
+	DBGV("msgUnpackHeader: versionPTP %d\n", header->get_versionPTP());
+	DBGV("msgUnpackHeader: versionNetwork %d\n", header->get_versionNetwork());
+
 
 	header->set_subdomain((buf+4),16);
-//	DBGV("msgUnpackHeader: subdomain %s\n", header->subdomain);
+	DBGV("msgUnpackHeader: subdomain %s\n", header->get_subdomain());
 
 	header->set_messageType(*(UInteger8 *) (buf + 20));
 	header->set_sourceCommunicationTechnology(*(UInteger8 *) (buf + 21));
-/*	DBGV("msgUnpackHeader: messageType %d\n", header->messageType);
-	DBGV("msgUnpackHeader: sourceCommunicationTechnology %d\n", header->sourceCommunicationTechnology);
-*/
+	DBGV("msgUnpackHeader: messageType %d\n", header->get_messageType());
+	DBGV("msgUnpackHeader: sourceCommunicationTechnology %d\n", header->get_sourceCommunicationTechnology90);
+
 	header->set_sourceUuid((buf+22),6);
 //	memcpy(header->sourceUuid, (buf + 22), 6);
 /*	DBGV("msgUnpackHeader: sourceUuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
@@ -45,14 +45,14 @@ msgUnpackHeader(void *buf, MsgHeader * header)
 
 	header->set_sourcePortId(flip16(*(UInteger16 *) (buf + 28)));
 	header->set_sequenceId(flip16(*(UInteger16 *) (buf + 30)));
-/*	DBGV("msgUnpackHeader: sourcePortId %d\n", header->sourcePortId);
-	DBGV("msgUnpackHeader: sequenceId %d\n", header->sequenceId);
-*/
+	DBGV("msgUnpackHeader: sourcePortId %d\n", header->get_sourcePortId());
+	DBGV("msgUnpackHeader: sequenceId %d\n", header->get_sequenceId());
+
 	header->set_control(*(UInteger8 *) (buf + 32));
-//	DBGV("msgUnpackHeader: control %d\n", header->control);
+	DBGV("msgUnpackHeader: control %d\n", header->get_control());
 
 	header->set_flags((buf+34),2);
-//	memcpy(header->flags, (buf + 34), 2);
+	memcpy(header->flags, (buf + 34), 2);
 //	DBGV("msgUnpackHeader: flags %02hhx %02hhx\n", header->flags[0], header->flags[1]);
 }
 

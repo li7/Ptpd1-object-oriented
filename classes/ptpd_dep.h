@@ -28,6 +28,7 @@
 #include<stdarg.h>
 #include<syslog.h>
 #include<limits.h>
+#include "datatypes.h"
 
 /* system messages */
 #define ERROR(x, ...)  message(LOG_ERR, x, ##__VA_ARGS__)
@@ -117,12 +118,8 @@ ssize_t	netSendGeneral(Octet *, UInteger16, NetPath *);
 
 /* servo.c */
 void	initClock(RunTimeOpts *, PtpClock *);
-void 
-updateDelay(TimeInternal *, TimeInternal *,
-    one_way_delay_filter *, RunTimeOpts *, PtpClock *);
-void 
-updateOffset(TimeInternal *, TimeInternal *,
-    offset_from_master_filter *, RunTimeOpts *, PtpClock *);
+void 	updateDelay(TimeInternal *, TimeInternal *,one_way_delay_filter *, RunTimeOpts *, PtpClock *);
+void 	updateOffset(TimeInternal *, TimeInternal *,offset_from_master_filter *, RunTimeOpts *, PtpClock *);
 void	updateClock(RunTimeOpts *, PtpClock *);
 
 /* startup.c */
@@ -149,6 +146,6 @@ void	timerUpdate(IntervalTimer *);
 void	timerStop(UInteger16, IntervalTimer *);
 void	timerStart(UInteger16, UInteger16, IntervalTimer *);
 Boolean	timerExpired(UInteger16, IntervalTimer *);
-
+void	catch_alarm(int);
 
 #endif
