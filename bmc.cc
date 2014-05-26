@@ -32,6 +32,7 @@ initData(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 
 	/* Default data set */
 	ptpClock->set_clockCommunicationTechnology(ptpClock->get_port_communication_technology());
+	printf("port uuid field = %d\n",ptpClock->get_port_uuid_field());
 	ptpClock->set_clockUuidField(ptpClock->get_port_uuid_field(), PTP_UUID_LENGTH);
 	ptpClock->set_clockPortField(0);
 	ptpClock->set_clockStratum(rtOpts->get_clockStratum());

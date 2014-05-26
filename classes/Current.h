@@ -15,8 +15,8 @@ public:
 
 	/****************accessors***********/
 	UInteger16 get_stepsRemoved() const;
-	TimeRepresentation get_offsetFromMaster() const;
-	TimeRepresentation get_oneWayDelay() const;
+	TimeRepresentation &get_offsetFromMaster();
+	TimeRepresentation &get_oneWayDelay();
 
 	/****************mutators***********/
 	void set_stepsRemoved(UInteger16 sr);

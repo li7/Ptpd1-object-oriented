@@ -1,4 +1,4 @@
-/**
+ /**
  * @file   protocol.c
  * @date   Wed Jun 23 09:40:39 2010
  * 
@@ -120,7 +120,7 @@ printf("enter doState\n");
 	case PTP_PASSIVE:
 	case PTP_SLAVE:
 	case PTP_MASTER:
-	ptpClock->set_record_update(1);
+	//ptpClock->set_record_update(3);
 	printf("%d\n",ptpClock->get_record_update());
 		if (ptpClock->get_record_update()) {
 			printf("get here\n");
@@ -149,6 +149,7 @@ printf("enter doState\n");
 	case PTP_PASSIVE:
 	case PTP_UNCALIBRATED:
 	case PTP_SLAVE:
+		printf("get to second case statement\n");
 		handle(rtOpts, ptpClock);
 
 		if (timerExpired(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer())) {
@@ -316,6 +317,7 @@ printf("enter handle\n");
 	if (!ptpClock->get_message_activity()) {
 		ret = netSelect(0, &ptpClock->get_netPath());
 		if (ret < 0) {
+			printf("failed to poll sockets\n");
 			PERROR("failed to poll sockets");
 			toState(PTP_FAULTY, rtOpts, ptpClock);
 			return;

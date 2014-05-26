@@ -15,7 +15,7 @@ GlobalTime::GlobalTime()
 }
 
 /*****************accessors***************/
-TimeRepresentation GlobalTime::get_localTime() const
+TimeRepresentation& GlobalTime::get_localTime()
 {return localTime;}
 
 Integer16 GlobalTime::get_currentUtcOffset() const
