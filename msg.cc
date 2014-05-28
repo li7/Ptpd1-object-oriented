@@ -396,6 +396,7 @@ msgPackHeader(void *buf, PtpClock * ptpClock)
 		setFlag((buf + 34), PTP_ASSIST);
 	if (ptpClock->get_is_boundary_clock())
 		setFlag((buf + 34), PTP_BOUNDARY_CLOCK);
+printf("msgPackHeader done correctly\n");
 }
 
 void 

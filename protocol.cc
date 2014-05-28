@@ -120,12 +120,12 @@ printf("enter doState\n");
 	case PTP_PASSIVE:
 	case PTP_SLAVE:
 	case PTP_MASTER:
-	ptpClock->set_record_update(1);
+//	ptpClock->set_record_update(1);
 	printf("%d\n",ptpClock->get_record_update());
 		if (ptpClock->get_record_update()) {
 			printf("get here\n");
 			ptpClock->set_record_update(false);
-			state = bmc(&ptpClock->get_foreign(), rtOpts, ptpClock);
+			state = bmc(ptpClock->get_foreign(), rtOpts, ptpClock);
 			printf("state = %d\n",ptpClock->get_port_state());
 			printf("state = %d\n",state);
 			if (state != ptpClock->get_port_state())
@@ -151,7 +151,7 @@ printf("enter doState\n");
 	case PTP_SLAVE:
 		handle(rtOpts, ptpClock);
 
-		if (timerExpired(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer())) {
+		if (timerExpired(SYNC_RECEIPT_TIMER, ptpClock->get_itimer())) {
 			DBG("event SYNC_RECEIPT_TIMEOUT_EXPIRES\n");
 			ptpClock->set_numberForeignRecords(0);
 			ptpClock->set_foreign_record_i(0);
@@ -164,7 +164,7 @@ printf("enter doState\n");
 		break;
 
 	case PTP_MASTER:
-		if (timerExpired(SYNC_INTERVAL_TIMER, &ptpClock->get_itimer())) {
+		if (timerExpired(SYNC_INTERVAL_TIMER, ptpClock->get_itimer())) {
 			DBGV("event SYNC_INTERVAL_TIMEOUT_EXPIRES\n");
 			issueSync(rtOpts, ptpClock);
 		}
@@ -196,8 +196,8 @@ printf("enter toState\n");
 	/* leaving state tasks */
 	switch (ptpClock->get_port_state()) {
 	case PTP_MASTER:
-		timerStop(SYNC_INTERVAL_TIMER, &ptpClock->get_itimer());
-		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), &ptpClock->get_itimer());
+		timerStop(SYNC_INTERVAL_TIMER, ptpClock->get_itimer());
+		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 		break;
 
 	case PTP_SLAVE:
@@ -212,21 +212,22 @@ printf("enter toState\n");
 	switch (state) {
 	case PTP_INITIALIZING:
 		DBG("state PTP_INITIALIZING\n");
-		timerStop(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer());
+		printf("state PTP_INITIALIZING\n");
+		timerStop(SYNC_RECEIPT_TIMER, ptpClock->get_itimer());
 
 		ptpClock->set_portState(PTP_INITIALIZING);
 		break;
 
 	case PTP_FAULTY:
 		DBG("state PTP_FAULTY\n");
-		timerStop(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer());
+		timerStop(SYNC_RECEIPT_TIMER, ptpClock->get_itimer());
 
 		ptpClock->set_portState(PTP_FAULTY);
 		break;
 
 	case PTP_DISABLED:
 		DBG("state change to PTP_DISABLED\n");
-		timerStop(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer());
+		timerStop(SYNC_RECEIPT_TIMER, ptpClock->get_itimer());
 
 		ptpClock->set_portState(PTP_DISABLED);
 		break;
@@ -234,7 +235,7 @@ printf("enter toState\n");
 	case PTP_LISTENING:
 		DBG("state PTP_LISTENING\n");
 
-		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), &ptpClock->get_itimer());
+		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
 		ptpClock->set_portState(PTP_LISTENING);
 		break;
@@ -243,9 +244,9 @@ printf("enter toState\n");
 		DBG("state PTP_MASTER\n");
 
 		if (ptpClock->get_port_state() != PTP_PRE_MASTER)
-			timerStart(SYNC_INTERVAL_TIMER, PTP_SYNC_INTERVAL_TIMEOUT(ptpClock->get_sync_interval()), &ptpClock->get_itimer());
+			timerStart(SYNC_INTERVAL_TIMER, PTP_SYNC_INTERVAL_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
-		timerStop(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer());
+		timerStop(SYNC_RECEIPT_TIMER, ptpClock->get_itimer());
 
 		ptpClock->set_portState(PTP_MASTER);
 		break;
@@ -276,14 +277,14 @@ printf("enter toState\n");
 		ptpClock->set_Q(0);
 		ptpClock->set_R(getRand(&ptpClock->get_random_seed()) % 4 + 4);
 		DBG("Q = %d, R = %d\n", ptpClock->get_Q(), ptpClock->get_R());
-
+		printf("Q = %d, R = %d\n", ptpClock->get_Q(), ptpClock->get_R());
 		ptpClock->set_waitingForFollow(false);
 		ptpClock->get_delay_req_send_time().set_seconds(0);
 		ptpClock->get_delay_req_send_time().set_nanoseconds(0);
 		ptpClock->get_delay_req_receive_time().set_seconds(0);
 		ptpClock->get_delay_req_receive_time().set_nanoseconds(0);
 
-		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), &ptpClock->get_itimer());
+		timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
 		ptpClock->set_portState(PTP_SLAVE);
 		break;
@@ -317,25 +318,31 @@ printf("enter handle\n");
 		ret = netSelect(0, &ptpClock->get_netPath());
 		if (ret < 0) {
 			PERROR("failed to poll sockets");
+			printf("failed to poll sockets\n");
 			toState(PTP_FAULTY, rtOpts, ptpClock);
 			return;
 		} else if (!ret) {
 			DBGV("handle: nothing\n");
+			printf("handle nothing\n");
 			return;
 		}
 		/* else length > 0 */
 	}
 	DBGV("handle: something\n");
+	printf("handle something\n");
 
 	length = netRecvEvent(ptpClock->get_msgIbuf(), &time, &ptpClock->get_netPath());
+	printf("length = %d\n",length);
 	if (length < 0) {
 		PERROR("failed to receive on the event socket");
+		printf("failed to receive on the event socket\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	} else if (!length) {
 		length = netRecvGeneral(ptpClock->get_msgIbuf(), &ptpClock->get_netPath());
 		if (length < 0) {
 			PERROR("failed to receive on the general socket");
+			printf("failed to receive on the general socket\n");
 			toState(PTP_FAULTY, rtOpts, ptpClock);
 			return;
 		} else if (!length)
@@ -348,6 +355,7 @@ printf("enter handle\n");
 
 	if (length < HEADER_LENGTH) {
 		ERROR("message shorter than header length\n");
+		printf("message shorter than header length\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
@@ -369,17 +377,19 @@ printf("enter handle\n");
 
 	if (ptpClock->get_msgTmpHeader().get_versionPTP() != VERSION_PTP) {
 		DBGV("ignore version %d message\n", ptpClock->get_msgTmpHeader().get_versionPTP());
+		printf("ignore version\n");
 		return;
 	}
 	if (memcmp(ptpClock->get_msgTmpHeader().get_subdomain(), ptpClock->get_subdomain_name(),
 	    PTP_SUBDOMAIN_NAME_LENGTH)) {
 		DBGV("ignore message from subdomain %s\n", ptpClock->get_msgTmpHeader().get_subdomain());
+		printf("ignore subdomain\n");
 		return;
 	}
 	isFromSelf = ptpClock->get_msgTmpHeader().get_sourceCommunicationTechnology() == ptpClock->get_port_communication_technology()
 	    && ptpClock->get_msgTmpHeader().get_sourcePortId() == ptpClock->get_port_id_field()
 	    && !memcmp(ptpClock->get_msgTmpHeader().get_sourceUuid(), ptpClock->get_port_uuid_field(), PTP_UUID_LENGTH);
-
+	printf("isFromSelf: %d\n",isFromSelf);
 	/*
 	 * subtract the inbound latency adjustment if it is not a loop back
 	 * and the time stamp seems reasonable
@@ -415,6 +425,7 @@ printf("enter handle\n");
 printf("exit handle\n");
 }
 
+/*START HERE*/
 void 
 handleSync(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal * time, Boolean isFromSelf, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
@@ -486,7 +497,7 @@ printf("enter handleSync\n");
 				DBG("Q = %d, R = %d\n", ptpClock->get_Q(), ptpClock->get_R());
 			}
 			DBGV("SYNC_RECEIPT_TIMER reset\n");
-			timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), &ptpClock->get_itimer());
+			timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
 			if (rtOpts->get_recordFP() != NULL) 
 				fprintf(rtOpts->get_recordFP(), "%d %llu\n", 
