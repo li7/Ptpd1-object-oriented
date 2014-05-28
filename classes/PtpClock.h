@@ -136,11 +136,11 @@ public:
 
 	Boolean get_message_activity() const;
 
-	IntervalTimer& get_itimer();
+	IntervalTimer* get_itimer();
 
 	NetPath& get_netPath();
 
-	bool get_flag();
+	bool get_flag() const;
 
 	/****************mutators***********/
         void set_clockCommunicationTechnology(UInteger8 cct);

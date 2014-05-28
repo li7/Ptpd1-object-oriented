@@ -17,7 +17,7 @@ ClockIdentity::ClockIdentity()
 UInteger8 ClockIdentity::get_clockCommunicationTechnology() const
 {return clockCommunicationTechnology;}
 
-Octet ClockIdentity::get_clockUuidField() const
+Octet &ClockIdentity::get_clockUuidField()
 {return *clockUuidField;}
 
 Octet ClockIdentity::get_clockUuidField(int position) const
@@ -26,7 +26,7 @@ Octet ClockIdentity::get_clockUuidField(int position) const
 UInteger16 ClockIdentity::get_clockPortField() const
 {return clockPortField;}
 
-Octet ClockIdentity::get_manufacturerIdentity() const
+Octet &ClockIdentity::get_manufacturerIdentity()
 {return *manufacturerIdentity;}
 
 Octet ClockIdentity::get_manufacturerIdentity(int position) const
@@ -37,13 +37,13 @@ void ClockIdentity::set_clockCommunicationTechnology(UInteger8 cct)
 {clockCommunicationTechnology = cct;}
 
 void ClockIdentity::set_clockUuidField(const void *cuf, int length)
-{memcpy(clockUuidField,cuf,length);}
+{if(length <= 6) memcpy(clockUuidField,cuf,length);}
 
 void ClockIdentity::set_clockPortField(UInteger16 cpf)
 {clockPortField = cpf;}
 
 void ClockIdentity::set_manufacturerIdentity(const void *mi, int length)
-{memcpy(manufacturerIdentity,mi,length);}
+{if(length <= 48) memcpy(manufacturerIdentity,mi,length);}
 
 ClockIdentity &ClockIdentity::operator=(const ClockIdentity & other_t)
 {
@@ -59,6 +59,7 @@ ostream& operator<<(ostream& s, const ClockIdentity& it)
         cout <<"clockCommunicationTechnology : " << it.clockCommunicationTechnology << endl;
 	cout << "clockPortField: " << it.clockPortField << endl;
 	cout << "clockUuidField: " << it.clockUuidField << endl;
+        cout <<"manufacturerIdentity : " << it.manufacturerIdentity << endl;
 
         return s;
 }

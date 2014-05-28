@@ -281,13 +281,13 @@ one_way_delay_filter& PtpClock::get_owd_filt()
 Boolean PtpClock::get_message_activity() const
 {return message_activity;}
 
-IntervalTimer& PtpClock::get_itimer()
-{return *itimer;}
+IntervalTimer* PtpClock::get_itimer()
+{return itimer;}
 
 NetPath& PtpClock::get_netPath()
 {return netPath;}
 
-bool PtpClock::get_flag()
+bool PtpClock::get_flag() const
 {return flag;}
 
 /****************mutators******************/
@@ -572,6 +572,9 @@ ostream& operator<<(ostream& s, const PtpClock& it)
 {
 	cout << "port Uuid field: " << it.port_uuid_field << endl;
 	cout << "offset from master: " << it.offset_from_master << endl;
+	cout << "delay req send time: " << it.delay_req_send_time << endl;
+	cout << "delay req receive time: " << it.delay_req_receive_time << endl;
+	cout << "version ptp: " << it.msgTmpHeader.get_versionPTP()<< endl;
         return s;
 }
 

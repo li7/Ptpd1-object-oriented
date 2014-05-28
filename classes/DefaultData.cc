@@ -29,7 +29,7 @@ DefaultData::DefaultData()
 UInteger8 DefaultData::get_clockCommunicationTechnology() const
 {return clockCommunicationTechnology;}
 
-Octet DefaultData::get_clockUuidField() const
+Octet& DefaultData::get_clockUuidField()
 {return *clockUuidField;}
 
 Octet DefaultData::get_clockUuidField(int position) const
@@ -41,7 +41,7 @@ UInteger16 DefaultData::get_clockPortField() const
 UInteger8 DefaultData::get_clockStratum() const
 {return clockStratum;}
 
-Octet DefaultData::get_clockIdentifier() const
+Octet &DefaultData::get_clockIdentifier()
 {return *clockIdentifier;}
 
 Octet DefaultData::get_clockIdentifier(int position) const
@@ -68,7 +68,7 @@ Boolean DefaultData::get_isBoundaryClock() const
 Integer8 DefaultData::get_syncInterval() const
 {return syncInterval;}
 
-Octet DefaultData::get_subdomainName() const
+Octet &DefaultData::get_subdomainName()
 {return *subdomainName;}
 
 Octet DefaultData::get_subdomainName(int x) const
@@ -146,6 +146,21 @@ DefaultData &DefaultData::operator=(const DefaultData & other_t)
 }
 ostream& operator<<(ostream& s, const DefaultData& it)
 {
+	cout<<"clockCommunicationTechnology: "<<it.clockCommunicationTechnology<<endl;
+	cout<<"clockUUidField: "<<it.clockUuidField<<endl;
+	cout<<"clockPortField: "<<it.clockPortField<<endl;
+	cout<<"clockStratum: "<<it.clockStratum<<endl;
+	cout<<"clockIdentifier: "<<it.clockIdentifier<<endl;
+	cout<<"clockVariance: "<<it.clockVariance<<endl;
+	cout<<"clockFollowUpCapable: "<<it.clockFollowupCapable<<endl;
+	cout<<"preferred: "<< it.preferred << endl;
+	cout<<"initializable: "<< it.initializable << endl;
+	cout<<"externalTiming: "<< it.externalTiming << endl;
+	cout<<"isBoundaryClock: "<< it.isBoundaryClock << endl;
+	cout<<"syncInterval: "<< it.syncInterval << endl;
+	cout<<"subdomainName: "<< it.subdomainName << endl;
+	cout<<"numberPorts: "<< it.numberPorts << endl;
+	cout<<"numberForeignRecords: "<< it.numberForeignRecords << endl;
         return s;
 }
 
