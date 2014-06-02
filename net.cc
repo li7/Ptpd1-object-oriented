@@ -73,9 +73,11 @@ findIface(Octet * ifaceName, UInteger8 * communicationTechnology,
 #if defined(linux)
 
 	/* depends on linux specific ioctls (see 'netdevice' man page) */
-	int i, flags;
+	int i, flags,x;
 	struct ifconf data;
 	struct ifreq device[IFCONF_LENGTH];
+
+	printf("communicationTechnology %d\n",*communicationTechnology);
 
 	data.ifc_len = sizeof(device);
 	data.ifc_req = device;
@@ -90,9 +92,9 @@ findIface(Octet * ifaceName, UInteger8 * communicationTechnology,
 		memcpy(device[i].ifr_name, ifaceName, IFACE_NAME_LENGTH);
 
 		if (ioctl(netPath->get_eventSock(), SIOCGIFHWADDR, &device[i]) < 0)
-			DBGV("failed to get hardware address\n");
+			printf("failed to get hardware address\n");
 		else if ((*communicationTechnology = lookupCommunicationTechnology(device[i].ifr_hwaddr.sa_family)) == PTP_DEFAULT)
-			DBGV("unsupported communication technology (%d)\n", *communicationTechnology);
+			printf("unsupported communication technology (%d)\n", *communicationTechnology);
 		else
 			memcpy(uuid, device[i].ifr_hwaddr.sa_data, PTP_UUID_LENGTH);
 	} else {
@@ -100,25 +102,31 @@ findIface(Octet * ifaceName, UInteger8 * communicationTechnology,
 		/* get list of network interfaces */
 		if (ioctl(netPath->get_eventSock(), SIOCGIFCONF, &data) < 0) {
 			PERROR("failed query network interfaces");
+			printf("failed query network interfaces");
 			return 0;
 		}
 		if (data.ifc_len >= sizeof(device))
 			DBG("device list may exceed allocated space\n");
+			printf("device list may exceed allocated space\n");
 
 		/* search through interfaces */
 		for (i = 0; i < data.ifc_len / sizeof(device[0]); ++i) {
 			DBGV("%d %s %s\n", i, device[i].ifr_name, inet_ntoa(((struct sockaddr_in *)&device[i].ifr_addr)->sin_addr));
-
+			printf("%d %s %s\n", i, device[i].ifr_name, inet_ntoa(((struct sockaddr_in *)&device[i].ifr_addr)->sin_addr));
+x=lookupCommunicationTechnology(device[i].ifr_hwaddr.sa_family);
+printf("x = %d, commTech = %d\n",x,*communicationTechnology);
 			if (ioctl(netPath->get_eventSock(), SIOCGIFFLAGS, &device[i]) < 0)
-				DBGV("failed to get device flags\n");
+				printf("failed to get device flags\n");
 			else if ((device[i].ifr_flags & flags) != flags)
-				DBGV("does not meet requirements (%08x, %08x)\n", device[i].ifr_flags, flags);
+				printf("does not meet requirements (%08x, %08x)\n", device[i].ifr_flags, flags);
 			else if (ioctl(netPath->get_eventSock(), SIOCGIFHWADDR, &device[i]) < 0)
-				DBGV("failed to get hardware address\n");
+				printf("failed to get hardware address\n");
 			else if ((*communicationTechnology = lookupCommunicationTechnology(device[i].ifr_hwaddr.sa_family)) == PTP_DEFAULT)
-				DBGV("unsupported communication technology (%d)\n", *communicationTechnology);
+				printf("unsupported communication technology (%d)\n", *communicationTechnology);
 			else {
 				DBGV("found interface (%s)\n", device[i].ifr_name);
+				printf("found interface (%s)\n", device[i].ifr_name);
+		printf("communication technology = %d\n",*communicationTechnology);
 
 				memcpy(uuid, device[i].ifr_hwaddr.sa_data, PTP_UUID_LENGTH);
 				memcpy(ifaceName, device[i].ifr_name, IFACE_NAME_LENGTH);
@@ -130,10 +138,12 @@ findIface(Octet * ifaceName, UInteger8 * communicationTechnology,
 
 	if (ifaceName[0] == '\0') {
 		ERROR("failed to find a usable interface\n");
+		printf("failed to find a usable interface\n");
 		return 0;
 	}
 	if (ioctl(netPath->get_eventSock(), SIOCGIFADDR, &device[i]) < 0) {
 		PERROR("failed to get ip address");
+		printf("failed to get ip address");
 		return 0;
 	}
 	return ((struct sockaddr_in *)&device[i].ifr_addr)->sin_addr.s_addr;
@@ -144,6 +154,7 @@ findIface(Octet * ifaceName, UInteger8 * communicationTechnology,
 
 	if (getifaddrs(&if_list) < 0) {
 		PERROR("getifaddrs() failed");
+		printf("getifaddrs() failed");
 		return FALSE;
 	}
 	/* find an IPv4, multicast, UP interface, right name(if supplied) */
@@ -169,9 +180,11 @@ findIface(Octet * ifaceName, UInteger8 * communicationTechnology,
 	if (ifv4 == NULL) {
 		if (ifaceName[0]) {
 			ERROR("interface \"%s\" does not exist, or is not appropriate\n", ifaceName);
+			printf("interface \"%s\" does not exist, or is not appropriate\n", ifaceName);
 			return false;
 		}
 		ERROR("no suitable interfaces found!");
+		printf("no suitable interfaces found!");
 		return false;
 	}
 	/* find the AF_LINK info associated with the chosen interface */
@@ -184,11 +197,13 @@ findIface(Octet * ifaceName, UInteger8 * communicationTechnology,
 
 	if (ifh == NULL) {
 		ERROR("could not get hardware address for interface \"%s\"\n", ifv4->ifa_name);
+		printf("could not get hardware address for interface \"%s\"\n", ifv4->ifa_name);
 		return false;
 	}
 	/* check that the interface TYPE is OK */
 	if (((struct sockaddr_dl *)ifh->ifa_addr)->sdl_type != IFT_ETHER) {
 		ERROR("\"%s\" is not an ethernet interface!\n", ifh->ifa_name);
+		printf("\"%s\" is not an ethernet interface!\n", ifh->ifa_name);
 		return false;
 	}
 
@@ -230,6 +245,7 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	if (netPath->get_eventSock() < 0
 	    || netPath->get_generalSock() < 0) {
 		PERROR("failed to initalize sockets");
+		printf("failed to initialize sockets\n");
 		return false;
 	}
 	printf("listen3.2\n");
@@ -243,6 +259,7 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	if (setsockopt(netPath->get_eventSock(), SOL_SOCKET, SO_REUSEADDR, &temp, sizeof(int)) < 0
 	    || setsockopt(netPath->get_generalSock(), SOL_SOCKET, SO_REUSEADDR, &temp, sizeof(int)) < 0) {
 		DBG("failed to set socket reuse\n");
+		printf("failed to set socket reuse\n");
 	}
 	/* bind sockets */
 	/*
@@ -256,12 +273,14 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	printf("listen3.5\n");
 	if (bind(netPath->get_eventSock(), (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0) {
 		PERROR("failed to bind event socket");
+		printf("failed to bind event socket");
 		return false;
 	}
 	addr.sin_port = htons(PTP_GENERAL_PORT);
 	printf("listen3.6\n");
 	if (bind(netPath->get_generalSock(), (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0) {
 		PERROR("failed to bind general socket");
+		printf("failed to bind general socket");
 		return false;
 	}
 	printf("listen3.7\n");
@@ -270,8 +289,8 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	ptpClock->set_generalPortAddress(PTP_GENERAL_PORT);
 	//ptpClock->set_eventPortAddress(*(Integer16 *) PTP_EVENT_PORT);
 	//ptpClock->set_generalPortAddress(*(Integer16 *) PTP_GENERAL_PORT);
-	printf("%d\n",ptpClock->get_event_port_address());
-	printf("%d\n",ptpClock->get_general_port_address());
+	printf("event port address: %c\n",*ptpClock->get_event_port_address());
+	printf("general port address: %c\n",*ptpClock->get_general_port_address());
 printf("listen3.8\n");
 	
 	/* send a uni-cast address if specified (useful for testing) */
@@ -553,6 +572,7 @@ netSendEvent(Octet * buf, UInteger16 length, NetPath * netPath)
 	ret = sendto(netPath->get_eventSock(), buf, length, 0, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
 	if (ret <= 0)
 		DBG("error sending multi-cast event message\n");
+		printf("error sending multi-cast event\n");
 
 	if (netPath->get_unicastAddr()) {
 		addr.sin_addr.s_addr = netPath->get_unicastAddr();
@@ -560,6 +580,7 @@ netSendEvent(Octet * buf, UInteger16 length, NetPath * netPath)
 		ret = sendto(netPath->get_eventSock(), buf, length, 0, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
 		if (ret <= 0)
 			DBG("error sending uni-cast event message\n");
+			printf("error sending uni-cast event message\n");
 	}
 	return ret;
 }
@@ -577,6 +598,7 @@ netSendGeneral(Octet * buf, UInteger16 length, NetPath * netPath)
 	ret = sendto(netPath->get_generalSock(), buf, length, 0, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
 	if (ret <= 0)
 		DBG("error sending multi-cast general message\n");
+		printf("error sending multi-cast general message\n");
 
 	if (netPath->get_unicastAddr()) {
 		addr.sin_addr.s_addr = netPath->get_unicastAddr();
@@ -584,6 +606,7 @@ netSendGeneral(Octet * buf, UInteger16 length, NetPath * netPath)
 		ret = sendto(netPath->get_eventSock(), buf, length, 0, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
 		if (ret <= 0)
 			DBG("error sending uni-cast general message\n");
+			printf("error sending uni-cast general message\n");
 	}
 	return ret;
 }

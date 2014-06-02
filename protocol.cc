@@ -435,6 +435,7 @@ printf("enter handleSync\n");
 
 	if (length < SYNC_PACKET_LENGTH) {
 		ERROR("short sync message\n");
+		printf("short sync message\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
@@ -443,63 +444,93 @@ printf("enter handleSync\n");
 	case PTP_INITIALIZING:
 	case PTP_DISABLED:
 		DBGV("handleSync: disreguard\n");
+		printf("handleSync: disreguard\n");
 		return;
 
 	case PTP_UNCALIBRATED:
 	case PTP_SLAVE:
 		if (isFromSelf) {
 			DBG("handleSync: ignore from self\n");
+			printf("handleSync: ignore from self\n");
 			return;
 		}
 		if (getFlag(header->get_flags(), PTP_SYNC_BURST) && !ptpClock->get_burst_enabled())
 			return;
 
+		printf("handlesync 1\n");
 		DBGV("handleSync: looking for uuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
 		    ptpClock->get_parent_uuid(0), ptpClock->get_parent_uuid(1), ptpClock->get_parent_uuid(2),
 		    ptpClock->get_parent_uuid(3), ptpClock->get_parent_uuid(4), ptpClock->get_parent_uuid(5));
+		printf("handlesync 2\n");
+		printf("%d > %d\n", header->get_sequenceId(),ptpClock->get_parent_last_sync_sequence_number());
+		printf("%d == %d\n",header->get_sourceCommunicationTechnology(),ptpClock->get_parent_communication_technology());
+		printf("%d == %d\n",header->get_sourcePortId(),ptpClock->get_parent_port_id());
+		printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
 		if (header->get_sequenceId() > ptpClock->get_parent_last_sync_sequence_number()
 		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
 		    && !memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH)) {
+		printf("handlesync 3\n");
 			/* addForeign() takes care of msgUnpackSync() */
 			ptpClock->set_record_update(true);
 			sync = addForeign(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader(), ptpClock);
 
+		printf("handlesync 4\n");
 			if (sync->get_syncInterval() != ptpClock->get_sync_interval()) {
 				DBGV("message's sync interval is %d, but clock's is %d\n", sync->get_syncInterval(), ptpClock->get_sync_interval());
+		printf("handlesync 5\n");
 				/*
 				 * spec recommends handling a sync interval
 				 * discrepancy as a fault
 				 */
 			}
+		printf("handlesync 6\n");
 			ptpClock->get_sync_receive_time().set_seconds(time->get_seconds());
+		printf("handlesync 7\n");
 			ptpClock->get_sync_receive_time().set_nanoseconds(time->get_nanoseconds());
 
+		printf("handlesync 8\n");
 			if (!getFlag(header->get_flags(), PTP_ASSIST)) {
+		printf("handlesync 9\n");
 				ptpClock->set_waitingForFollow(false);
 
+		printf("handlesync 10\n");
 				toInternalTime(&originTimestamp, &sync->get_originTimestamp(), &ptpClock->get_halfEpoch());
+		printf("handlesync 11\n");
 				updateOffset(&originTimestamp, &ptpClock->get_sync_receive_time(),
 				    &ptpClock->get_ofm_filt(), rtOpts, ptpClock);
+		printf("handlesync 12\n");
 				updateClock(rtOpts, ptpClock);
+		printf("handlesync 13\n");
 			} else {
 				ptpClock->set_waitingForFollow(true);
+		printf("handlesync 14\n");
 			}
 
+		printf("handlesync 15\n");
 			s1(header, sync, ptpClock);
 
-			ptpClock->set_R(ptpClock->get_R() - 1);
-			if (!(ptpClock->get_R())) {
+			printf("R: %d\n",ptpClock->get_R());
+		printf("handlesync 16\n");
+			if (!(ptpClock->get_R()-1)) {
+		printf("handlesync 17\n");
 				issueDelayReq(rtOpts, ptpClock);
 
+		printf("handlesync 18\n");
 				ptpClock->set_Q(0);
+		printf("handlesync 18\n");
 				ptpClock->set_R(getRand(&ptpClock->get_random_seed()) % (PTP_DELAY_REQ_INTERVAL - 2) + 2);
 				DBG("Q = %d, R = %d\n", ptpClock->get_Q(), ptpClock->get_R());
 			}
 			DBGV("SYNC_RECEIPT_TIMER reset\n");
+		printf("handlesync 19\n");
 			timerStart(SYNC_RECEIPT_TIMER, PTP_SYNC_RECEIPT_TIMEOUT(ptpClock->get_sync_interval()), ptpClock->get_itimer());
 
+		printf("handlesync 20\n");
+		printf("handlesync 21\n");
+		printf("handlesync 22\n");
 			if (rtOpts->get_recordFP() != NULL) 
+		printf("handlesync 21\n");
 				fprintf(rtOpts->get_recordFP(), "%d %llu\n", 
 					header->get_sequenceId(), 
 					((time->get_seconds() * 1000000000ULL) + 
@@ -507,10 +538,12 @@ printf("enter handleSync\n");
 
 		} else {
 			DBGV("handleSync: unwanted\n");
+		printf("handlesync 22\n");
 		}
 
 	case PTP_MASTER:
 	default:
+		printf("handlesync 23\n");
 		if (header->get_sourceCommunicationTechnology() == ptpClock->get_clock_communication_technology()
 		    || header->get_sourceCommunicationTechnology() == PTP_DEFAULT
 		    || ptpClock->get_clock_communication_technology() == PTP_DEFAULT) {
@@ -536,6 +569,7 @@ printf("enter handleFollowUp\n");
 
 	if (length < FOLLOW_UP_PACKET_LENGTH) {
 		ERROR("short folow up message\n");
+		printf("short follow up message'n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
@@ -543,6 +577,7 @@ printf("enter handleFollowUp\n");
 	case PTP_SLAVE:
 		if (isFromSelf) {
 			DBG("handleFollowUp: ignore from self\n");
+			printf("ignore from self'n");
 			return;
 		}
 		if (getFlag(header->get_flags(), PTP_SYNC_BURST) && !ptpClock->get_burst_enabled())
@@ -584,6 +619,7 @@ handleDelayReq(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal
 printf("enter handleDelayReq\n");
 	if (length < DELAY_REQ_PACKET_LENGTH) {
 		ERROR("short delay request message\n");
+		printf("short delay request message\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
@@ -591,11 +627,13 @@ printf("enter handleDelayReq\n");
 	case PTP_MASTER:
 		if (isFromSelf) {
 			DBG("handleDelayReq: ignore from self\n");
+			printf("handleDelayReq: ignore from self\n");
 			return;
 		}
 		if (header->get_sourceCommunicationTechnology() == ptpClock->get_clock_communication_technology()
 		    || header->get_sourceCommunicationTechnology() == PTP_DEFAULT
 		    || ptpClock->get_clock_communication_technology() == PTP_DEFAULT) {
+			printf("issueDelayResp\n");
 			issueDelayResp(time, &ptpClock->get_msgTmpHeader(), rtOpts, ptpClock);
 		}
 		break;

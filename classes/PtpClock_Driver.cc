@@ -9,6 +9,7 @@ main()
 	PtpClock one;
 	Octet x;
 	UInteger16 y;
+	ForeignMasterRecord a[2];
 
 	one.set_portUuidField("eot",6);
 	x = one.get_port_uuid_field(0);
@@ -25,6 +26,7 @@ main()
 	one.get_msgtmp().get_sync().set_grandmasterClockStratum(3);
 	one.get_msgTmpHeader().set_versionPTP(VERSION_PTP);
 	y = one.get_msgTmpHeader().get_versionPTP();
+	one.set_foreign(a);
 
 	cout << "x = " << x << endl << endl;
 	cout << "y = " << y << endl << endl;

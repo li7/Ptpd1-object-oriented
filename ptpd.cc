@@ -46,6 +46,7 @@ main(int argc, char **argv)
 		return ret;
 
 	if (rtOpts.get_probe()) {
+		printf("enter probe\n");
 		probe(&rtOpts, ptpClock);
 	} else {
 		/* do the protocol engine */

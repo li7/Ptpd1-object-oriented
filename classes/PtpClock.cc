@@ -191,10 +191,10 @@ UInteger16 PtpClock::get_port_id_field() const
 Boolean PtpClock::get_burst_enabled() const
 {return burst_enabled;}
 
-ForeignMasterRecord& PtpClock::get_foreign()
-{return *foreign;}
+ForeignMasterRecord* PtpClock::get_foreign()
+{return foreign;}
 
-ForeignMasterRecord PtpClock::get_foreign(int i)
+ForeignMasterRecord PtpClock::get_foreign(UInteger16 i)
 {return foreign[i];}
 
 Boolean& PtpClock::get_halfEpoch()
@@ -448,14 +448,14 @@ void PtpClock::set_subdomainAddress(int i, Octet sa)
 {memcpy(event_port_address,epa,length);}
 */
 void PtpClock::set_eventPortAddress(Octet length)
-{memset(event_port_address,length,PORT_ADDRESS_LENGTH);
+{*(Integer16 *) event_port_address = length;
 }
 /*
 void PtpClock::set_generalPortAddress(Octet *gpa, int length)
 {memcpy(general_port_address,gpa,length);}
 */
 void PtpClock::set_generalPortAddress(Octet length)
-{memset(general_port_address,length,PORT_ADDRESS_LENGTH);
+{*(Integer16 *) general_port_address = length;
 }
 
 void PtpClock::set_portCommunicationTechnology(UInteger8 pct)

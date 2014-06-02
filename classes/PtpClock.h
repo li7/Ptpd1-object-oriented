@@ -94,8 +94,8 @@ public:
         Boolean get_burst_enabled() const;
 
 	/*foreign master record data set*/
-	ForeignMasterRecord& get_foreign();
-	ForeignMasterRecord get_foreign(int i);
+	ForeignMasterRecord* get_foreign();
+	ForeignMasterRecord get_foreign(UInteger16 i);
 
 	/*other*/
 	Boolean& get_halfEpoch();

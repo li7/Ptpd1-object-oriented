@@ -672,13 +672,13 @@ msgPackManagementResponse(void *buf, MsgHeader * header, MsgManagement * manage,
 		*(Integer32 *) (buf + 60) = shift16(flip16(ptpClock->get_port_id_field()), 1);
 		*(Integer32 *) (buf + 64) = shift16(flip16(manage->get_recordKey() - 1), 1);
 //		*(Integer32 *) (buf + 68) = shift8(ptpClock->foreign[manage->recordKey - 1].foreign_master_communication_technology, 3);
-		*(Integer32 *) (buf + 68) = shift8(ptpClock->get_foreign().get_foreign_master_communication_technology(), 3);
+		*(Integer32 *) (buf + 68) = shift8(ptpClock->get_foreign(manage->get_recordKey()-1).get_foreign_master_communication_technology(), 3);
 //		memcpy(buf + 72, ptpClock->foreign[manage->recordKey - 1].foreign_master_uuid, 6);
-		memcpy(buf + 72, ptpClock->get_foreign().get_foreign_master_uuid(), 6);
+		memcpy(buf + 72, ptpClock->get_foreign(manage->get_recordKey()-1).get_foreign_master_uuid(), 6);
 //		*(Integer32 *) (buf + 80) = shift16(flip16(ptpClock->foreign[manage->recordKey - 1].foreign_master_port_id), 1);
 //		*(Integer32 *) (buf + 84) = shift16(flip16(ptpClock->foreign[manage->recordKey - 1].foreign_master_syncs), 1);
-		*(Integer32 *) (buf + 80) = shift16(flip16(ptpClock->get_foreign().get_foreign_master_port_id()), 1);
-		*(Integer32 *) (buf + 84) = shift16(flip16(ptpClock->get_foreign().get_foreign_master_syncs()), 1);
+		*(Integer32 *) (buf + 80) = shift16(flip16(ptpClock->get_foreign(manage->get_recordKey()-1).get_foreign_master_port_id()), 1);
+		*(Integer32 *) (buf + 84) = shift16(flip16(ptpClock->get_foreign(manage->get_recordKey()-1).get_foreign_master_syncs()), 1);
 		return 88;
 
 	default:

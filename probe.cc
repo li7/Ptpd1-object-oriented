@@ -24,6 +24,7 @@ probe(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	UInteger16 length;
 	TimeInternal interval, now, finish, timestamp;
 
+	printf("enter probe\n");
 	/* check */
 	if (rtOpts->get_probe_management_key() == PTP_MM_UPDATE_DEFAULT_DATA_SET
 	    || rtOpts->get_probe_management_key() == PTP_MM_UPDATE_GLOBAL_TIME_PROPERTIES
