@@ -28,6 +28,7 @@ initData(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	ptpClock->set_lastSyncEventSequenceNumber(0);
 	ptpClock->set_lastGeneralEventSequenceNumber(0);
 	ptpClock->set_portIdField(1);
+	printf("portIdField = %d\n",ptpClock->get_port_id_field());
 	ptpClock->set_burstEnabled(BURST_ENABLED);
 
 	/* Default data set */
@@ -76,6 +77,7 @@ m1(PtpClock * ptpClock)
 	ptpClock->set_parentUuid(ptpClock->get_clock_uuid_field(), PTP_UUID_LENGTH);
 	ptpClock->set_parentPortId(ptpClock->get_clock_port_id_field());
 	ptpClock->set_parentLastSyncSequenceNumber(0);
+	printf("parent last sync seq number (m1) = %d\n",ptpClock->get_parent_last_sync_sequence_number());
 	ptpClock->set_parentFollowupCapable(ptpClock->get_clock_followup_capable());
 	ptpClock->set_parentExternalTiming(ptpClock->get_external_timing());
 	ptpClock->set_parentVariance(ptpClock->get_clock_variance());
@@ -88,6 +90,7 @@ m1(PtpClock * ptpClock)
 	ptpClock->set_grandmasterPreferred(ptpClock->get_preferred());
 	ptpClock->set_grandmasterIsBoundaryClock(ptpClock->get_is_boundary_clock());
 	ptpClock->set_grandmasterSequenceNumber(ptpClock->get_last_sync_event_sequence_number());
+	printf("gmsn (m1) = %d\n",ptpClock->get_grandmaster_sequence_number());
 printf("exit m1\n");
 }
 
@@ -96,7 +99,9 @@ void
 s1(MsgHeader * header, MsgSync * sync, PtpClock * ptpClock)
 {
 printf("enter s1\n");
+printf("port id field (s1 in bmc.cc) = %d\n",ptpClock->get_port_id_field());
 	/* Current data set */
+	printf("enter s1\n");
 	ptpClock->set_stepsRemoved(sync->get_localStepsRemoved() + 1);
 
 	/* Parent data set */
@@ -104,8 +109,12 @@ printf("enter s1\n");
 	printf("parentCommtech: %d\n",ptpClock->get_parent_communication_technology());
 	printf("sourceCommtech: %d\n",header->get_sourceCommunicationTechnology());
 	ptpClock->set_parentUuid(header->get_sourceUuid(), PTP_UUID_LENGTH);
-	ptpClock->set_parentPortId(header->get_sourcePortId());
+	//ptpClock->set_parentPortId(header->get_sourcePortId());
+	ptpClock->set_parentPortId(ptpClock->get_msgTmpHeader().get_sourcePortId());
+	printf("header source port id (s1) = %d\n",ptpClock->get_msgTmpHeader().get_sourcePortId());
 	ptpClock->set_parentLastSyncSequenceNumber(header->get_sequenceId());
+	printf("parent last sync sequence number(s1) = %d\n",ptpClock->get_parent_last_sync_sequence_number());
+	printf("header sequence id (s1) = %d\n",header->get_sequenceId());
 	ptpClock->set_parentFollowupCapable(getFlag(header->get_flags(), PTP_ASSIST));
 	ptpClock->set_parentExternalTiming(getFlag(header->get_flags(), PTP_EXT_SYNC));
 	ptpClock->set_parentVariance(sync->get_localClockVariance());
@@ -118,6 +127,7 @@ printf("enter s1\n");
 	ptpClock->set_grandmasterPreferred(sync->get_grandmasterPreferred());
 	ptpClock->set_grandmasterIsBoundaryClock(sync->get_grandmasterIsBoundaryClock());
 	ptpClock->set_grandmasterSequenceNumber(sync->get_grandmasterSequenceId());
+	printf("gmsn (s1) = %d\n",ptpClock->get_grandmaster_sequence_number());
 
 	/* Global time properties data set */
 	ptpClock->set_currentUtcOffset(sync->get_currentUTCOffset());
@@ -130,6 +140,7 @@ printf("exit s1\n");
 void 
 copyD0(MsgHeader * header, MsgSync * sync, PtpClock * ptpClock)
 {
+	printf("port id field (copyD0 in bmc.cc) = %d\n",ptpClock->get_port_id_field());
 	sync->set_grandmasterCommunicationTechnology(ptpClock->get_clock_communication_technology());
 	sync->set_grandmasterClockUuid(ptpClock->get_port_uuid_field(), PTP_UUID_LENGTH);
 	sync->set_grandmasterPortId(ptpClock->get_port_id_field());
@@ -142,8 +153,12 @@ copyD0(MsgHeader * header, MsgSync * sync, PtpClock * ptpClock)
 	header->set_sourceCommunicationTechnology(ptpClock->get_clock_communication_technology());
 	header->set_sourceUuid(ptpClock->get_port_uuid_field(), PTP_UUID_LENGTH);
 	header->set_sourcePortId(ptpClock->get_port_id_field());
+	printf("ptpclock port id field (copyD0) = %d\n",ptpClock->get_port_id_field());
+	printf("header source port id (copyD0) = %d\n",header->get_sourcePortId());
 	sync->set_grandmasterSequenceId(ptpClock->get_grandmaster_sequence_number());
+	printf("gmsi (copyD0) = %d\n",sync->get_grandmasterSequenceId());
 	header->set_sequenceId(ptpClock->get_grandmaster_sequence_number());
+	printf("seq id (copyD0) = %d\n",header->get_sequenceId());
 }
 
 int 
@@ -299,18 +314,22 @@ B:
 UInteger8 
 bmcStateDecision(MsgHeader *header, MsgSync *sync, RunTimeOpts *rtOpts, PtpClock *ptpClock)
 {
+	printf("enter bmcStateDecision\n");
 	if (rtOpts->get_slaveOnly()) {
+		printf("header source port id before s1 = %d\n",header->get_sourcePortId());
 		s1(header, sync, ptpClock);
 		return PTP_SLAVE;
 	}
 	/********************************START HERE****************************/
 	copyD0(&ptpClock->get_msgTmpHeader(), &ptpClock->get_msgtmp_sync(), ptpClock); /*iffy,pass by reference/pointer or value*/
+	printf("header source port id bmcStateDecision = %d\n",ptpClock->get_msgTmpHeader().get_sourcePortId());
 
 	if (ptpClock->get_msgtmp().get_sync().get_grandmasterClockStratum() < 3) {
 		if (bmcDataSetComparison(&ptpClock->get_msgTmpHeader(), &ptpClock->get_msgtmp().get_sync(), header, sync, ptpClock) > 0) {
 			m1(ptpClock);
 			return PTP_MASTER;
 		}
+		printf("header source port id before s1 = %d\n",header->get_sourcePortId());
 		s1(header, sync, ptpClock);
 		return PTP_PASSIVE;
 	} else if (bmcDataSetComparison(&ptpClock->get_msgTmpHeader(), &ptpClock->get_msgtmp().get_sync(), header, sync, ptpClock) > 0
@@ -318,6 +337,7 @@ bmcStateDecision(MsgHeader *header, MsgSync *sync, RunTimeOpts *rtOpts, PtpClock
 		m1(ptpClock);
 		return PTP_MASTER;
 	} else {
+		printf("header source port id before s1 = %d\n",header->get_sourcePortId());
 		s1(header, sync, ptpClock);
 		return PTP_SLAVE;
 	}
@@ -343,7 +363,9 @@ bmc(ForeignMasterRecord * foreign, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	}
 
 	DBGV("bmc: best record %d\n", best);
+	printf("best = %d\n",best);
 	ptpClock->set_foreign_record_best(best);
 
+	printf("best = %d\n",best);
 	return bmcStateDecision(&foreign[best].get_header(), &foreign[best].get_sync(), rtOpts, ptpClock);
 }

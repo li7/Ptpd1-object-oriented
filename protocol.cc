@@ -71,6 +71,7 @@ doInit(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	}
 	/* initialize other stuff */
 	initData(rtOpts, ptpClock);
+	printf("port id field(doInit in protocol.cc)  = %d\n",ptpClock->get_port_id_field());
 	printf("listen6\n");
 	initTimer();
 	printf("listen7\n");
@@ -125,6 +126,7 @@ printf("enter doState\n");
 		if (ptpClock->get_record_update()) {
 			printf("get here\n");
 			ptpClock->set_record_update(false);
+			printf("foreign header = %d\n",ptpClock->get_foreign(0).get_header().get_sourcePortId());
 			state = bmc(ptpClock->get_foreign(), rtOpts, ptpClock);
 			printf("state = %d\n",ptpClock->get_port_state());
 			printf("state = %d\n",state);
@@ -439,6 +441,7 @@ printf("enter handleSync\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 		return;
 	}
+	printf("port state (handleSync) = %d\n",ptpClock->get_port_state());
 	switch (ptpClock->get_port_state()) {
 	case PTP_FAULTY:
 	case PTP_INITIALIZING:
@@ -465,7 +468,9 @@ printf("enter handleSync\n");
 		printf("%d > %d\n", header->get_sequenceId(),ptpClock->get_parent_last_sync_sequence_number());
 		printf("%d == %d\n",header->get_sourceCommunicationTechnology(),ptpClock->get_parent_communication_technology());
 		printf("%d == %d\n",header->get_sourcePortId(),ptpClock->get_parent_port_id());
+printf("source uuid %d, parent port id %d\n",header->get_sourceUuid(),ptpClock->get_parent_port_id());
 		printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
+printf("source uuid %d, parent port id %d\n",*header->get_sourceUuid(),ptpClock->get_parent_port_id());
 		if (header->get_sequenceId() > ptpClock->get_parent_last_sync_sequence_number()
 		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
@@ -473,6 +478,7 @@ printf("enter handleSync\n");
 		printf("handlesync 3\n");
 			/* addForeign() takes care of msgUnpackSync() */
 			ptpClock->set_record_update(true);
+			printf("enter addForeign1(handleSync)\n");
 			sync = addForeign(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader(), ptpClock);
 
 		printf("handlesync 4\n");
@@ -549,6 +555,7 @@ printf("enter handleSync\n");
 		    || ptpClock->get_clock_communication_technology() == PTP_DEFAULT) {
 			if (!isFromSelf) {
 				ptpClock->set_record_update(true);
+printf("enter addForegin2(handleSync)\n");
 				addForeign(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader(), ptpClock);
 			} else if (ptpClock->get_port_state() == PTP_MASTER && ptpClock->get_clock_followup_capable()) {
 				addTime(time, time, &rtOpts->get_outboundLatency());
@@ -912,7 +919,10 @@ printf("enter addForeign\n");
 		ptpClock->set_foreign_record_i((ptpClock->get_foreign_record_i() + 1) % ptpClock->get_max_foreign_records());
 	}
 	msgUnpackHeader(buf, &ptpClock->get_foreign(j).get_header());
+	printf("enter msgUnpackSync from addForeign\n");
 	msgUnpackSync(buf, &ptpClock->get_foreign(j).get_sync());
+	printf("returned from msgUnpackSync\n");
+	printf(" grandmasterSequenceId = %d\n",ptpClock->get_foreign(j).get_sync().get_grandmasterSequenceId());
 
 	return &ptpClock->get_foreign(j).get_sync();
 printf("exit addForeign\n");

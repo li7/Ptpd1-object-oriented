@@ -74,9 +74,8 @@ msgUnpackSync(void *buf, MsgSync * sync)
 	    sync->grandmasterClockUuid[0], sync->grandmasterClockUuid[1], sync->grandmasterClockUuid[2],
 	    sync->grandmasterClockUuid[3], sync->grandmasterClockUuid[4], sync->grandmasterClockUuid[5]);*/
 	sync->set_grandmasterPortId(flip16(*(UInteger16 *) (buf + 60)));
-	DBGV("msgUnpackSync: grandmasterPortId %d\n", sync->grandmasterPortId);
 	sync->set_grandmasterSequenceId(flip16(*(UInteger16 *) (buf + 62)));
-	DBGV("msgUnpackSync: grandmasterSequenceId %d\n", sync->grandmasterSequenceId);
+	printf("msgUnpackSync: grandmasterSequenceId %d\n", sync->get_grandmasterSequenceId());
 	sync->set_grandmasterClockStratum(*(UInteger8 *) (buf + 67));
 	DBGV("msgUnpackSync: grandmasterClockStratum %d\n", sync->grandmasterClockStratum);
 	sync->set_grandmasterClockIdentifier((buf + 68), 4);
