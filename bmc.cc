@@ -100,7 +100,11 @@ s1(MsgHeader * header, MsgSync * sync, PtpClock * ptpClock)
 
 	/* Parent data set */
 	ptpClock->set_parentCommunicationTechnology(header->get_sourceCommunicationTechnology());
+	printf("--parent comm tech (s1) = %d\n",ptpClock->get_parent_communication_technology());
+	printf("--header source com tech (s1) = %d\n",header->get_sourceCommunicationTechnology());
 	ptpClock->set_parentUuid(header->get_sourceUuid(), PTP_UUID_LENGTH);
+	printf("-header source uuid (s1) = %d\n",*header->get_sourceUuid());
+	printf("-parent uuid (s1) = %d\n",*ptpClock->get_parent_uuid());
 	ptpClock->set_parentPortId(header->get_sourcePortId());
 	ptpClock->set_parentLastSyncSequenceNumber(header->get_sequenceId());
 	ptpClock->set_parentFollowupCapable(getFlag(header->get_flags(), PTP_ASSIST));
@@ -137,7 +141,11 @@ copyD0(MsgHeader * header, MsgSync * sync, PtpClock * ptpClock)
 	sync->set_grandmasterPreferred(ptpClock->get_preferred());
 	sync->set_localStepsRemoved(ptpClock->get_steps_removed());
 	header->set_sourceCommunicationTechnology(ptpClock->get_clock_communication_technology());
+	printf("--source communication tech (copyD0) = %d\n",header->get_sourceCommunicationTechnology());
+	printf("--clock communication tech (copyD0) = %d\n",ptpClock->get_clock_communication_technology());
 	header->set_sourceUuid(ptpClock->get_port_uuid_field(), PTP_UUID_LENGTH);
+	printf("-port uuid field (copyD0) = %d\n", *ptpClock->get_port_uuid_field());
+	printf("-header source uuid (copyD0) = %d\n", *header->get_sourceUuid());
 	header->set_sourcePortId(ptpClock->get_port_id_field());
 	sync->set_grandmasterSequenceId(ptpClock->get_grandmaster_sequence_number());
 	header->set_sequenceId(ptpClock->get_grandmaster_sequence_number());
@@ -296,18 +304,26 @@ B:
 UInteger8 
 bmcStateDecision(MsgHeader *header, MsgSync *sync, RunTimeOpts *rtOpts, PtpClock *ptpClock)
 {
+	printf("--source communication tech (bmcsd) = %d\n",ptpClock->get_msgTmpHeader().get_sourceCommunicationTechnology());
+	printf("--clock communication tech (bmcsd) = %d\n",header->get_sourceCommunicationTechnology());
+	cout << *header << endl;
+	//printf("messageType = %d\n",header->get_messageType());
+	//printf("source communication tech = %d\n",header->get_sourceCommunicationTechnology());
+	cout << ptpClock->get_msgTmpHeader() << endl;
 	if (rtOpts->get_slaveOnly()) {
 		s1(header, sync, ptpClock);
 		return PTP_SLAVE;
 	}
-	/********************************START HERE****************************/
 	copyD0(&ptpClock->get_msgTmpHeader(), &ptpClock->get_msgtmp_sync(), ptpClock); /*iffy,pass by reference/pointer or value*/
+	printf("--source communication tech (bmcsd) = %d\n",ptpClock->get_msgTmpHeader().get_sourceCommunicationTechnology());
+	printf("--clock communication tech (bmcsd) = %d\n",ptpClock->get_clock_communication_technology());
 
 	if (ptpClock->get_msgtmp().get_sync().get_grandmasterClockStratum() < 3) {
 		if (bmcDataSetComparison(&ptpClock->get_msgTmpHeader(), &ptpClock->get_msgtmp().get_sync(), header, sync, ptpClock) > 0) {
 			m1(ptpClock);
 			return PTP_MASTER;
 		}
+		cout << "call s1 1" << endl;
 		s1(header, sync, ptpClock);
 		return PTP_PASSIVE;
 	} else if (bmcDataSetComparison(&ptpClock->get_msgTmpHeader(), &ptpClock->get_msgtmp().get_sync(), header, sync, ptpClock) > 0
@@ -315,6 +331,7 @@ bmcStateDecision(MsgHeader *header, MsgSync *sync, RunTimeOpts *rtOpts, PtpClock
 		m1(ptpClock);
 		return PTP_MASTER;
 	} else {
+		cout << "call s1 2" << endl;
 		s1(header, sync, ptpClock);
 		return PTP_SLAVE;
 	}
@@ -339,8 +356,9 @@ bmc(ForeignMasterRecord * foreign, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 			best = i;
 	}
 
-	DBGV("bmc: best record %d\n", best);
+	printf("-bmc: best record %d\n", best);
 	ptpClock->set_foreign_record_best(best);
 
+	printf("-foreign header = %d\n",foreign[best].get_header());
 	return bmcStateDecision(&foreign[best].get_header(), &foreign[best].get_sync(), rtOpts, ptpClock);
 }

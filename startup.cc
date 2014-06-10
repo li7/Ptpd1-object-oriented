@@ -339,8 +339,10 @@ ptpdStartup(int argc, char **argv, Integer16 * ret, RunTimeOpts * rtOpts)
 	} else {
 	cout << "memory allocated" << endl;
 		DBG("allocated %d bytes for protocol engine data\n", (int)sizeof(PtpClock));
-		ptpClock->set_foreign((ForeignMasterRecord *) calloc(rtOpts->get_max_foreign_records(), sizeof(ForeignMasterRecord)));
-		if (ptpClock->get_flag() == false) {
+		ptpClock->set_foreign(rtOpts->get_max_foreign_records());
+// ptpClock->foreign = (ForeignMasterRecord *) calloc(rtOpts->get_max_foreign_records(), sizeof(ForeignMasterRecord));
+	//	if (!ptpClock->foreign) {
+		if(ptpClock->get_flag() == false){
 			PERROR("failed to allocate memory for foreign master data");
 			*ret = 2;
 			free(ptpClock);

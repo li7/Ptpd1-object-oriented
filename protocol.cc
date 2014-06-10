@@ -354,6 +354,11 @@ printf("enter handle\n");
 		return;
 	}
 	msgUnpackHeader(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader());
+	 printf("sourceUuid msgUnpackHeader returned = %d\n",*ptpClock->get_msgTmpHeader().get_sourceUuid());
+        printf("sourceCommunicationTech msgUnpackHeader returned  = %d\n",ptpClock->get_msgTmpHeader().get_sourceCommunicationTechnology());
+        printf("source port id msgUnpackHeader returned = %d\n",ptpClock->get_msgTmpHeader().get_sourcePortId());
+        printf("sequence id msgUnpackHeader returned = %d\n",ptpClock->get_msgTmpHeader().get_sequenceId());
+	printf("-header source uuid return msgunpacheader1 = %d\n",*ptpClock->get_msgTmpHeader().get_sourceUuid());
 
 	DBGV("event Receipt of Message\n"
 	    "   version %d\n"
@@ -448,6 +453,8 @@ printf("enter handleSync\n");
 		DBGV("handleSync: looking for uuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
 		    ptpClock->get_parent_uuid(0), ptpClock->get_parent_uuid(1), ptpClock->get_parent_uuid(2),
 		    ptpClock->get_parent_uuid(3), ptpClock->get_parent_uuid(4), ptpClock->get_parent_uuid(5));
+printf("source uuid = %d, parentUuid = %d\n",*header->get_sourceUuid(),*ptpClock->get_parent_uuid());
+printf("memcmp = %d\n", memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
 		if (header->get_sequenceId() > ptpClock->get_parent_last_sync_sequence_number()
 		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
@@ -831,7 +838,13 @@ printf("enter addForeign\n");
 	DBGV("updateForeign\n");
 
 	j = ptpClock->get_foreign_record_best();
+	cout << "j = " << j << endl;
 	for (i = 0; i < ptpClock->get_number_foreign_records(); ++i) {
+	cout << "i = " << i << endl;
+        printf("%d == %d\n",header->get_sourceCommunicationTechnology() ,ptpClock->get_foreign(j).get_foreign_master_communication_technology());
+        printf("%d == %d\n",header->get_sourcePortId(),ptpClock->get_foreign(j).get_foreign_master_port_id());
+        printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_foreign(j).get_foreign_master_uuid(), PTP_UUID_LENGTH));
+
 		if (header->get_sourceCommunicationTechnology() == ptpClock->get_foreign(j).get_foreign_master_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_foreign(j).get_foreign_master_port_id()
 		    && !memcmp(header->get_sourceUuid(), ptpClock->get_foreign(j).get_foreign_master_uuid(), PTP_UUID_LENGTH)) {
@@ -865,6 +878,12 @@ printf("enter addForeign\n");
 		ptpClock->set_foreign_record_i((ptpClock->get_foreign_record_i() + 1) % ptpClock->get_max_foreign_records());
 	}
 	msgUnpackHeader(buf, &ptpClock->get_foreign(j).get_header());
+	//msgUnpackHeader(buf, &ptpClock->foreign[j].get_header());
+	 printf("versionPTP (addForeign) = %d\n",ptpClock->get_foreign(j).get_header().get_versionPTP()); 
+	 printf("****sourceUuid msgUnpackHeader returned (used for foreign[j].header) = %d\n",*ptpClock->get_foreign(j).get_header().get_sourceUuid());
+        printf("****sourceCommunicationTech msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sourceCommunicationTechnology());
+        printf("****source port id msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sourcePortId());
+        printf("****sequence id msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sequenceId());
 	msgUnpackSync(buf, &ptpClock->get_foreign(j).get_sync());
 
 	return &ptpClock->get_foreign(j).get_sync();
