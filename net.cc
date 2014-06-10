@@ -121,6 +121,7 @@ findIface(Octet * ifaceName, UInteger8 * communicationTechnology,
 				DBGV("found interface (%s)\n", device[i].ifr_name);
 
 				memcpy(uuid, device[i].ifr_hwaddr.sa_data, PTP_UUID_LENGTH);
+	printf("-uuid (findIface) = %d\n",*uuid);
 				memcpy(ifaceName, device[i].ifr_name, IFACE_NAME_LENGTH);
 
 				break;
@@ -237,6 +238,7 @@ netInit(NetPath * netPath, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	if (!(interfaceAddr.s_addr = findIface(rtOpts->get_ifaceName(), &ptpClock->get_port_communication_technology(),
 	    ptpClock->get_port_uuid_field(), netPath)))
 		return false;
+	printf("-port uuid field (findIface return) = %d\n",*ptpClock->get_port_uuid_field());
 
 	printf("listen3.3\n");
 	temp = 1;			/* allow address reuse */

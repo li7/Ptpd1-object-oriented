@@ -1,4 +1,5 @@
 #include "MsgHeader.h"
+#include "stdio.h"
 #include <iostream>
 #include <string.h>
 
@@ -96,11 +97,13 @@ ostream& operator<<(ostream& s, const MsgHeader& it)
 	cout << "Version PTP : " << it.versionPTP << endl;
 	cout << "Version Network : " << it.versionNetwork << endl;
 	cout << "Subdomain : " << it.subdomain << endl;
-	cout << "MseeageType : " << it.messageType << endl;
-	cout<< "Source Comm Tech : "<< it.sourceCommunicationTechnology << endl;
+	printf("MessageType : %d\n",it.messageType);
+	printf("Source Comm Tech : %d\n",it.sourceCommunicationTechnology);
+	printf("Source Uuid : %d\n",*it.sourceUuid);
 	cout << "Source PortID : " << it.sourcePortId << endl;
 	cout << "Sequence ID : " << it.sequenceId << endl;
-	cout << "Control : " << it.control << endl;
+	printf("Control : %d\n",it.control);
+	printf("flags : %d\n",*it.flags);
 
 	return s;
 }

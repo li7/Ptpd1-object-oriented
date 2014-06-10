@@ -15,10 +15,10 @@ Current::Current()
 UInteger16 Current::get_stepsRemoved() const
 {return stepsRemoved;}
 
-TimeRepresentation Current::get_offsetFromMaster() const
+TimeRepresentation &Current::get_offsetFromMaster()
 {return offsetFromMaster;}
 
-TimeRepresentation Current::get_oneWayDelay() const
+TimeRepresentation &Current::get_oneWayDelay()
 {return oneWayDelay;}
 
 /****************mutators******************/

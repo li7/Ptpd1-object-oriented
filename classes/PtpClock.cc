@@ -194,7 +194,7 @@ Boolean PtpClock::get_burst_enabled() const
 ForeignMasterRecord& PtpClock::get_foreign()
 {return *foreign;}
 
-ForeignMasterRecord PtpClock::get_foreign(int i)
+ForeignMasterRecord& PtpClock::get_foreign(int i)
 {return foreign[i];}
 
 Boolean& PtpClock::get_halfEpoch()
@@ -470,9 +470,15 @@ void PtpClock::set_portIdField(UInteger16 pif)
 void PtpClock::set_burstEnabled(Boolean be)
 {burst_enabled = be;}
 
-void PtpClock::set_foreign(ForeignMasterRecord *f)
+/*void PtpClock::set_foreign(ForeignMasterRecord *f)
 {foreign = f;
 if (f == NULL) flag = false;
+else flag = true;}
+*/
+
+void PtpClock::set_foreign(int x)
+{foreign = (ForeignMasterRecord *) calloc(x,sizeof(ForeignMasterRecord));
+if (foreign == NULL) flag = false;
 else flag = true;}
 
 void PtpClock::free_foreign()

@@ -20,5 +20,8 @@ main()
 	one.get_localTime().set_seconds(15);
 
 	cout << one << endl;
+	one.set_localTime(tr);
+	one.get_localTime().set_nanoseconds(60);
+	cout << one << endl;
 }
 

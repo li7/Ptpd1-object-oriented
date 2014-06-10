@@ -19,6 +19,7 @@ class PtpClock{
 
 public:
 
+        ForeignMasterRecord *foreign;
 	/*************Constructor************/
 	PtpClock();
 
@@ -95,7 +96,7 @@ public:
 
 	/*foreign master record data set*/
 	ForeignMasterRecord& get_foreign();
-	ForeignMasterRecord get_foreign(int i);
+	ForeignMasterRecord& get_foreign(int i);
 
 	/*other*/
 	Boolean& get_halfEpoch();
@@ -203,7 +204,8 @@ public:
         void set_portUuidField(Octet *puf, int length);
         void set_portIdField(UInteger16 pif);
         void set_burstEnabled(Boolean be);
-	void set_foreign(ForeignMasterRecord *f);
+	//void set_foreign(ForeignMasterRecord *f);
+	void set_foreign(int x);
 	void free_foreign();
 
 	void set_halfEpoch(Boolean he);
@@ -309,7 +311,6 @@ private:
         Boolean burst_enabled;
 
         /* Foreign master data set */
-        ForeignMasterRecord *foreign;
 
         /* Other things we need for the protocol */
         Boolean halfEpoch;

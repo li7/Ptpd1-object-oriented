@@ -14,7 +14,7 @@ public:
 	GlobalTime();
 
 	/****************accessors***********/
-	TimeRepresentation get_localTime() const;
+	TimeRepresentation& get_localTime();
 	Integer16 get_currentUtcOffset() const;
 	Boolean get_leap59() const;
 	Boolean get_leap61() const;

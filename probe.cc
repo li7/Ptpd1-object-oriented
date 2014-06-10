@@ -52,12 +52,14 @@ probe(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 
 		if (!(length = msgPackManagement(ptpClock->get_msgObuf(), &ptpClock->get_msgtmp().get_manage(), ptpClock))) {
 			ERROR("failed to pack management message\n");
+			printf("failed to pack management message\n");
 			return;
 		}
 		printf("\n(sending managementMessageKey %hhu)\n", ptpClock->get_msgtmp().get_manage().get_managementMessageKey());
 
 		if (!netSendGeneral(ptpClock->get_msgObuf(), length, &ptpClock->get_netPath())) {
 			ERROR("failed to send message\n");
+			printf("failed to send message\n");
 			return;
 		}
 		if (rtOpts->get_probe_management_key() > 0)

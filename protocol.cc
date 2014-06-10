@@ -1,4 +1,4 @@
-/**
+ /**
  * @file   protocol.c
  * @date   Wed Jun 23 09:40:39 2010
  * 
@@ -120,7 +120,11 @@ printf("enter doState\n");
 	case PTP_PASSIVE:
 	case PTP_SLAVE:
 	case PTP_MASTER:
+<<<<<<< HEAD
 	//ptpClock->set_record_update(1);
+=======
+	//ptpClock->set_record_update(3);
+>>>>>>> b3a903a9b33e5df8385c6f88ab607d782fc05a4a
 	printf("%d\n",ptpClock->get_record_update());
 		if (ptpClock->get_record_update()) {
 			printf("get here\n");
@@ -149,6 +153,7 @@ printf("enter doState\n");
 	case PTP_PASSIVE:
 	case PTP_UNCALIBRATED:
 	case PTP_SLAVE:
+		printf("get to second case statement\n");
 		handle(rtOpts, ptpClock);
 
 		if (timerExpired(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer())) {
@@ -316,6 +321,7 @@ printf("enter handle\n");
 	if (!ptpClock->get_message_activity()) {
 		ret = netSelect(0, &ptpClock->get_netPath());
 		if (ret < 0) {
+			printf("failed to poll sockets\n");
 			PERROR("failed to poll sockets");
 			toState(PTP_FAULTY, rtOpts, ptpClock);
 			return;
@@ -352,6 +358,11 @@ printf("enter handle\n");
 		return;
 	}
 	msgUnpackHeader(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader());
+	 printf("sourceUuid msgUnpackHeader returned = %d\n",*ptpClock->get_msgTmpHeader().get_sourceUuid());
+        printf("sourceCommunicationTech msgUnpackHeader returned  = %d\n",ptpClock->get_msgTmpHeader().get_sourceCommunicationTechnology());
+        printf("source port id msgUnpackHeader returned = %d\n",ptpClock->get_msgTmpHeader().get_sourcePortId());
+        printf("sequence id msgUnpackHeader returned = %d\n",ptpClock->get_msgTmpHeader().get_sequenceId());
+	printf("-header source uuid return msgunpacheader1 = %d\n",*ptpClock->get_msgTmpHeader().get_sourceUuid());
 
 	DBGV("event Receipt of Message\n"
 	    "   version %d\n"
@@ -446,6 +457,8 @@ printf("enter handleSync\n");
 		DBGV("handleSync: looking for uuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
 		    ptpClock->get_parent_uuid(0), ptpClock->get_parent_uuid(1), ptpClock->get_parent_uuid(2),
 		    ptpClock->get_parent_uuid(3), ptpClock->get_parent_uuid(4), ptpClock->get_parent_uuid(5));
+printf("source uuid = %d, parentUuid = %d\n",*header->get_sourceUuid(),*ptpClock->get_parent_uuid());
+printf("memcmp = %d\n", memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
 		if (header->get_sequenceId() > ptpClock->get_parent_last_sync_sequence_number()
 		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
@@ -829,7 +842,13 @@ printf("enter addForeign\n");
 	DBGV("updateForeign\n");
 
 	j = ptpClock->get_foreign_record_best();
+	cout << "j = " << j << endl;
 	for (i = 0; i < ptpClock->get_number_foreign_records(); ++i) {
+	cout << "i = " << i << endl;
+        printf("%d == %d\n",header->get_sourceCommunicationTechnology() ,ptpClock->get_foreign(j).get_foreign_master_communication_technology());
+        printf("%d == %d\n",header->get_sourcePortId(),ptpClock->get_foreign(j).get_foreign_master_port_id());
+        printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_foreign(j).get_foreign_master_uuid(), PTP_UUID_LENGTH));
+
 		if (header->get_sourceCommunicationTechnology() == ptpClock->get_foreign(j).get_foreign_master_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_foreign(j).get_foreign_master_port_id()
 		    && !memcmp(header->get_sourceUuid(), ptpClock->get_foreign(j).get_foreign_master_uuid(), PTP_UUID_LENGTH)) {
@@ -863,6 +882,12 @@ printf("enter addForeign\n");
 		ptpClock->set_foreign_record_i((ptpClock->get_foreign_record_i() + 1) % ptpClock->get_max_foreign_records());
 	}
 	msgUnpackHeader(buf, &ptpClock->get_foreign(j).get_header());
+	//msgUnpackHeader(buf, &ptpClock->foreign[j].get_header());
+	 printf("versionPTP (addForeign) = %d\n",ptpClock->get_foreign(j).get_header().get_versionPTP()); 
+	 printf("****sourceUuid msgUnpackHeader returned (used for foreign[j].header) = %d\n",*ptpClock->get_foreign(j).get_header().get_sourceUuid());
+        printf("****sourceCommunicationTech msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sourceCommunicationTechnology());
+        printf("****source port id msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sourcePortId());
+        printf("****sequence id msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sequenceId());
 	msgUnpackSync(buf, &ptpClock->get_foreign(j).get_sync());
 
 	return &ptpClock->get_foreign(j).get_sync();
