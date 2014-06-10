@@ -120,7 +120,7 @@ printf("enter doState\n");
 	case PTP_PASSIVE:
 	case PTP_SLAVE:
 	case PTP_MASTER:
-	ptpClock->set_record_update(1);
+	//ptpClock->set_record_update(1);
 	printf("%d\n",ptpClock->get_record_update());
 		if (ptpClock->get_record_update()) {
 			printf("get here\n");
