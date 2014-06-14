@@ -120,11 +120,8 @@ printf("enter doState\n");
 	case PTP_PASSIVE:
 	case PTP_SLAVE:
 	case PTP_MASTER:
-<<<<<<< HEAD
 	//ptpClock->set_record_update(1);
-=======
 	//ptpClock->set_record_update(3);
->>>>>>> b3a903a9b33e5df8385c6f88ab607d782fc05a4a
 	printf("%d\n",ptpClock->get_record_update());
 		if (ptpClock->get_record_update()) {
 			printf("get here\n");
@@ -459,6 +456,10 @@ printf("enter handleSync\n");
 		    ptpClock->get_parent_uuid(3), ptpClock->get_parent_uuid(4), ptpClock->get_parent_uuid(5));
 printf("source uuid = %d, parentUuid = %d\n",*header->get_sourceUuid(),*ptpClock->get_parent_uuid());
 printf("memcmp = %d\n", memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
+		printf("%d > %d\n",header->get_sequenceId(),ptpClock->get_parent_last_sync_sequence_number());
+		printf("%d == %d\n",header->get_sourceCommunicationTechnology(),ptpClock->get_parent_communication_technology());
+		printf("%d == %d\n", header->get_sourcePortId(),ptpClock->get_parent_port_id());
+		printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
 		if (header->get_sequenceId() > ptpClock->get_parent_last_sync_sequence_number()
 		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
