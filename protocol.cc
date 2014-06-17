@@ -36,6 +36,7 @@ MsgSync *addForeign(Octet *, MsgHeader *, PtpClock *);
 void 
 protocol(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
+	int count = 0;
 	DBG("event POWERUP\n");
 
 	toState(PTP_INITIALIZING, rtOpts, ptpClock);
@@ -43,6 +44,7 @@ protocol(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	DBGV("Debug Initializing...");
 
 	for (;;) {
+		printf("iteration %d\n",count++);
 		if (ptpClock->get_port_state() != PTP_INITIALIZING)
 			doState(rtOpts, ptpClock);
 		else if (!doInit(rtOpts, ptpClock))
@@ -112,6 +114,7 @@ doState(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
 printf("enter doState\n");
 	UInteger8 state;
+	int i;
 
 	ptpClock->set_message_activity(false);
 	printf("%d\n",ptpClock->get_port_state());
@@ -127,10 +130,12 @@ printf("enter doState\n");
 			printf("get here\n");
 			ptpClock->set_record_update(false);
 			state = bmc(&ptpClock->get_foreign(), rtOpts, ptpClock);
-			printf("state = %d\n",ptpClock->get_port_state());
-			printf("state = %d\n",state);
-			if (state != ptpClock->get_port_state())
+			printf("#state = %d\n",ptpClock->get_port_state());
+			printf("###state = %d\n",state);
+			if (state != ptpClock->get_port_state()){
+				printf("toState(state %d) 2\n",state);
 				toState(state, rtOpts, ptpClock);
+			}
 		}
 		break;
 
@@ -152,13 +157,19 @@ printf("enter doState\n");
 	case PTP_SLAVE:
 		printf("get to second case statement\n");
 		handle(rtOpts, ptpClock);
+		printf("return from handle\n");
 
-		if (timerExpired(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer())) {
-			DBG("event SYNC_RECEIPT_TIMEOUT_EXPIRES\n");
+		i = timerExpired(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer());
+		printf("%%sync receipt timer %d\n",SYNC_RECEIPT_TIMER);
+		printf("%%timerExpired = %d\n",i);
+		//if (timerExpired(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer())) {
+		if (i) {
+			printf("event SYNC_RECEIPT_TIMEOUT_EXPIRES\n");
 			ptpClock->set_numberForeignRecords(0);
 			ptpClock->set_foreign_record_i(0);
 			if (!rtOpts->get_slaveOnly() && ptpClock->get_clock_stratum() != 255) {
 				m1(ptpClock);
+				printf("toState(PTP_MASTER)\n");
 				toState(PTP_MASTER, rtOpts, ptpClock);
 			} else if (ptpClock->get_port_state() != PTP_LISTENING)
 				toState(PTP_LISTENING, rtOpts, ptpClock);
@@ -720,6 +731,7 @@ printf("enter handleManagement\n");
 			ptpClock->set_record_update(true);
 			state = msgUnloadManagement(ptpClock->get_msgIbuf(), manage, ptpClock, rtOpts);
 			if (state != ptpClock->get_port_state())
+				printf("toState(state %d)\n",state);
 				toState(state, rtOpts, ptpClock);
 			break;
 		}

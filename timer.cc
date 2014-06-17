@@ -42,14 +42,20 @@ timerUpdate(IntervalTimer * itimer)
 {
 	int i, delta;
 
+	printf("1 elapsed = %d\n",elapsed);
 	delta = elapsed;
+	printf("2 delta = %d, elapsed = %d\n",delta,elapsed);
 	elapsed = 0;
+	printf("3 delta = %d, elapsed = %d \n",delta,elapsed);
 
 	if (delta <= 0)
 		return;
 
 	for (i = 0; i < TIMER_ARRAY_SIZE; ++i) {
-		if (itimer[i].get_interval() > 0 && (itimer[i].get_left() - delta) <= 0) {
+		printf("i (timerUpdate) = %d\n",i);
+		itimer[i].set_left(itimer[i].get_left() - delta);
+		if (itimer[i].get_interval() > 0 &&  itimer[i].get_left() <= 0) {
+		printf("in if timerUpdate\n");
 			itimer[i].set_left(itimer[i].get_interval());
 			itimer[i].set_expire(true);
 			DBGV("timerUpdate: timer %u expired\n", i);
@@ -82,6 +88,7 @@ timerStart(UInteger16 index, UInteger16 interval, IntervalTimer * itimer)
 Boolean 
 timerExpired(UInteger16 index, IntervalTimer * itimer)
 {
+	printf("%%index = %d\n",index);
 	timerUpdate(itimer);
 
 	if (index >= TIMER_ARRAY_SIZE)
