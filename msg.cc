@@ -24,8 +24,8 @@ msgUnpackHeader(void *buf, MsgHeader * header)
 {
 	header->set_versionPTP(flip16(*(UInteger16 *) (buf + 0)));
 	header->set_versionNetwork(flip16(*(UInteger16 *) (buf + 2)));
-	printf("msgUnpackHeader: versionPTP %d\n", header->get_versionPTP());
-	printf("msgUnpackHeader: versionNetwork %d\n", header->get_versionNetwork());
+	//printf("msgUnpackHeader: versionPTP %d\n", header->get_versionPTP());
+	//printf("msgUnpackHeader: versionNetwork %d\n", header->get_versionNetwork());
 
 
 	header->set_subdomain((buf+4),16);
@@ -37,7 +37,7 @@ msgUnpackHeader(void *buf, MsgHeader * header)
 	DBGV("msgUnpackHeader: sourceCommunicationTechnology %d\n", header->get_sourceCommunicationTechnology90);
 
 	header->set_sourceUuid((buf+22),6);
-	printf("header sourceUuid (msgUnpackHeader) = %d\n",*header->get_sourceUuid());
+	//printf("header sourceUuid (msgUnpackHeader) = %d\n",*header->get_sourceUuid());
 //	memcpy(header->sourceUuid, (buf + 22), 6);
 /*	DBGV("msgUnpackHeader: sourceUuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
 	    header->sourceUuid[0], header->sourceUuid[1], header->sourceUuid[2],

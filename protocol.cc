@@ -44,7 +44,7 @@ protocol(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	DBGV("Debug Initializing...");
 
 	for (;;) {
-		printf("iteration %d\n",count++);
+		//printf("iteration %d\n",count++);
 		if (ptpClock->get_port_state() != PTP_INITIALIZING)
 			doState(rtOpts, ptpClock);
 		else if (!doInit(rtOpts, ptpClock))
@@ -63,9 +63,9 @@ doInit(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	DBG("manufacturerIdentity: %s\n", MANUFACTURER_ID);
 
 	/* initialize networking */
-	printf("listen1\n");
+	//printf("listen1\n");
 	netShutdown(&ptpClock->get_netPath());
-	printf("listen2\n");
+	//printf("listen2\n");
 	if (!netInit(&ptpClock->get_netPath(), rtOpts, ptpClock)) {
 		ERROR("failed to initialize network\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
@@ -73,15 +73,15 @@ doInit(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	}
 	/* initialize other stuff */
 	initData(rtOpts, ptpClock);
-	printf("listen6\n");
+	//printf("listen6\n");
 	initTimer();
-	printf("listen7\n");
+	//printf("listen7\n");
 	initClock(rtOpts, ptpClock);
-	printf("listen8\n");
+	//printf("listen8\n");
 	m1(ptpClock);
-	printf("listen9\n");
+	//printf("listen9\n");
 	msgPackHeader(ptpClock->get_msgObuf(), ptpClock);
-	printf("listen10\n");
+	//printf("listen10\n");
 
 	DBG("sync message interval: %d\n", PTP_SYNC_INTERVAL_TIMEOUT(ptpClock->get_sync_interval()));
 	DBG("clock identifier: %s\n", ptpClock->get_clock_identifier());
@@ -102,9 +102,9 @@ doInit(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	DBG("general port address: %hhx %hhx\n",
 	    ptpClock->get_general_port_address(0), ptpClock->get_general_port_address(1));
 
-	printf("listen11\n");
+	//printf("listen11\n");
 	toState(PTP_LISTENING, rtOpts, ptpClock);
-	printf("listen12\n");
+	//printf("listen12\n");
 	return true;
 }
 
@@ -112,12 +112,12 @@ doInit(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 void 
 doState(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter doState\n");
+//printf("enter doState\n");
 	UInteger8 state;
 	int i;
 
 	ptpClock->set_message_activity(false);
-	printf("%d\n",ptpClock->get_port_state());
+//	printf("%d\n",ptpClock->get_port_state());
 	switch (ptpClock->get_port_state()) {
 	case PTP_LISTENING:
 	case PTP_PASSIVE:
@@ -125,15 +125,15 @@ printf("enter doState\n");
 	case PTP_MASTER:
 	//ptpClock->set_record_update(1);
 	//ptpClock->set_record_update(3);
-	printf("%d\n",ptpClock->get_record_update());
+	//printf("%d\n",ptpClock->get_record_update());
 		if (ptpClock->get_record_update()) {
-			printf("get here\n");
+			//printf("get here\n");
 			ptpClock->set_record_update(false);
 			state = bmc(&ptpClock->get_foreign(), rtOpts, ptpClock);
-			printf("#state = %d\n",ptpClock->get_port_state());
-			printf("###state = %d\n",state);
+			//printf("#state = %d\n",ptpClock->get_port_state());
+			//printf("###state = %d\n",state);
 			if (state != ptpClock->get_port_state()){
-				printf("toState(state %d) 2\n",state);
+				//printf("toState(state %d) 2\n",state);
 				toState(state, rtOpts, ptpClock);
 			}
 		}
@@ -155,21 +155,21 @@ printf("enter doState\n");
 	case PTP_PASSIVE:
 	case PTP_UNCALIBRATED:
 	case PTP_SLAVE:
-		printf("get to second case statement\n");
+		//printf("get to second case statement\n");
 		handle(rtOpts, ptpClock);
-		printf("return from handle\n");
+		//printf("return from handle\n");
 
 		i = timerExpired(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer());
-		printf("%%sync receipt timer %d\n",SYNC_RECEIPT_TIMER);
-		printf("%%timerExpired = %d\n",i);
+		//printf("%%sync receipt timer %d\n",SYNC_RECEIPT_TIMER);
+		//printf("%%timerExpired = %d\n",i);
 		//if (timerExpired(SYNC_RECEIPT_TIMER, &ptpClock->get_itimer())) {
 		if (i) {
-			printf("event SYNC_RECEIPT_TIMEOUT_EXPIRES\n");
+			//printf("event SYNC_RECEIPT_TIMEOUT_EXPIRES\n");
 			ptpClock->set_numberForeignRecords(0);
 			ptpClock->set_foreign_record_i(0);
 			if (!rtOpts->get_slaveOnly() && ptpClock->get_clock_stratum() != 255) {
 				m1(ptpClock);
-				printf("toState(PTP_MASTER)\n");
+				//printf("toState(PTP_MASTER)\n");
 				toState(PTP_MASTER, rtOpts, ptpClock);
 			} else if (ptpClock->get_port_state() != PTP_LISTENING)
 				toState(PTP_LISTENING, rtOpts, ptpClock);
@@ -196,14 +196,14 @@ printf("enter doState\n");
 		DBG("do unrecognized state\n");
 		break;
 	}
-printf("exit doState\n");
+//printf("exit doState\n");
 }
 
 /* perform actions required when leaving 'port_state' and entering 'state' */
 void 
 toState(UInteger8 state, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter toState\n");
+//printf("enter toState\n");
 	ptpClock->set_message_activity(true);
 
 	/* leaving state tasks */
@@ -310,14 +310,14 @@ printf("enter toState\n");
 
 	if (rtOpts->get_displayStats())
 		displayStats(rtOpts, ptpClock);
-printf("exit toState\n");
+//printf("exit toState\n");
 }
 
 /* check and handle received messages */
 void 
 handle(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter handle\n");
+//printf("enter handle\n");
 	int ret;
 	ssize_t length;
 	Boolean isFromSelf;
@@ -329,7 +329,7 @@ printf("enter handle\n");
 	if (!ptpClock->get_message_activity()) {
 		ret = netSelect(0, &ptpClock->get_netPath());
 		if (ret < 0) {
-			printf("failed to poll sockets\n");
+			//printf("failed to poll sockets\n");
 			PERROR("failed to poll sockets");
 			toState(PTP_FAULTY, rtOpts, ptpClock);
 			return;
@@ -366,11 +366,11 @@ printf("enter handle\n");
 		return;
 	}
 	msgUnpackHeader(ptpClock->get_msgIbuf(), &ptpClock->get_msgTmpHeader());
-	 printf("sourceUuid msgUnpackHeader returned = %d\n",*ptpClock->get_msgTmpHeader().get_sourceUuid());
-        printf("sourceCommunicationTech msgUnpackHeader returned  = %d\n",ptpClock->get_msgTmpHeader().get_sourceCommunicationTechnology());
-        printf("source port id msgUnpackHeader returned = %d\n",ptpClock->get_msgTmpHeader().get_sourcePortId());
-        printf("sequence id msgUnpackHeader returned = %d\n",ptpClock->get_msgTmpHeader().get_sequenceId());
-	printf("-header source uuid return msgunpacheader1 = %d\n",*ptpClock->get_msgTmpHeader().get_sourceUuid());
+	 //printf("sourceUuid msgUnpackHeader returned = %d\n",*ptpClock->get_msgTmpHeader().get_sourceUuid());
+        //printf("sourceCommunicationTech msgUnpackHeader returned  = %d\n",ptpClock->get_msgTmpHeader().get_sourceCommunicationTechnology());
+        //printf("source port id msgUnpackHeader returned = %d\n",ptpClock->get_msgTmpHeader().get_sourcePortId());
+        //printf("sequence id msgUnpackHeader returned = %d\n",ptpClock->get_msgTmpHeader().get_sequenceId());
+	//printf("-header source uuid return msgunpacheader1 = %d\n",*ptpClock->get_msgTmpHeader().get_sourceUuid());
 
 	DBGV("event Receipt of Message\n"
 	    "   version %d\n"
@@ -431,13 +431,13 @@ printf("enter handle\n");
 		DBG("handle: unrecognized message\n");
 		break;
 	}
-printf("exit handle\n");
+//printf("exit handle\n");
 }
 
 void 
 handleSync(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal * time, Boolean isFromSelf, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter handleSync\n");
+//printf("enter handleSync\n");
 	MsgSync *sync;
 	TimeInternal originTimestamp;
 
@@ -465,12 +465,12 @@ printf("enter handleSync\n");
 		DBGV("handleSync: looking for uuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
 		    ptpClock->get_parent_uuid(0), ptpClock->get_parent_uuid(1), ptpClock->get_parent_uuid(2),
 		    ptpClock->get_parent_uuid(3), ptpClock->get_parent_uuid(4), ptpClock->get_parent_uuid(5));
-printf("source uuid = %d, parentUuid = %d\n",*header->get_sourceUuid(),*ptpClock->get_parent_uuid());
-printf("memcmp = %d\n", memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
-		printf("%d > %d\n",header->get_sequenceId(),ptpClock->get_parent_last_sync_sequence_number());
-		printf("%d == %d\n",header->get_sourceCommunicationTechnology(),ptpClock->get_parent_communication_technology());
-		printf("%d == %d\n", header->get_sourcePortId(),ptpClock->get_parent_port_id());
-		printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
+//printf("source uuid = %d, parentUuid = %d\n",*header->get_sourceUuid(),*ptpClock->get_parent_uuid());
+//printf("memcmp = %d\n", memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
+		//printf("%d > %d\n",header->get_sequenceId(),ptpClock->get_parent_last_sync_sequence_number());
+		//printf("%d == %d\n",header->get_sourceCommunicationTechnology(),ptpClock->get_parent_communication_technology());
+		//printf("%d == %d\n", header->get_sourcePortId(),ptpClock->get_parent_port_id());
+		//printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
 		if (header->get_sequenceId() > ptpClock->get_parent_last_sync_sequence_number()
 		    && header->get_sourceCommunicationTechnology() == ptpClock->get_parent_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_parent_port_id()
@@ -538,13 +538,13 @@ printf("memcmp = %d\n", memcmp(header->get_sourceUuid(), ptpClock->get_parent_uu
 		}
 		break;
 	}
-printf("exit handleSync\n");
+//printf("exit handleSync\n");
 }
 
 void 
 handleFollowUp(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean isFromSelf, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter handleFollowUp\n");
+//printf("enter handleFollowUp\n");
 	MsgFollowUp *follow;
 	TimeInternal preciseOriginTimestamp;
 
@@ -589,13 +589,13 @@ printf("enter handleFollowUp\n");
 		DBGV("handleFollowUp: disreguard\n");
 		return;
 	}
-printf("exit handleFollowUp\n");
+//printf("exit handleFollowUp\n");
 }
 
 void 
 handleDelayReq(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal * time, Boolean isFromSelf, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter handleDelayReq\n");
+//printf("enter handleDelayReq\n");
 	if (length < DELAY_REQ_PACKET_LENGTH) {
 		ERROR("short delay request message\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
@@ -641,13 +641,13 @@ printf("enter handleDelayReq\n");
 		DBGV("handleDelayReq: disreguard\n");
 		return;
 	}
-printf("exit handleDelayReq\n");
+//printf("exit handleDelayReq\n");
 }
 
 void 
 handleDelayResp(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean isFromSelf, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter handleDelayResp\n");
+//printf("enter handleDelayResp\n");
 	MsgDelayResp *resp;
 
 	if (length < DELAY_RESP_PACKET_LENGTH) {
@@ -694,13 +694,13 @@ printf("enter handleDelayResp\n");
 		DBGV("handleDelayResp: disreguard\n");
 		return;
 	}
-printf("exit handleDelayResp\n");
+//printf("exit handleDelayResp\n");
 }
 
 void 
 handleManagement(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean isFromSelf, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter handleManagement\n");
+//printf("enter handleManagement\n");
 	MsgManagement *manage;
 
 	UInteger8 state;
@@ -731,21 +731,21 @@ printf("enter handleManagement\n");
 			ptpClock->set_record_update(true);
 			state = msgUnloadManagement(ptpClock->get_msgIbuf(), manage, ptpClock, rtOpts);
 			if (state != ptpClock->get_port_state())
-				printf("toState(state %d)\n",state);
+				//printf("toState(state %d)\n",state);
 				toState(state, rtOpts, ptpClock);
 			break;
 		}
 	} else {
 		DBG("handleManagement: unwanted\n");
 	}
-printf("exit handleManagement\n");
+//printf("exit handleManagement\n");
 }
 
 /* pack and send various messages */
 void 
 issueSync(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter issueSync\n");
+//printf("enter issueSync\n");
 	TimeInternal internalTime;
 	TimeRepresentation originTimestamp;
 
@@ -761,13 +761,13 @@ printf("enter issueSync\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent sync message\n");
-printf("exit issueSync\n");
+//printf("exit issueSync\n");
 }
 
 void 
 issueFollowup(TimeInternal * time, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter issueFollowUp\n");
+//printf("enter issueFollowUp\n");
 	TimeRepresentation preciseOriginTimestamp;
 
 	//++ptpClock->last_general_event_sequence_number;
@@ -780,13 +780,13 @@ printf("enter issueFollowUp\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent followup message\n");
-printf("exit issueFollowUp\n");
+//printf("exit issueFollowUp\n");
 }
 
 void 
 issueDelayReq(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter issueDelayReq\n");
+//printf("enter issueDelayReq\n");
 	TimeInternal internalTime;
 	TimeRepresentation originTimestamp;
 
@@ -802,14 +802,14 @@ printf("enter issueDelayReq\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent delay request message\n");
-printf("exit issueDelayReq\n");
+//nprintf("exit issueDelayReq\n");
 }
 
 /*********************START HERE*******************/
 void 
 issueDelayResp(TimeInternal * time, MsgHeader * header, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter issueDelayResp\n");
+//printf("enter issueDelayResp\n");
 	TimeRepresentation delayReceiptTimestamp;
 
 	//++ptpClock->last_general_event_sequence_number;
@@ -822,13 +822,13 @@ printf("enter issueDelayResp\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent delay response message\n");
-printf("exit issueDelayResp\n");
+//printf("exit issueDelayResp\n");
 }
 
 void 
 issueManagement(MsgHeader * header, MsgManagement * manage, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-printf("enter issueManagament\n");
+//printf("enter issueManagament\n");
 	UInteger16 length;
 
 	//++ptpClock->last_general_event_sequence_number;
@@ -841,26 +841,26 @@ printf("enter issueManagament\n");
 		toState(PTP_FAULTY, rtOpts, ptpClock);
 	else
 		DBGV("sent management message\n");
-printf("exit issueManagament\n");
+//printf("exit issueManagament\n");
 }
 
 /* add or update an entry in the foreign master data set */
 MsgSync *
 addForeign(Octet * buf, MsgHeader * header, PtpClock * ptpClock)
 {
-printf("enter addForeign\n");
+//printf("enter addForeign\n");
 	int i, j;
 	Boolean found = false;
 
 	DBGV("updateForeign\n");
 
 	j = ptpClock->get_foreign_record_best();
-	cout << "j = " << j << endl;
+	//cout << "j = " << j << endl;
 	for (i = 0; i < ptpClock->get_number_foreign_records(); ++i) {
-	cout << "i = " << i << endl;
-        printf("%d == %d\n",header->get_sourceCommunicationTechnology() ,ptpClock->get_foreign(j).get_foreign_master_communication_technology());
-        printf("%d == %d\n",header->get_sourcePortId(),ptpClock->get_foreign(j).get_foreign_master_port_id());
-        printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_foreign(j).get_foreign_master_uuid(), PTP_UUID_LENGTH));
+	//cout << "i = " << i << endl;
+        //printf("%d == %d\n",header->get_sourceCommunicationTechnology() ,ptpClock->get_foreign(j).get_foreign_master_communication_technology());
+        //printf("%d == %d\n",header->get_sourcePortId(),ptpClock->get_foreign(j).get_foreign_master_port_id());
+        //printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_foreign(j).get_foreign_master_uuid(), PTP_UUID_LENGTH));
 
 		if (header->get_sourceCommunicationTechnology() == ptpClock->get_foreign(j).get_foreign_master_communication_technology()
 		    && header->get_sourcePortId() == ptpClock->get_foreign(j).get_foreign_master_port_id()
@@ -896,13 +896,13 @@ printf("enter addForeign\n");
 	}
 	msgUnpackHeader(buf, &ptpClock->get_foreign(j).get_header());
 	//msgUnpackHeader(buf, &ptpClock->foreign[j].get_header());
-	 printf("versionPTP (addForeign) = %d\n",ptpClock->get_foreign(j).get_header().get_versionPTP()); 
-	 printf("****sourceUuid msgUnpackHeader returned (used for foreign[j].header) = %d\n",*ptpClock->get_foreign(j).get_header().get_sourceUuid());
-        printf("****sourceCommunicationTech msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sourceCommunicationTechnology());
-        printf("****source port id msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sourcePortId());
-        printf("****sequence id msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sequenceId());
+	 //printf("versionPTP (addForeign) = %d\n",ptpClock->get_foreign(j).get_header().get_versionPTP()); 
+	 //printf("****sourceUuid msgUnpackHeader returned (used for foreign[j].header) = %d\n",*ptpClock->get_foreign(j).get_header().get_sourceUuid());
+        //printf("****sourceCommunicationTech msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sourceCommunicationTechnology());
+        //printf("****source port id msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sourcePortId());
+        //printf("****sequence id msgUnpackHeader returned (used for foreign[j].header) = %d\n",ptpClock->get_foreign(j).get_header().get_sequenceId());
 	msgUnpackSync(buf, &ptpClock->get_foreign(j).get_sync());
 
 	return &ptpClock->get_foreign(j).get_sync();
-printf("exit addForeign\n");
+//printf("exit addForeign\n");
 }
