@@ -1,4 +1,5 @@
- /**
+ /*
+ * one more line
  * @file   protocol.c
  * @date   Wed Jun 23 09:40:39 2010
  * 
@@ -36,7 +37,6 @@ MsgSync *addForeign(Octet *, MsgHeader *, PtpClock *);
 void 
 protocol(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-	int count = 0;
 	DBG("event POWERUP\n");
 
 	toState(PTP_INITIALIZING, rtOpts, ptpClock);
@@ -155,7 +155,6 @@ doState(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	case PTP_PASSIVE:
 	case PTP_UNCALIBRATED:
 	case PTP_SLAVE:
-		//printf("get to second case statement\n");
 		handle(rtOpts, ptpClock);
 		//printf("return from handle\n");
 
@@ -189,6 +188,7 @@ doState(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 		break;
 
 	case PTP_DISABLED:
+		//printf("handle disabled\n");
 		handle(rtOpts, ptpClock);
 		break;
 
@@ -317,7 +317,6 @@ toState(UInteger8 state, RunTimeOpts * rtOpts, PtpClock * ptpClock)
 void 
 handle(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 {
-//printf("enter handle\n");
 	int ret;
 	ssize_t length;
 	Boolean isFromSelf;
@@ -406,6 +405,7 @@ handle(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 	if (!isFromSelf && time.get_seconds() > 0)
 		subTime(&time, &time, &rtOpts->get_inboundLatency());
 
+	//printf("control = %d\n",ptpClock->get_msgTmpHeader().get_control());
 	switch (ptpClock->get_msgTmpHeader().get_control()) {
 	case PTP_SYNC_MESSAGE:
 		handleSync(&ptpClock->get_msgTmpHeader(), ptpClock->get_msgIbuf(), length, &time, isFromSelf, rtOpts, ptpClock);
@@ -624,6 +624,7 @@ handleDelayReq(MsgHeader * header, Octet * msgIbuf, ssize_t length, TimeInternal
 			addTime(&ptpClock->get_delay_req_send_time(), &ptpClock->get_delay_req_send_time(), &rtOpts->get_outboundLatency());
 
 			if (ptpClock->get_delay_req_receive_time().get_seconds()) {
+//printf("updateDelay 2\n");
 				updateDelay(&ptpClock->get_delay_req_send_time(), 
 					    &ptpClock->get_delay_req_receive_time(),
 					    &ptpClock->get_owd_filt(), rtOpts, 
@@ -664,6 +665,16 @@ handleDelayResp(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean isF
 		resp = &ptpClock->get_msgtmp().get_resp();
 		msgUnpackDelayResp(ptpClock->get_msgIbuf(), resp);
 
+/*printf("%d\n",ptpClock->get_sentDelayReq());
+printf("%d == %d\n",resp->get_requestingSourceSequenceId(),ptpClock->get_sentDelayReqSequenceId());
+printf("%d == %d\n",resp->get_requestingSourceCommunicationTechnology(),ptpClock->get_port_communication_technology());
+printf("%d == %d\n",resp->get_requestingSourcePortId(),ptpClock->get_port_id_field());
+printf("%d\n",!memcmp(resp->get_requestingSourceUuid(), ptpClock->get_port_uuid_field(), PTP_UUID_LENGTH));
+printf("%d == %d\n",header->get_sourceCommunicationTechnology(),ptpClock->get_parent_communication_technology());
+printf("%d == %d\n",header->get_sourcePortId(),ptpClock->get_parent_port_id());
+printf("%d\n",!memcmp(header->get_sourceUuid(), ptpClock->get_parent_uuid(), PTP_UUID_LENGTH));
+*/
+
 		if (ptpClock->get_sentDelayReq()
 		    && resp->get_requestingSourceSequenceId() == ptpClock->get_sentDelayReqSequenceId()
 		    && resp->get_requestingSourceCommunicationTechnology() == ptpClock->get_port_communication_technology()
@@ -676,7 +687,9 @@ handleDelayResp(MsgHeader * header, Octet * msgIbuf, ssize_t length, Boolean isF
 
 			toInternalTime(&ptpClock->get_delay_req_receive_time(), &resp->get_delayReceiptTimestamp(), &ptpClock->get_halfEpoch());
 
+//printf("del req send time = %d\n",ptpClock->get_delay_req_send_time().get_seconds());
 			if (ptpClock->get_delay_req_send_time().get_seconds()) {
+//printf("updateDelay 1\n");
 				updateDelay(&ptpClock->get_delay_req_send_time(), &ptpClock->get_delay_req_receive_time(),
 				    &ptpClock->get_owd_filt(), rtOpts, ptpClock);
 
@@ -792,7 +805,9 @@ issueDelayReq(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 
 	ptpClock->set_sentDelayReq(true);
 	//ptpClock->sentDelayReqSequenceId = ++ptpClock->last_sync_event_sequence_number;
-	ptpClock->set_sentDelayReqSequenceId(ptpClock->get_last_sync_event_sequence_number() + 1);
+	
+	ptpClock->set_lastSyncEventSequenceNumber(ptpClock->get_last_sync_event_sequence_number() + 1);
+	ptpClock->set_sentDelayReqSequenceId(ptpClock->get_last_sync_event_sequence_number());
 
 	getTime(&internalTime);
 	fromInternalTime(&internalTime, &originTimestamp, ptpClock->get_halfEpoch());

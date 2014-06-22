@@ -39,14 +39,14 @@ updateDelay(TimeInternal * send_time, TimeInternal * recv_time,
 	TimeInternal slave_to_master_delay;
 
 	DBGV("updateDelay\n");
+	//printf("updateDelay\n");
 
 	/* calc 'slave_to_master_delay' */
 	subTime(&slave_to_master_delay, recv_time, send_time);
 
 	if (rtOpts->get_maxDelay()) { /* If maxDelay is 0 then it's OFF */
 		if (slave_to_master_delay.get_seconds() && rtOpts->get_maxDelay()) {
-			INFO("updateDelay aborted, delay greater than 1"
-			     " second.");
+			INFO("updateDelay aborted, delay greater than 1");
 			return;
 		}
 
@@ -65,6 +65,7 @@ updateDelay(TimeInternal * send_time, TimeInternal * recv_time,
 	addTime(&ptpClock->get_one_way_delay(), &ptpClock->get_master_to_slave_delay(), &ptpClock->get_slave_to_master_delay());
 	ptpClock->set_oneWayDelay_seconds(ptpClock->get_one_way_delay_seconds()/2);
 	ptpClock->set_oneWayDelay_nanoseconds(ptpClock->get_one_way_delay_nanoseconds()/2);
+//printf("owd: seconds = %d, nanoseconds = %d\n",ptpClock->get_one_way_delay_seconds(),ptpClock->get_one_way_delay_nanoseconds());
 
 	if (ptpClock->get_one_way_delay_seconds()) {
 		/* cannot filter with secs, clear filter */
@@ -108,8 +109,8 @@ updateOffset(TimeInternal * send_time, TimeInternal * recv_time,
 
 	if (rtOpts->get_maxDelay()) { /* If maxDelay is 0 then it's OFF */
 		if (master_to_slave_delay.get_seconds() && rtOpts->get_maxDelay()) {
-			INFO("updateDelay aborted, delay greater than 1"
-			     " second.");
+			INFO("updateDelay aborted, delay greater than 1");
+			//printf("updateDelay aborted, delay greater than 1");
 			return;
 		}
 
@@ -150,17 +151,17 @@ updateClock(RunTimeOpts * rtOpts, PtpClock * ptpClock)
 
 	if (rtOpts->get_maxReset()) { /* If maxReset is 0 then it's OFF */
 		if (ptpClock->get_offset_from_master_seconds()) {
-			INFO("updateClock aborted, offset greater than 1"
-			     " second.");
+			INFO("updateClock aborted, offset greater than 1");
+			//printf("updateClock aborted, offset greater than 1");
 			goto display;
 		}
 		
 		if (ptpClock->get_offset_from_master_nanoseconds() > 
 		    rtOpts->get_maxReset()) {
-			INFO("updateClock aborted, offset %d greater than "
-			     "administratively set maximum %d\n",
+			INFO("updateClock aborted, offset %d greater than ");
+			//printf("updateClock aborted, offset %d greater than ");
 			     ptpClock->get_offset_from_master_nanoseconds(), 
-			     rtOpts->get_maxReset());
+			     rtOpts->get_maxReset();
 			goto display;
 		}
 	}

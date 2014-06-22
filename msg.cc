@@ -140,20 +140,20 @@ void
 msgUnpackDelayResp(void *buf, MsgDelayResp * resp)
 {
 	resp->set_delayReceiptTimestamp_seconds(flip32(*(UInteger32 *) (buf + 40)));
-//	DBGV("msgUnpackDelayResp: delayReceiptTimestamp.seconds %u\n", resp->delayReceiptTimestamp.seconds);
+//	printf("msgUnpackDelayResp: delayReceiptTimestamp.seconds %u\n", resp->get_delayReceiptTimestamp().get_seconds());
 	resp->set_delayReceiptTimestamp_nanoseconds(flip32(*(Integer32 *) (buf + 44)));
-//	DBGV("msgUnpackDelayResp: delayReceiptTimestamp.nanoseconds %d\n", resp->delayReceiptTimestamp.nanoseconds);
+//	printf("msgUnpackDelayResp: delayReceiptTimestamp.nanoseconds %d\n", resp->get_delayReceiptTimestamp().get_nanoseconds());
 	resp->set_requestingSourceCommunicationTechnology(*(UInteger8 *) (buf + 49));
-//	DBGV("msgUnpackDelayResp: requestingSourceCommunicationTechnology %d\n", resp->requestingSourceCommunicationTechnology);
+//	printf("msgUnpackDelayResp: requestingSourceCommunicationTechnology %d\n", resp->get_requestingSourceCommunicationTechnology());
 	resp->set_requestingSourceUuid((buf + 50), 6);
-/*	DBGV("msgUnpackDelayResp: requestingSourceUuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
-	    resp->requestingSourceUuid[0], resp->requestingSourceUuid[1], resp->requestingSourceUuid[2],
-	    resp->requestingSourceUuid[3], resp->requestingSourceUuid[4], resp->requestingSourceUuid[5]);
-*/
+	DBGV("msgUnpackDelayResp: requestingSourceUuid %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
+	    resp->get_requestingSourceUuid(0), resp->get_requestingSourceUuid(1), resp->get_requestingSourceUuid(2),
+	    resp->get_requestingSourceUuid(3), resp->get_requestingSourceUuid(4), resp->get_requestingSourceUuid(5));
+
 	resp->set_requestingSourcePortId(flip16(*(UInteger16 *) (buf + 56)));
-//	DBGV("msgUnpackDelayResp: requestingSourcePortId %d\n", resp->requestingSourcePortId);
+//	printf("msgUnpackDelayResp: requestingSourcePortId %d\n", resp->get_requestingSourcePortId());
 	resp->set_requestingSourceSequenceId(flip16(*(UInteger16 *) (buf + 58)));
-//	DBGV("msgUnpackDelayResp: requestingSourceSequenceId %d\n", resp->requestingSourceSequenceId);
+//	printf("msgUnpackDelayResp: requestingSourceSequenceId %d\n", resp->get_requestingSourceSequenceId());
 }
 
 void 
