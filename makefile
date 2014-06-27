@@ -1,12 +1,12 @@
-all:
-	 g++ -w -o ptpd ptpd.cc protocol.cc probe.cc classes/RunTimeOpts.cc classes/TimeInternal.cc classes/PtpClock.cc classes/msgTmp.cc classes/MsgHeader.cc classes/MsgDelayResp.cc classes/TimeRepresentation.cc classes/MsgSync.cc classes/MsgManagement.cc classes/MsgManagementPayload.cc classes/ClockIdentity.cc classes/Parent.cc classes/Port.cc classes/Current.cc classes/GlobalTime.cc classes/DefaultData.cc classes/Foreign.cc classes/NetPath.cc classes/MsgFollowUp.cc classes/IntervalTimer.cc classes/one_way_delay_filter.cc classes/offset_from_master_filter.cc sys.cc net.cc startup.cc arith.cc bmc.cc msg.cc classes/ForeignMasterRecord.cc servo.cc timer.cc
+#all:
+#	 g++ -w -o ptpd ptpd.cc protocol.cc probe.cc classes/RunTimeOpts.cc classes/TimeInternal.cc classes/PtpClock.cc classes/msgTmp.cc classes/MsgHeader.cc classes/MsgDelayResp.cc classes/TimeRepresentation.cc classes/MsgSync.cc classes/MsgManagement.cc classes/MsgManagementPayload.cc classes/ClockIdentity.cc classes/Parent.cc classes/Port.cc classes/Current.cc classes/GlobalTime.cc classes/DefaultData.cc classes/Foreign.cc classes/NetPath.cc classes/MsgFollowUp.cc classes/IntervalTimer.cc classes/one_way_delay_filter.cc classes/offset_from_master_filter.cc sys.cc net.cc startup.cc arith.cc bmc.cc msg.cc classes/ForeignMasterRecord.cc servo.cc timer.cc
 
-#CC = g++
-#CFLAGS = -Wall #-DBSD_INTERFACE_FUNCTIONS
-#CPPFLAGS = -DPTPD_DBG -DPTPD_NO_DAEMON
+CC = g++
+CFLAGS = -Wall #-DBSD_INTERFACE_FUNCTIONS
+CPPFLAGS = -DPTPD_DBG -DPTPD_NO_DAEMON
 
-#PROG = ptpd
-#SRCS = ptpd.cc arith.cc bmc.cc probe.cc protocol.cc \
+PROG = ptpd
+SRCS = ptpd.cc arith.cc bmc.cc probe.cc protocol.cc \
 	msg.cc net.cc servo.cc startup.cc sys.cc timer.cc \
 	classes/ClockIdentity.cc classes/Current.cc \
 	classes/DefaultData.cc classes/Foreign.cc \
@@ -22,9 +22,9 @@ all:
 	classes/RunTimeOpts.cc classes/TimeInternal.cc \
 	classes/TimeRepresentation.cc
 
-#OBJS = $(SRCS:.cc=.o)
+OBJS = $(SRCS:.cc=.o)
 
-#HDRS = classes/ptpd.h classes/constants.h classes/datatypes.h \
+HDRS = classes/ptpd.h classes/constants.h classes/datatypes.h \
         classes/ptpd_dep.h classes/constants_dep.h \
 	classes/datatypes_dep.h classes/ClockIdentity.h \
 	classes/Current.h classes/DefaultData.h \
@@ -39,11 +39,13 @@ all:
 	classes/Port.h classes/PtpClock.h classes/RunTimeOpts.h \
 	classes/TimeInternal.h classes/TimeRepresentation.h 
 
-#.cc.o:
-#	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+.cc.o:
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
-#all: $(PROG)
+all: $(PROG)
 
-#$(PROG): $(OBJS)
-#	$(CC) $(LDFLAGS) -o $@ $(OBJS)
+$(PROG): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS)
 
+clean:
+	rm *.o
