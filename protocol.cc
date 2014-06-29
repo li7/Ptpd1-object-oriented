@@ -899,14 +899,14 @@ addForeign(Octet * buf, MsgHeader * header, PtpClock * ptpClock)
 		ptpClock->get_foreign(j).set_foreign_master_port_id(header->get_sourcePortId());
 		ptpClock->get_foreign(j).set_foreign_master_uuid(header->get_sourceUuid(), PTP_UUID_LENGTH);
 
-		DBG("updateForeign: new record (%d,%d) %d %d %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
+		/*DBG("updateForeign: new record (%d,%d) %d %d %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
 		    ptpClock->get_foreign_record_i(), ptpClock->get_number_foreign_records(),
 		    ptpClock->get_foreign(j).get_foreign_master_communication_technology(),
 		    ptpClock->get_foreign(j).get_foreign_master_port_id(),
 		    ptpClock->get_foreign(j).get_foreign_master_uuid(0), ptpClock->get_foreign(j).get_foreign_master_uuid(1),
 		    ptpClock->get_foreign(j).get_foreign_master_uuid(2), ptpClock->get_foreign(j).get_foreign_master_uuid(3),
 		    ptpClock->get_foreign(j).get_foreign_master_uuid(4), ptpClock->get_foreign(j).get_foreign_master_uuid(5));
-
+*/
 		ptpClock->set_foreign_record_i((ptpClock->get_foreign_record_i() + 1) % ptpClock->get_max_foreign_records());
 	}
 	msgUnpackHeader(buf, &ptpClock->get_foreign(j).get_header());
